@@ -1,0 +1,8 @@
+tec\psa\repository\UserRepository.class
+tec\psa\SpaceApplication.class
+tec\psa\service\UserService.class
+tec\psa\model\User.class
+tec\psa\configuration\WebMvcConfig.class
+tec\psa\configuration\SecurityConfiguration.class
+tec\psa\controller\LoginController.class
+tec\psa\service\UserServiceImpl.class
