@@ -2,7 +2,6 @@ package tec.psa.segmentacion.algoritmos;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Scalar;
@@ -18,16 +17,18 @@ public class Etiquetado {
    * @return Imagen segmentada
    */
   public Mat etiquetarCelulas(Mat imagen) {
+	  
     Mat imagenParaEtiquetar = new Mat();
     Imgproc.cvtColor(imagen, imagenParaEtiquetar, Imgproc.COLOR_GRAY2RGB);
     ArrayList<MatOfPoint> contornos = new ArrayList<MatOfPoint>();
     Mat hierarchy = new Mat();
     Imgproc.findContours(imagen, contornos, hierarchy,
         Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+       
     int colorBase = 100;
     int aumento = 900000 / contornos.size();
    
-    for (MatOfPoint matOfPoint : contornos) { // Recorre los puntos del contorno y los dibuja
+    for (MatOfPoint matOfPoint : contornos) { // Recorre los puntos del contorno y los dibuja    
       Color colorCont = new Color(colorBase);
       ArrayList<MatOfPoint> c = new ArrayList<MatOfPoint>();
       c.add(matOfPoint);
@@ -38,6 +39,22 @@ public class Etiquetado {
     
     return imagenParaEtiquetar;       
     
+  }
+  
+  /**
+   * 
+   * 
+   * @param imagen matriz de imagen en escala de grises
+   * @return numero de celulas u objetos encontrados en la imagen
+   */
+  public long getConteoCelulas(Mat imagen) {
+	    Mat imagenParaEtiquetar = new Mat();
+	    Imgproc.cvtColor(imagen, imagenParaEtiquetar, Imgproc.COLOR_GRAY2RGB);
+	    ArrayList<MatOfPoint> contornos = new ArrayList<MatOfPoint>();
+	    Mat hierarchy = new Mat();
+	    Imgproc.findContours(imagen, contornos, hierarchy,
+	        Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);	
+	    return contornos.size();
   }
  
 }

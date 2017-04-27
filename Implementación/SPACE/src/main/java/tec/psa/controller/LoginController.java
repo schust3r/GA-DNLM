@@ -9,6 +9,8 @@ import java.io.File;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,17 +44,19 @@ public class LoginController {
         userValidator.validate(userForm, bindingResult);
 
         if (bindingResult.hasErrors()) {
+        	model.addAttribute("error", "No se pudo crear la cuenta.");
             return "registration";
+        }
+        else {
+        	model.addAttribute("success", "Se ha creado la cuenta de usuario.");
         }
 
         userService.save(userForm);
         
         // Crear carpeta de almacenamiento para el usuario (temporal)
-        new File(loteDir + userForm.getUsername()).mkdirs();
-        
-        securityService.autologin(userForm.getUsername(), userForm.getPassword());
+        new File(loteDir + userForm.getUsername()).mkdirs();        
 
-        return "redirect:/upload";
+        return "login";
     }
     
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -61,26 +65,39 @@ public class LoginController {
         
         if (bindingResult.hasErrors()) {
             return "login";
-        }
+        }        
 
         securityService.autologin(userForm.getUsername(), userForm.getPassword());
-
-        return "upload";
+        
+        return "dashboard";
     }
 
     @RequestMapping(value = {"/", "/login"}, method = RequestMethod.GET)
     public String login(Model model, String error, String logout) {
         if (error != null)
-            model.addAttribute("error", "Your username and password is invalid.");
+            model.addAttribute("error", "Usuario o contraseña inválida.");
 
         if (logout != null)
-            model.addAttribute("message", "You have been logged out successfully.");
+            model.addAttribute("message", "Ha salido del sistema con éxito.");
 
         return "login";
     }
 
-    @RequestMapping(value = "/upload", method = RequestMethod.GET)
-    public String upload(Model model) {
-        return "upload";
+    @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
+    public String dashboard(@ModelAttribute("user") User userForm, Model model) {
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("usuario", auth.getName());
+        
+        return "dashboard";
     }
+    
+    @RequestMapping(value="/logout", method = RequestMethod.GET)
+    public String logoutPage (Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null){    
+            auth.setAuthenticated(false);
+        }
+        return "redirect:/login";
+    }
+    
 }

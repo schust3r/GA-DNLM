@@ -4,7 +4,7 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
-public class ImageHandler {
+public class ImageHandler {	
 
 	/**
 	 * Carga una imagen en 3 canales desde ubicación en disco 
@@ -66,13 +66,13 @@ public class ImageHandler {
 	 * @param nombreImagen	nombre para asignar a imagen guardada
 	 * @param imagen		matriz de OpenCV con datos de imagen
 	 */
-	public void sobreescribirImagen(String ruta, String nombreImagen, Mat imagen) {
+	public void sobreescribirImagen(String ruta, Mat imagen) {
 		try {
-			Imgcodecs.imwrite(ruta + "/" + nombreImagen, imagen);			
+			Imgcodecs.imwrite(ruta, imagen);			
 		}
 		catch (Exception e) {
 			e.printStackTrace();		
 		}
-	}
+	}	
 	
 }

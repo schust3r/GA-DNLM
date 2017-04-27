@@ -1,7 +1,6 @@
 package tec.psa.segmentacion.imagenes;
 
-import org.opencv.core.Mat;
-
+import tec.psa.model.Imagen;
 import tec.psa.segmentacion.Histograma;
 import tec.psa.segmentacion.algoritmos.Etiquetado;
 import tec.psa.segmentacion.algoritmos.Kittler;
@@ -10,7 +9,7 @@ import tec.psa.segmentacion.conf.Const;
 
 /**
  * 
- * @author Joel
+ * @author Joel Schuster
  *
  */
 public class ImageProcessor {
@@ -43,15 +42,29 @@ public class ImageProcessor {
 	 * 
 	 * @param nombreImg	nombre de la imagen guardada en disco
 	 */
-	public void procesarImagen(String nombreImg) {	
-		Mat imagen = ih.leerImagenGrises(Const.IMG_DIR + nombreImg);
-		Histograma hist = new Histograma(imagen, Const.LIMITE);
-		k.setHistograma(hist);		
-		k.calcularUmbral();
-		umb.aplicarUmbral(imagen, k.getTao());
-		//imagen = etq.etiquetarCelulas(imagen);
-		ih.guardarImagen(Const.IMG_DIR, "salida", "bmp", imagen);
+	public Imagen procesarImagen(String rutaImg) {
+	
+		// Contar tiempo
+		long startTime = System.nanoTime();   
 		
+		// Crea una nueva imagen y la asigna
+		Imagen img = new Imagen();
+		img.setImagen(ih.leerImagenGrises(rutaImg));			
+		img.setHistograma(new Histograma(img.getImagen(), Const.LIMITE));
+		k.setHistograma(img.getHistograma());
+		k.calcularUmbral();
+		img.setTao(k.getTao());
+		umb.aplicarUmbral(img.getImagen(), img.getTao());
+		img.setNumeroCelulas(etq.getConteoCelulas(img.getImagen()));
+		img.setImagen(etq.etiquetarCelulas(img.getImagen()));		
+		ih.sobreescribirImagen(rutaImg, img.getImagen());
+		
+		// Obtener estimacion del tiempo en nanosegundos
+		long estimatedTime = System.nanoTime() - startTime;
+		
+		img.setTiempoProcesamiento(estimatedTime);
+		
+		return img;
 	}
 	
 }
