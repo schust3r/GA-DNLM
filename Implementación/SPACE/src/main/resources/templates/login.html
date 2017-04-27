@@ -4,8 +4,7 @@
 
 <head>
 	<title>Login Form</title>
-	<link rel="stylesheet" type="text/css" th:href="@{/css/login.css}" />
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
@@ -16,7 +15,8 @@
 	</form>	
 	
 	<div class="container">		
-		<form th:action="@{/login}" method="POST" class="form-signin">
+		<form th:action="@{/login}" method="POST" class="form-signin"
+			  th:object="${user}">
 			<h3 class="form-signin-heading" th:text="Welcome"></h3>
 			<br/>
 			 
@@ -26,7 +26,7 @@
 				id="password" name="password" class="form-control" /> <br /> 
 				
 			<div align="center" th:if="${param.error}">
-				<p style="font-size: 20; color: #FF1C19;">Email or Password invalid, please verify</p>
+				<p style="font-size: 20; color: #FF1C19;" th:text="${errorlist}"></p>
 			</div>
 			
 			<button class="btn btn-lg btn-primary btn-block" name="Submit" value="Login" type="Submit" th:text="Login"></button>

@@ -26,13 +26,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Value("${spring.queries.users-query}")
 	private String usersQuery;
 	
+	@Value("${spring.queries.auth-query}")
+	private String authQuery;
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth)
 			throws Exception {
 		auth.
 			jdbcAuthentication()
 				.usersByUsernameQuery(usersQuery)
-				.dataSource(dataSource)
+				.authoritiesByUsernameQuery(authQuery)
+				.dataSource(dataSource)				
 				.passwordEncoder(bCryptPasswordEncoder);
 	}
 
@@ -44,11 +48,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/").permitAll()
 				.antMatchers("/login").permitAll()
 				.antMatchers("/registration").permitAll()
-				.antMatchers("/admin/**").hasAuthority("ADMIN").anyRequest()
+				.antMatchers("/upload").hasAuthority("ROLE_USER").anyRequest()				
 				.authenticated().and().csrf().disable().formLogin()
 				.loginPage("/login").failureUrl("/login?error=true")
-				.defaultSuccessUrl("/admin/home")
-				.usernameParameter("email")
+				.defaultSuccessUrl("/upload")
+				.usernameParameter("username")
 				.passwordParameter("password")
 				.and().logout()
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

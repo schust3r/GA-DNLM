@@ -1,42 +1,65 @@
 package tec.psa.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.data.annotation.Transient;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-@Table(name = "Login")
+@Table(name = "user")
 public class User {
+    private Long id;
+    private String username;
+    private String password;
+    private boolean enabled;
+    private Set<Role> roles;
+    
+    public User() {
+        super();
+        // Usuario habilitado por defecto
+        this.enabled = true;
+    }    
 
-	@Id
-	@Column(name = "Username")
-	private String username;
-	
-	@Column(name = "Password")
-	@Length(min = 6, message = "*Your password must have at least 6 characters")
-	@NotEmpty(message = "*Please provide your password")
-	@Transient
-	private String password;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long getId() {
+        return id;
+    }
 
-	public String getUsername() {
-		return username;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @ManyToMany
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+	public boolean isEnabled() {
+		return enabled;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 }

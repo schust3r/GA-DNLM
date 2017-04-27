@@ -3,7 +3,6 @@
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 	<title>Registration Form</title>
-	<link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -22,8 +21,7 @@
 					<h2>Registration Form</h2>
 					<div class="form-group">
 						<div class="col-sm-9">
-						<label th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
-								class="validation-message"></label>
+						
 						<input type="text" th:field="*{username}" placeholder="Username"
 								class="form-control" /> 
 						</div>
@@ -32,9 +30,7 @@
 					<div class="form-group">
 						<div class="col-sm-9">
 							<input type="password" th:field="*{password}"
-								placeholder="Password" class="form-control" /> <label
-								th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
-								class="validation-message"></label>
+								placeholder="Password" class="form-control" /> 
 						</div>
 					</div>
 
@@ -43,8 +39,6 @@
 							<button type="submit" class="btn btn-primary btn-block">Register User</button>
 						</div>
 					</div>
-					
-					<span th:utext="${successMessage}"></span>
 					
 					
 				</form>
