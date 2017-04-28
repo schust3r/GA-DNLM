@@ -1,0 +1,5 @@
+Aseguramiento de la Calidad del Software - PoC
+Prof. M. Sc. Saúl Calderón
+
+Documentación interna:
+- Abrir el archivo "index.html" para navegar por la documentación interna javadocs del proyecto.
