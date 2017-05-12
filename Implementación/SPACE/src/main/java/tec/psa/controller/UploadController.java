@@ -3,10 +3,11 @@ package tec.psa.controller;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,8 +29,10 @@ public class UploadController {
 
 	@Value("${upload.lote.path}")
 	private String loteDir;
-	
+
 	private FileWriter pw;
+	
+	private String allowedExts[] = {"bmp", "tif", "png", "jpg"};
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public void saveFile(HttpServletRequest servletRequest, @ModelAttribute UploadedFile uploadedFile,
@@ -41,26 +44,31 @@ public class UploadController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String uniqueDirLote = loteDir + auth.getName() + "/" + nombreLote + "/";
 
+		String ext = FilenameUtils.getExtension(fileName);
+
 		try {
-			File rutaLote = new File(uniqueDirLote);
-			rutaLote.mkdirs();
+			if (Arrays.asList(allowedExts).contains(ext)) {
+				
+				File rutaLote = new File(uniqueDirLote);
+				rutaLote.mkdirs();
 
-			File file = new File(uniqueDirLote, fileName);
-			multipartFile.transferTo(file);
+				File file = new File(uniqueDirLote, fileName);
+				multipartFile.transferTo(file);
 
-			ImageProcessor ip = new ImageProcessor();
-			Imagen img = ip.procesarImagen(file.getAbsolutePath());
-			img.setNombreImagen(fileName);
+				ImageProcessor ip = new ImageProcessor();
+				Imagen img = ip.procesarImagen(file.getAbsolutePath());
+				img.setNombreImagen(fileName);
+
+				File csv = new File(uniqueDirLote, "1resultados.csv");
+				pw = new FileWriter(csv, true);
+				construirLineaImagen(img);				
+			}
 			
-			File csv = new File(uniqueDirLote, "1resultados.csv");
-			pw = new FileWriter(csv, true);
-			construirLineaImagen(img);
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void construirLineaImagen(Imagen img) {
 		try {
 			StringBuilder sb = new StringBuilder();
@@ -72,11 +80,10 @@ public class UploadController {
 			sb.append(",");
 			sb.append(img.getTiempoProcesamiento());
 			sb.append("\n");
-			pw.write(sb.toString());	
+			pw.write(sb.toString());
 			pw.flush();
 			pw.close();
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
