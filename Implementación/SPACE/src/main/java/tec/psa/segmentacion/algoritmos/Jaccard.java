@@ -4,6 +4,15 @@ import org.opencv.core.Mat;
 
 import org.opencv.core.Size;
 
+/**
+ * Clase para calcular la métrica de Jaccard para
+ * analizar la similitud entre dos imágenes 
+ * 
+ * Matematicamente - |A intersect B| / ( |A| + |B| - |A intersect B| )
+ * 
+ * @author Joel Barrantes
+ *
+ */
 public class Jaccard {
   
   /**

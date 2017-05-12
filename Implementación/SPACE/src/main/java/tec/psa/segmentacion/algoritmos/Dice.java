@@ -4,6 +4,16 @@ import org.opencv.core.Mat;
 
 import org.opencv.core.Size;
 
+/**
+ * Clase para calcular la métrica de Dice o coeficiente  
+ * de Sorensen-Dice. Permite encontrar qué tan similares 
+ * son dos imágenes.
+ * 
+ *  Matematicamente - 2 * |A intersect B| / ( |A| + |B| )
+ * 
+ * @author Joel Barrantes
+ *
+ */
 public class Dice {
 
   /**

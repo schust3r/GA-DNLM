@@ -18,6 +18,7 @@
             var bar = document.getElementById('bar');
             bar.style.width = '100%';
             bar.innerHTML = '100% completado';
+            alert('ÉXITO: las imágenes se subieron correctamente.');
         }
     }
  
