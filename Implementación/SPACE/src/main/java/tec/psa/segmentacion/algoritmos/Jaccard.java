@@ -6,8 +6,8 @@ import org.opencv.core.Size;
 
 /**
  * Clase para calcular la métrica de Jaccard para
- * analizar la similitud entre dos imágenes 
- * 
+ * analizar la similitud entre dos imágenes.
+ * <br>
  * Matematicamente - |A intersect B| / ( |A| + |B| - |A intersect B| )
  * 
  * @author Joel Barrantes
@@ -45,14 +45,11 @@ public class Jaccard {
 
           }
         }
-      }
-
-      double jaccardIndex = (cardIntersection) / (sizeGroundTruth.area() 
+      }      
+      return (cardIntersection) / (sizeGroundTruth.area() 
           + sizeImagenUmbralizada.area() - cardIntersection);
-      return jaccardIndex;
     } else {
       return 0;
-
     }
   }
 }

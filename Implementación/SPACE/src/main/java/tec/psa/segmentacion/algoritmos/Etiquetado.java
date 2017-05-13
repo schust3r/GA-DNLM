@@ -1,16 +1,23 @@
 package tec.psa.segmentacion.algoritmos;
 
 import java.awt.Color;
+
 import java.util.ArrayList;
+
 import org.opencv.core.Mat;
+
 import org.opencv.core.MatOfPoint;
+
 import org.opencv.core.Scalar;
+
 import org.opencv.imgproc.Imgproc;
 
 /**
  * Clase para realizar el etiquetado de cada una de las
  * células segmentadas por el umbral de Kittler. Etiqueta
  * cada una con un color único.
+ * <br>
+ * Referencia OpenCV - http://docs.opencv.org/
  * 
  * @author Reggie Barker
  *
@@ -21,8 +28,7 @@ public class Etiquetado {
   /**
    * Segmenta una imagen de celulas previamente umbralizada.
    *
-   * @param imagen
-   *            Imagen umbralizada
+   * @param imagen la imagen umbralizada
    * @return Imagen segmentada
    */
   public Mat etiquetarCelulas(Mat imagen) {
@@ -30,7 +36,7 @@ public class Etiquetado {
     try {
 
       if (imagen == null) {
-        throw new NullPointerException();
+        throw new NullPointerException("Imagen de entrada no encontrada.");
       }
 
       Mat imagenParaEtiquetar = new Mat();
@@ -59,7 +65,10 @@ public class Etiquetado {
     } catch (NullPointerException ex) {
       ex.printStackTrace();
       return null;
-    }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      return null;
+    }      
     
   }
 
@@ -70,13 +79,28 @@ public class Etiquetado {
    * @return numero de celulas u objetos encontrados en la imagen
    */
   public long getConteoCelulas(Mat imagen) {
-    Mat imagenParaEtiquetar = new Mat();
-    Imgproc.cvtColor(imagen, imagenParaEtiquetar, Imgproc.COLOR_GRAY2RGB);
-    ArrayList<MatOfPoint> contornos = new ArrayList<MatOfPoint>();
-    Mat hierarchy = new Mat();
-    Imgproc.findContours(imagen, contornos, hierarchy, Imgproc.RETR_EXTERNAL,
-          Imgproc.CHAIN_APPROX_SIMPLE);
-    return contornos.size();
+    try {
+      Mat imagenParaEtiquetar = new Mat();
+      
+      if (imagen == null) {
+        throw new NullPointerException("Imagen nula: no se pueden contar células.");
+      }
+      
+      Imgproc.cvtColor(imagen, imagenParaEtiquetar, Imgproc.COLOR_GRAY2RGB);
+      ArrayList<MatOfPoint> contornos = new ArrayList<MatOfPoint>();
+      Mat hierarchy = new Mat();
+      Imgproc.findContours(imagen, contornos, hierarchy, Imgproc.RETR_EXTERNAL,
+            Imgproc.CHAIN_APPROX_SIMPLE);
+      return contornos.size();
+      
+    } catch (NullPointerException ex) {
+      ex.printStackTrace();
+      return 0;
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      return 0;
+    } 
+    
   }
 
 }
