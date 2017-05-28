@@ -1,4 +1,4 @@
-    var loteName, totalFileLength, totalUploaded, fileCount, filesUploaded;
+ var loteName, totalFileLength, totalUploaded, fileCount, filesUploaded;
  
     //To log everything on console
     function debug(s) {
@@ -73,8 +73,9 @@
     //Let's begin the upload process
     function startUpload() {
     	loteName = document.getElementById('loteNombre').value;
-    	var Exp = /^[0-9a-z]+$/;
-    	if (loteName.length > 5 && loteName.match("^[a-zA-Z0-9]*$")) {
+    	if (loteName.length > 5 && loteName.match("^[ a-zA-Z0-9]*$")) {
+    		var barraProgreso = document.getElementById("progreso");
+    		barraProgreso.classList.remove("hidden");
     		if (fileCount > 0) {
     			totalUploaded = filesUploaded = 0;
     			uploadNext();    	

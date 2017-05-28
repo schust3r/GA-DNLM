@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import java.util.ArrayList;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 
 import org.opencv.core.MatOfPoint;
@@ -33,7 +34,7 @@ public class Etiquetado {
    */
   public Mat etiquetarCelulas(Mat imagen) {
 
-    try {
+    try {           
 
       if (imagen == null) {
         throw new NullPointerException("Imagen de entrada no encontrada.");

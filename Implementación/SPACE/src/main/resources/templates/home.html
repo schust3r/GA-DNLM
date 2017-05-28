@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>Home - SPACE</title>
+
+<!-- Bootstrap Core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+
+<link href="css/home.css" rel="stylesheet">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+ <div class="container">
+  <h3>
+   Bienvenid@, <span th:text="${usuario}"></span><br /> <small>Sistema
+    de Preprocesamiento y Análisis Celular</small>
+  </h3>
+  <br />
+
+  <div class="row">
+   <div class="col-sm-2">
+    <nav class="nav-sidebar">
+
+     <ul class="nav">
+
+      <li class="active"><a href="/home"><i
+        class="glyphicon glyphicon-home"></i> Inicio</a></li>
+
+      <li><a href="/upload"><i
+        class="glyphicon glyphicon-upload"></i> Subir lote</a></li>
+
+      <li><a href="/lotes"><i
+        class="glyphicon glyphicon-picture"></i> Explorar lotes</a></li>
+
+      <li><a href="/export"><i class="glyphicon glyphicon-copy"></i>
+        Informes</a></li>
+
+      <li class="nav-divider"></li>
+      <li><a href="/logout"><i class="glyphicon glyphicon-off"></i>
+        Salir</a></li>
+
+     </ul>
+
+    </nav>
+   </div>
+
+   <!-- Content -->
+   <div class="col-sm-8">
+   
+    <h2>Sistema SPACE</h2><hr>
+    
+   
+   </div>
+
+  </div>
+  
+ </div>
+
+
+</body>
+
+</html>

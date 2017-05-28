@@ -26,6 +26,25 @@
 
 	<dependencies>
 	
+	  <!-- mongodb java driver -->
+  <dependency>
+   <groupId>org.mongodb</groupId>
+   <artifactId>mongo-java-driver</artifactId>   
+   </dependency>
+
+  <!-- Spring data mongodb -->
+  <dependency>
+   <groupId>org.springframework.data</groupId>
+   <artifactId>spring-data-mongodb</artifactId>   
+   </dependency>
+   
+	<!-- https://mvnrepository.com/artifact/org.jongo/jongo -->
+	 <dependency>
+	  <groupId>org.jongo</groupId>
+	  <artifactId>jongo</artifactId>
+	  <version>1.0</version>
+	 </dependency>
+	
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
