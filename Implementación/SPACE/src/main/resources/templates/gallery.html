@@ -66,6 +66,12 @@
 				<h3 th:text="${nombreLote}"></h3>
 				<hr>
 
+				<div class="alert alert-success" th:if="${eliminado}">
+					<div class="text-center">
+						<span th:text="${eliminado}"></span>
+					</div>
+				</div>
+
 				<div class="row">
 
 					<div class="col-md-12">
@@ -75,7 +81,8 @@
 
 							<div th:each="imagen1 : ${listaImgs1}"
 								class="mix col-sm-3 margin30">
-								<a th:href="${'/detalle?id=' + imagen1.id + '&i=' + indice}" class="show-image"> <img
+								<a th:href="${'/detalle?id=' + imagen1.id + '&i=' + indice}"
+									class="show-image"> <img
 									th:src="${'data:image/jpg;base64,' + imagen1.imgBase64}"
 									class="img-responsive"></a>
 							</div>
@@ -89,12 +96,13 @@
 						<!-- segunda fila de imagenes -->
 						<div id="grid">
 
-       <div th:each="imagen2 : ${listaImgs2}"
-        class="mix col-sm-3 margin30">
-        <a th:href="${'/detalle?id=' + imagen2.id + '&i=' + indice}" class="show-image"> <img
-         th:src="${'data:image/jpg;base64,' + imagen2.imgBase64}"
-         class="img-responsive"></a>
-       </div>
+							<div th:each="imagen2 : ${listaImgs2}"
+								class="mix col-sm-3 margin30">
+								<a th:href="${'/detalle?id=' + imagen2.id + '&i=' + indice}"
+									class="show-image"> <img
+									th:src="${'data:image/jpg;base64,' + imagen2.imgBase64}"
+									class="img-responsive"></a>
+							</div>
 
 						</div>
 

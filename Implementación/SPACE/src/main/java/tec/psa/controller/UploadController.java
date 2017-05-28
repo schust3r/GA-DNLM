@@ -125,6 +125,7 @@ public class UploadController {
       metaData.put("conteo", imagen.getNumeroCelulas());
       metaData.put("tiempo_procesamiento", imagen.getTiempoProcesamiento());
       metaData.put("umbral", imagen.getTao());
+      //metaData.put("csv", );
       
       // Extraer Stream desde MatOfBytes
       InputStream inputStreamData = new ByteArrayInputStream(imagen.getImagenBytes());   

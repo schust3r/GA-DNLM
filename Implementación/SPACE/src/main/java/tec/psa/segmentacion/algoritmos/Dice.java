@@ -5,10 +5,8 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 
 /**
- * Clase para calcular la métrica de Dice o coeficiente  
- * de Sorensen-Dice. Permite encontrar qué tan similares 
- * son dos imágenes.
- * <br> 
+ * Clase para calcular la métrica de Dice o coeficiente de Sorensen-Dice.
+ * Permite encontrar qué tan similares son dos imágenes. <br>
  * Matematicamente - 2 * |A intersect B| / ( |A| + |B| )
  * 
  * @author Joel Barrantes
@@ -17,12 +15,14 @@ import org.opencv.core.Size;
 public class Dice {
 
   /**
-   * Calcula el indice de similitud de Dice 
-   * entre dos imagenes.
+   * Calcula el indice de similitud de Dice entre dos imagenes.
    * 
-   * @param groundTruth Imagen segmentada manualmente
-   * @param imagenUmbralizada Imagen segmentada con el tao de kittler
-   * @return indice de Dice = 2 * interseccion/(cantidad de pixeles de las 2 imagenes)
+   * @param groundTruth
+   *          Imagen segmentada manualmente
+   * @param imagenUmbralizada
+   *          Imagen segmentada con el tao de kittler
+   * @return indice de Dice = 2 * interseccion/(cantidad de pixeles de las 2
+   *         imagenes)
    */
 
   public static double calcularDice(Mat groundTruth, Mat imagenUmbralizada) {
@@ -46,9 +46,8 @@ public class Dice {
 
           }
         }
-      }      
-      return (2 * cardIntersection) / (sizeGroundTruth.area()
-              + sizeImagenUmbralizada.area());
+      }
+      return (2 * cardIntersection) / (sizeGroundTruth.area() + sizeImagenUmbralizada.area());
     } else {
       return 0;
     }

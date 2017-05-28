@@ -9,7 +9,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<title>Home - SPACE</title>
+<title>Detalle - SPACE</title>
 
 <!-- Bootstrap Core CSS -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -86,33 +86,35 @@
 			<!-- Content -->
 			<div class="col-sm-10">
 
-				<a th:href="${'/gallery?lote='+lote+'&i='+ival}"><h3>< Volver</h3></a>
+				<a th:href="${'/gallery?lote='+lote+'&i='+ival}"><h3>«
+						Volver</h3></a>
 				<hr>
-				
+
 				<div class="col-sm-6">
 
 					<img class="media__image"
 						th:src="${'data:image/jpg;base64,' + imagen.imgBase64}">
-											
-     <hr><p align="center">Haga clic para expandir la imagen</p>
+
+					<hr>
+					<p align="center">Haga clic para expandir la imagen</p>
 
 				</div>
-				
+
 
 				<div class="col-sm-6">
-				
-				 <h4>Información</h4>
-				
+
+					<h4>Información</h4><hr>
+
 					<table class="table table-striped custab">
 						<tr>
 							<td><strong>Nombre del archivo</strong></td>
 							<td th:text="${imagen.nombreArchivo}"></td>
 						</tr>
-						
-					 <tr>
-       <td><strong>Lote</strong></td>
-       <td th:text="${imagen.nombreLote}"></td>
-      </tr>
+
+						<tr>
+							<td><strong>Lote</strong></td>
+							<td th:text="${imagen.nombreLote}"></td>
+						</tr>
 
 						<tr>
 							<td><strong>Conteo de células</strong></td>
@@ -123,16 +125,36 @@
 							<td><strong>Tiempo de procesamiento</strong></td>
 							<td th:text="${imagen.tiempoProcesamiento + ' ns'}"></td>
 						</tr>
-						
+
 						<tr>
-       <td><strong>Umbral Illingworth-Kittler</strong></td>
-       <td th:text="${imagen.umbral}"></td>
-      </tr>
+							<td><strong>Umbral Illingworth-Kittler</strong></td>
+							<td th:text="${imagen.umbral}"></td>
+						</tr>
 
 					</table>
+
+
+					<h4>Métricas e informes</h4><hr>
+
+					<div class="col-sm-4">
+						<input class="btn btn-primary" type="button"
+							th:onclick="'location.href=\'/generarInforme?id=' + ${imagen.id} + '\''" value="Generar informe">
+					</div>
+
+     <div class="col-sm-5">
+      <label class="btn btn-default btn-file"> Subir groundtruth
+       <input type="file" id="files" multiple style="display:none;">
+      </label>   
+     </div>   
+
+					<div class="col-sm-3">
+						<input class="btn btn-danger" type="button"
+							th:onclick="'location.href=\'/eliminarImagen?id=' + ${imagen.id} + '\''" value="✖  Eliminar">							
+					</div>
 					
+					<output id="selectedFiles"></output>
+
 					
-					<h4>Acciones</h4>
 
 				</div>
 

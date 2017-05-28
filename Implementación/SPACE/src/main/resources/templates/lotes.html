@@ -80,6 +80,7 @@
 								<thead>
 									<th>Nombre del lote</th>
 									<th>Imágenes</th>
+									<th>Tiempo de procesamiento</th>
 									<th>Última actualización</th>
 									<th>Editar</th>
 									<th>Eliminar</th>
@@ -90,6 +91,7 @@
 										<td><a th:href="${'/gallery?lote='+lote.nombre+'&i=1'}"
 											th:text="${lote.nombre}"></a></td>
 										<td th:text="${lote.imagenes}"></td>
+										<td th:text="${lote.tiempoProcesamiento}"></td>
 										<td th:text="${lote.ultimaModificacion}"></td>
 
 										<td><p data-placement="top" data-toggle="tooltip"
@@ -99,6 +101,7 @@
 													<span class="glyphicon glyphicon-pencil"></span>
 												</button>
 											</p></td>
+											
 										<td><p data-placement="top" data-toggle="tooltip"
 												title="Eliminar">
 												<button class="btn btn-danger btn-xs" data-title="Delete"

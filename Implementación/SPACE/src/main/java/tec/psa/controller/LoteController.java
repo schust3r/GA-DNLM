@@ -77,6 +77,17 @@ public class LoteController {
             .and("metadata.lote").is(nombreLote));
         List<GridFSDBFile> imgs = gridOperations.find(query);
         lote.setImagenes(imgs.size());
+        
+        // Calcular la duración al procesar el lote
+        long tiempoProcesamiento = 0;
+        for (GridFSDBFile img : imgs) {
+          String t = img.getMetaData().get("tiempo_procesamiento").toString();
+          tiempoProcesamiento += Long.parseLong(t);
+        }        
+        // guardar tiempo como String en segundos
+        double tiempoTotal = (double)tiempoProcesamiento / 1000000000.0;
+        lote.setTiempoProcesamiento(String.valueOf(Math.round(tiempoTotal * 1000.0) / 1000.0) 
+            + " segundos"); 
 
         // Obtener la fecha del ultimo archivo modificado
         query = new Query(Criteria.where("metadata.usuario").is(nombreUsuario)

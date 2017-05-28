@@ -11,7 +11,16 @@ public class Lote {
   private String nombre;
   private long imagenes;
   private String ultimaModificacion;
-  
+  private String tiempoProcesamiento;   
+
+  public String getTiempoProcesamiento() {
+    return tiempoProcesamiento;
+  }
+
+  public void setTiempoProcesamiento(String tiempoProcesamiento) {
+    this.tiempoProcesamiento = tiempoProcesamiento;
+  }
+
   public String getNombre() {
     return nombre;
   }

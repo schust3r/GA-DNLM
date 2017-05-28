@@ -1,9 +1,5 @@
 package tec.psa.segmentacion.imagenes;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.opencv.core.Core;
 import org.opencv.core.MatOfByte;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -124,7 +120,7 @@ public class ImageProcessor {
       img.setImagen(etq.etiquetarCelulas(img.getImagen()));
       
       // Settear el arreglo de bytes para la imagen procesada
-      Imgcodecs.imencode(".jpg", img.getImagen(), matrizBytes);
+      Imgcodecs.imencode(".bmp", img.getImagen(), matrizBytes);
       img.setImagenBytes(matrizBytes.toArray());
 
       // CONTADOR: Obtener estimacion del tiempo en nanosegundos
@@ -138,31 +134,7 @@ public class ImageProcessor {
       ex.printStackTrace();
       return null;
     }
-
   }
 
-  /**
-   * Leer stream de entrada para convertir a imagen.
-   * 
-   * @param stream input stream de una imagen
-   * @return arreglo de bytes
-   * @throws IOException si ocurre un error al leer el archivo
-   */
-  private static byte[] readStream(InputStream stream) throws IOException {
-    // Copy content of the image to byte-array
-    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-    int numRead;
-    byte[] data = new byte[16384];
-
-    while ((numRead = stream.read(data, 0, data.length)) != -1) {
-      buffer.write(data, 0, numRead);
-    }
-
-    buffer.flush();
-    byte[] temporaryImageInMemory = buffer.toByteArray();
-    buffer.close();
-    stream.close();
-    return temporaryImageInMemory;
-  }
 
 }

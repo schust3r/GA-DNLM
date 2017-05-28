@@ -10,11 +10,10 @@ public class EtiquetadoTest {
    * Prueba unitaria para el etiquetado de las celulas.
    */
   public void etiquetadoTest() {
-    ImageHandler ih = new  ImageHandler();
+    ImageHandler ih = new ImageHandler();
     Mat img = ih.leerImagenGrises("C:\\Users\\Reggie Barker\\Documents\\AC\\salida.bmp");
     Etiquetado et = new Etiquetado();
-    ih.guardarImagen("C:\\Users\\Reggie Barker\\Documents\\AC","EtiquetdoTestHOY",
-        "bmp", et.etiquetarCelulas(img));
+    ih.guardarImagen("C:\\Users\\Reggie Barker\\Documents\\AC", "EtiquetdoTestHOY", "bmp", et.etiquetarCelulas(img));
   }
 
 }
