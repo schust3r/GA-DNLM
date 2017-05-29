@@ -30,54 +30,46 @@ public class CentroideAreaGen {
       // llamar librería nativa
       System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-      Mat imagen = Imgcodecs.imdecode(new MatOfByte(bytes), Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);
+      Mat imagen = Imgcodecs.imdecode(new MatOfByte(bytes),
+          Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);
       
       // StringBuilder para formar el csv
-      StringBuilder csv = new StringBuilder();
-      csv.append("id,centroideX,centroideY,area\n");
+      String csv = "id,centroideX,centroideY,area\n";
 
       if (imagen == null) {
         throw new NullPointerException("Imagen de entrada no encontrada.");
       }
 
-      ArrayList<MatOfPoint> contornos = new ArrayList<MatOfPoint>();
+      ArrayList<MatOfPoint> contornos = new ArrayList<>();
       Mat hierarchy = new Mat();
       Imgproc.findContours(imagen, contornos, hierarchy, 
           Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
       int index = 1;
       // Recorre los puntos del contorno y los dibuja
-      for (MatOfPoint matOfPoint : contornos) {               
-
-        csv.append(index);
-        csv.append(",");
-
-        // Calcular y guardar los centroides
-        Moments moments = Imgproc.moments(matOfPoint);
+      for (MatOfPoint matOfPoint : contornos) {        
         
-        Point centroid = new Point();
-
-        // centroide en X
-        centroid.x = moments.get_m10() / moments.get_m00();
-        csv.append(centroid.x);
-        csv.append(",");
-
-        // centroide en Y
-        centroid.y = moments.get_m01() / moments.get_m00();
-        csv.append(centroid.y);
-        csv.append(",");
-
         // calcular el area
         double area = Imgproc.contourArea(matOfPoint);
-        csv.append(area);
-        csv.append("\n");
-
-        // aumentar el contador en 1
+        
+        // Definir el centroide
+        Point centroid = new Point();
+        
+        if (area > 0) {
+          Moments moments = Imgproc.moments(matOfPoint);  
+          centroid.x = moments.get_m10() / moments.get_m00();    
+          centroid.y = moments.get_m01() / moments.get_m00();
+        } else {
+          area = 1;
+          centroid.x = matOfPoint.get(0, 0)[0];
+          centroid.y = matOfPoint.get(0, 0)[1];
+        }
+        // agregar valores al String
+        csv += index + "," + centroid.x + "," + centroid.y + "," + area + "\n";               
         index++;
+      }           
 
-      }
-
-      return csv.toString();
+      return csv;
 
     } catch (NullPointerException ex) {
       ex.printStackTrace();

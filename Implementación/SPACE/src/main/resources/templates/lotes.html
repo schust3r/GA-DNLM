@@ -51,10 +51,15 @@
 						<li class="active"><a href="/lotes"><i
 								class="glyphicon glyphicon-picture"></i> Explorar lotes</a></li>
 
-						<li><a href="/export"><i class="glyphicon glyphicon-copy"></i>
-								Informes</a></li>
+						<li><a href="/about"><i class="glyphicon glyphicon-info-sign"></i>
+								Acerca de</a></li>
 
 						<li class="nav-divider"></li>
+						
+						<li><a href="" > <i class="glyphicon glyphicon-user"></i>
+						 <span th:text="${usuario}"></span>
+       </a></li>
+						
 						<li><a href="/logout"><i class="glyphicon glyphicon-off"></i>
 								Salir</a></li>
 
@@ -62,7 +67,7 @@
 
 				</nav>
 			</div>
-
+ 
 			<!-- Content -->
 			<div class="container">
 				<div class="row">
@@ -82,7 +87,6 @@
 									<th>Imágenes</th>
 									<th>Tiempo de procesamiento</th>
 									<th>Última actualización</th>
-									<th>Editar</th>
 									<th>Eliminar</th>
 								</thead>
 								<tbody>
@@ -93,24 +97,15 @@
 										<td th:text="${lote.imagenes}"></td>
 										<td th:text="${lote.tiempoProcesamiento}"></td>
 										<td th:text="${lote.ultimaModificacion}"></td>
-
-										<td><p data-placement="top" data-toggle="tooltip"
-												title="Editar">
-												<button class="btn btn-primary btn-xs" data-title="Edit"
-													data-toggle="modal" data-target="#edit">
-													<span class="glyphicon glyphicon-pencil"></span>
-												</button>
-											</p></td>
-											
-										<td><p data-placement="top" data-toggle="tooltip"
-												title="Eliminar">
+										<td><p data-placement="top" align="center"
+												data-toggle="tooltip" title="Eliminar">
 												<button class="btn btn-danger btn-xs" data-title="Delete"
+												 th:onclick="'location.href=\'/eliminarLote?lote=' + ${lote.nombre} + '\''"
 													data-toggle="modal" data-target="#delete">
 													<span class="glyphicon glyphicon-trash"></span>
 												</button>
 											</p></td>
 									</tr>
-
 								</tbody>
 
 							</table>

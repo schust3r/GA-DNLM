@@ -26,13 +26,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import tec.psa.configuration.SpringMongoConfiguration;
 import tec.psa.model.ImagenGaleria;
+import tec.psa.model.UploadedFile;
 import tec.psa.segmentacion.algoritmos.CentroideAreaGen;
+import tec.psa.segmentacion.algoritmos.Dice;
 
 @Controller
 public class DetalleController {
@@ -50,20 +55,24 @@ public class DetalleController {
    */
   @RequestMapping(value = "/detalle", params = { "id", "i" }, method = RequestMethod.GET)
   public String cargarDetalles(@RequestParam(value = "id") String idImagen,
-      @RequestParam(value = "i", required = false) int ival, HttpServletRequest servletRequest, Model model) {
+      @RequestParam(value = "i", required = false) int ival, 
+      HttpServletRequest servletRequest, Model model) {
 
     // Autenticacion para obtener nombre de usuario
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     String nombreUsuario = auth.getName();
     model.addAttribute("usuario", nombreUsuario);
     model.addAttribute("ival", ival);
+    model.addAttribute("id", idImagen);
 
     try {
 
-      ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+      ApplicationContext ctx = 
+          new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
       final GridFsOperations gridOperations = (GridFsOperations) ctx.getBean("gridFsTemplate");
 
-      Query query = new Query(Criteria.where("metadata.usuario").is(nombreUsuario).and("_id").is(idImagen));
+      Query query = new Query(Criteria.where("metadata.usuario").is(nombreUsuario)
+          .and("_id").is(idImagen));
 
       // Seleccionar la unica imagen
       GridFSDBFile file = gridOperations.find(query).get(0);
@@ -86,7 +95,8 @@ public class DetalleController {
       imagenDetalle.setUmbral(file.getMetaData().get("umbral").toString());
 
       // settera el tiempo total de procesamiento
-      imagenDetalle.setTiempoProcesamiento(file.getMetaData().get("tiempo_procesamiento").toString());
+      imagenDetalle.setTiempoProcesamiento(file.getMetaData()
+          .get("tiempo_procesamiento").toString());
 
       // Obtener y asignar el byte array de la imagen en Base64
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -116,8 +126,8 @@ public class DetalleController {
    * @return la visualización del lote
    */
   @RequestMapping(value = "/eliminarImagen", params = { "id" }, method = RequestMethod.GET)
-  public String eliminarImagen(@RequestParam(value = "id") String idImagen, HttpServletRequest servletRequest,
-      Model model) {
+  public String eliminarImagen(@RequestParam(value = "id") String idImagen, 
+      HttpServletRequest servletRequest, Model model) {
 
     // Autenticacion para obtener nombre de usuario
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -126,7 +136,8 @@ public class DetalleController {
 
     try {
 
-      ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+      ApplicationContext ctx = 
+          new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
       final GridFsOperations gridOperations = (GridFsOperations) ctx.getBean("gridFsTemplate");
 
       Query query = new Query(Criteria.where("_id").is(idImagen));
@@ -203,24 +214,65 @@ public class DetalleController {
       CentroideAreaGen cenarGen = new CentroideAreaGen();
       String csv = cenarGen.obtenerCentroidesAreas(imgSegAuto);
 
-      ServletOutputStream out = response.getOutputStream();
-
-      InputStream in = new ByteArrayInputStream(csv.getBytes("UTF-8"));
-
-      byte[] outputByte = new byte[4096];
-
-      // copiar binarios al archivo de salida
-      while (in.read(outputByte, 0, 4096) != -1) {
-        out.write(outputByte, 0, 4096);
-      }
-
-      in.close();
-      out.flush();
-      out.close();
-      
+      response.getOutputStream().print(csv);
+      response.getOutputStream().flush();
+            
     } catch (Exception ex) {
       ex.printStackTrace();
     }
   }
+  
+  /**
+   * Función para evaluar ground truth respecto a la imagen indicada.
+   * 
+   * @param idImagen el identificador de la imagen
+   * @param uploadedFile el archivo de groundtruth a subir
+   * @param model el modelo de Spring
+   * @param servletRequest la solicitud el Servlet
+   */
+  @ResponseBody
+  @RequestMapping(value = "/evaluarGroundtruth", method = RequestMethod.POST)
+  public String evaluarGroundtruth(
+      @RequestParam(value = "id") String idImagen,
+      @RequestParam(value = "ival") String ival, 
+      @ModelAttribute UploadedFile uploadedFile, 
+      Model model, 
+      HttpServletRequest servletRequest) {
+    
+    // Archivo multipart de subida (groundtruth)
+    MultipartFile multipartFile = uploadedFile.getMultipartFile();
+
+    // Autenticacion para obtener nombre de usuario
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    String nombreUsuario = auth.getName();
+    
+    model.addAttribute("usuario", nombreUsuario);    
+    
+    try {
+
+      ApplicationContext ctx = 
+          new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+      final GridFsOperations gridOperations = (GridFsOperations) ctx.getBean("gridFsTemplate");
+
+      Query query = new Query(Criteria.where("_id").is(idImagen));
+
+      // Seleccionar la unica imagen
+      GridFSDBFile file = gridOperations.find(query).get(0);
+
+      // Convertir archivo a byte array
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      file.writeTo(baos);
+      byte[] imgSegAuto = baos.toByteArray();
+      
+      double diceResult = Dice.calcularDice(imgSegAuto, multipartFile.getBytes());
+      
+      return "Se ha encontrado un " 
+          + (100.0 * Math.round(diceResult * 1000.0) / 1000.0) + "% de similitud.";
+            
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      return "Error.";
+    }
+  }  
 
 }

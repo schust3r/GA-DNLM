@@ -8,10 +8,19 @@ package tec.psa.model;
  */
 public class Lote {
   
+  private String id;
   private String nombre;
   private long imagenes;
   private String ultimaModificacion;
-  private String tiempoProcesamiento;   
+  private String tiempoProcesamiento;    
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
 
   public String getTiempoProcesamiento() {
     return tiempoProcesamiento;

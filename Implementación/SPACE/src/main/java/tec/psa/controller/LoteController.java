@@ -23,14 +23,50 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import tec.psa.configuration.SpringMongoConfiguration;
 import tec.psa.model.Lote;
 
 @Controller
 public class LoteController {
 
-  // Configuraciones de Mongo DB
-  private SpringMongoConfiguration mongoHelper;
+  /**
+   * Borrar un lote completo de la base de datos.
+   * 
+   * @param nombreLote el nombre del lote a borrar
+   * @param servletRequest la solicitud del server 
+   * @param model el modelo de Spring
+   * @return ruta lotes
+   */
+  @RequestMapping(value = "/eliminarLote", params = { "lote" }, method = RequestMethod.GET)
+  public String eliminarLote(@RequestParam(value = "lote") String nombreLote, 
+      HttpServletRequest servletRequest, Model model) {
+
+    // Autenticacion para obtener nombre de usuario
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    String nombreUsuario = auth.getName();
+    model.addAttribute("usuario", nombreUsuario);
+
+    try {
+
+      ApplicationContext ctx = 
+          new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+      final GridFsOperations gridOperations = (GridFsOperations) ctx.getBean("gridFsTemplate");
+
+      Query query = new Query(Criteria.where("metadata.usuario").is(nombreUsuario)
+          .and("metadata.lote").is(nombreLote));
+
+      // operacion de borrado del lote
+      gridOperations.delete(query);
+
+      return "redirect:/lotes";
+
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      return "home";
+    }
+  }  
 
   /**
    * Cargar los lotes a partir de las imágenes en base de datos.

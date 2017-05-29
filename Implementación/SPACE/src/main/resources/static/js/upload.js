@@ -30,7 +30,7 @@
         totalFileLength = 0;
         for (var i = 0; i < fileCount; i++) {
             var file = files[i];
-            output.push(file.name, ' (', file.size, ' bytes, ', file.lastModifiedDate.toLocaleDateString(), ')');
+            output.push(file.name, ' (', Math.round(file.size/1000), ' kB, ', file.lastModifiedDate.toLocaleDateString(), ')');
             output.push('<br/>');
             debug('add ' + file.size);
             totalFileLength += file.size;
