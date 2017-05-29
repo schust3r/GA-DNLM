@@ -1,12 +1,5 @@
 package tec.psa.controller;
 
-import tec.psa.model.User;
-import tec.psa.service.SecurityService;
-import tec.psa.service.UserService;
-import tec.psa.validator.UserValidator;
-
-import java.io.File;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -18,86 +11,87 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import tec.psa.model.User;
+import tec.psa.service.SecurityService;
+import tec.psa.service.UserService;
+import tec.psa.validator.UserValidator;
+
 @Controller
 public class LoginController {
-    @Autowired
-    private UserService userService;
+  @Autowired
+  private UserService userService;
 
-    @Autowired
-    private SecurityService securityService;
+  @Autowired
+  private SecurityService securityService;
 
-    @Autowired
-    private UserValidator userValidator;
+  @Autowired
+  private UserValidator userValidator;
 
-	@Value("${upload.lote.path}")
-    private String loteDir;
-    
-    @RequestMapping(value = "/registration", method = RequestMethod.GET)
-    public String registration(Model model) {
-        model.addAttribute("user", new User());
+  @RequestMapping(value = "/registration", method = RequestMethod.GET)
+  public String registration(Model model) {
+    model.addAttribute("user", new User());
 
-        return "registration";
+    return "registration";
+  }
+
+  @RequestMapping(value = "/registration", method = RequestMethod.POST)
+  public String registration(@ModelAttribute("user") User userForm, 
+      BindingResult bindingResult, Model model) {
+
+    userValidator.validate(userForm, bindingResult);
+
+    if (bindingResult.hasErrors()) {
+      model.addAttribute("error", "No se pudo crear la cuenta.");
+      return "registration";
+    } else {
+      model.addAttribute("success", "Se ha creado la cuenta de usuario.");
     }
 
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String registration(@ModelAttribute("user") User userForm, BindingResult bindingResult, Model model) {
-        userValidator.validate(userForm, bindingResult);
+    userService.save(userForm);
 
-        if (bindingResult.hasErrors()) {
-        	model.addAttribute("error", "No se pudo crear la cuenta.");
-            return "registration";
-        }
-        else {
-        	model.addAttribute("success", "Se ha creado la cuenta de usuario.");
-        }
+    return "login";
+  }
 
-        userService.save(userForm);
-        
-        // Crear carpeta de almacenamiento para el usuario (temporal)
-        new File(loteDir + userForm.getUsername()).mkdirs();        
+  @RequestMapping(value = "/login", method = RequestMethod.POST)
+  public String login(@ModelAttribute("user") User userForm, BindingResult bindingResult, Model model) {
 
-        return "login";
-    }
-    
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(@ModelAttribute("user") User userForm, BindingResult bindingResult, Model model) {
-        userValidator.validate(userForm, bindingResult);
-        
-        if (bindingResult.hasErrors()) {
-            return "login";
-        }        
+    userValidator.validate(userForm, bindingResult);
 
-        securityService.autologin(userForm.getUsername(), userForm.getPassword());
-        
-        return "dashboard";
+    if (bindingResult.hasErrors()) {
+      return "login";
     }
 
-    @RequestMapping(value = {"/", "/login"}, method = RequestMethod.GET)
-    public String login(Model model, String error, String logout) {
-        if (error != null)
-            model.addAttribute("error", "Usuario o contraseña inválida.");
+    securityService.autologin(userForm.getUsername(), userForm.getPassword());
 
-        if (logout != null)
-            model.addAttribute("message", "Ha salido del sistema con éxito.");
+    return "home";
+  }
 
-        return "login";
+  @RequestMapping(value = { "/", "/login" }, method = RequestMethod.GET)
+  public String login(Model model, String error, String logout) {
+    if (error != null) {
+      model.addAttribute("error", "Usuario o contraseña inválida.");
     }
+    if (logout != null) {
+      model.addAttribute("message", "Ha salido del sistema con éxito.");
+    }
+    return "login";
+  }
 
-    @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
-    public String dashboard(@ModelAttribute("user") User userForm, Model model) {
-    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        model.addAttribute("usuario", auth.getName());
-        
-        return "dashboard";
+  @RequestMapping(value = "/home", method = RequestMethod.GET)
+  public String dashboard(@ModelAttribute("user") User userForm, Model model) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    model.addAttribute("usuario", auth.getName());
+
+    return "home";
+  }
+
+  @RequestMapping(value = "/logout", method = RequestMethod.GET)
+  public String logoutPage(Model model) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth != null) {
+      auth.setAuthenticated(false);
     }
-    
-    @RequestMapping(value="/logout", method = RequestMethod.GET)
-    public String logoutPage (Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null){    
-            auth.setAuthenticated(false);
-        }
-        return "redirect:/login";
-    }
-    
+    return "redirect:/login";
+  }
+
 }

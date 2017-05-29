@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>Home - SPACE</title>
+
+<!-- Bootstrap Core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+
+<link href="css/home.css" rel="stylesheet">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+ <div class="container">
+  <h3>
+   Bienvenid@, <span th:text="${usuario}"></span><br /> <small>Sistema
+    de Preprocesamiento y Análisis Celular</small>
+  </h3>
+  <br />
+
+  <div class="row">
+   <div class="col-sm-2">
+    <nav class="nav-sidebar">
+
+     <ul class="nav">
+
+      <li><a href="/home"><i class="glyphicon glyphicon-home"></i>
+        Inicio</a></li>
+
+      <li><a href="/upload"><i
+        class="glyphicon glyphicon-upload"></i> Subir lote</a></li>
+
+      <li><a href="/lotes"><i
+        class="glyphicon glyphicon-picture"></i> Explorar lotes</a></li>
+
+      <li class="active"><a href="/about"><i class="glyphicon glyphicon-info-sign"></i>
+        Acerca de</a></li>
+
+      <li class="nav-divider"></li>
+      
+      <li><a href="" > <i class="glyphicon glyphicon-user"></i>
+       <span th:text="${usuario}"></span>
+       </a></li>
+      
+      <li><a href="/logout"><i class="glyphicon glyphicon-off"></i>
+        Salir</a></li>
+
+     </ul>
+
+    </nav>
+   </div>
+
+   <!-- Content -->
+   <div class="col-sm-8">
+   
+    <h2>Acerca de</h2><hr>
+    
+     SPACE 2017 - Sistema de Preprocesamiento y Análisis Celular.
+     <br><br>
+     Elaborado por:
+     <br>
+     <ul>
+      <li> Joel Barrantes Garro
+      <li> Jose Alvarado Chaves
+      <li> Reggie Barker Guillén
+      <li> Joel Schuster Valverde
+     </ul>
+     <br>
+     El uso del sistema SPACE y sus componentes está permitido bajo la licencia MIT.
+     <br><br>
+     Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so.
+     <br><br>
+     <img src="images/bender.jpg" style="max-width:300px;">
+   
+   </div>
+
+  </div>
+  
+ </div>
+
+
+</body>
+
+</html>

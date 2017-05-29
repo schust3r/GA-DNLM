@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>Explorar - SPACE</title>
+
+<!-- Bootstrap Core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/home.css" rel="stylesheet">
+
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+	<div class="container">
+		<h3>
+			Bienvenid@, <span th:text="${usuario}"></span><br /> <small>Sistema
+				de Preprocesamiento y Análisis Celular</small>
+		</h3>
+		<br />
+
+		<div class="row">
+			<div class="col-sm-2">
+				<nav class="nav-sidebar">
+
+					<ul class="nav">
+
+						<li><a href="/home"><i class="glyphicon glyphicon-home"></i>
+								Inicio</a></li>
+
+						<li><a href="/upload"><i
+								class="glyphicon glyphicon-upload"></i> Subir lote</a></li>
+
+						<li class="active"><a href="/lotes"><i
+								class="glyphicon glyphicon-picture"></i> Explorar lotes</a></li>
+
+						<li><a href="/about"><i class="glyphicon glyphicon-info-sign"></i>
+								Acerca de</a></li>
+
+						<li class="nav-divider"></li>
+						
+						<li><a href="" > <i class="glyphicon glyphicon-user"></i>
+						 <span th:text="${usuario}"></span>
+       </a></li>
+						
+						<li><a href="/logout"><i class="glyphicon glyphicon-off"></i>
+								Salir</a></li>
+
+					</ul>
+
+				</nav>
+			</div>
+ 
+			<!-- Content -->
+			<div class="container">
+				<div class="row">
+
+
+					<div class="col-md-8">
+
+						<h2>Lotes del usuario</h2>
+						<hr>
+
+						<div class="table-responsive">
+
+							<table id="mytable" class="table table-bordred table-striped">
+
+								<thead>
+									<th>Nombre del lote</th>
+									<th>Imágenes</th>
+									<th>Tiempo de procesamiento</th>
+									<th>Última actualización</th>
+									<th>Eliminar</th>
+								</thead>
+								<tbody>
+
+									<tr th:each="lote : ${listaLotes}">
+										<td><a th:href="${'/gallery?lote='+lote.nombre+'&i=1'}"
+											th:text="${lote.nombre}"></a></td>
+										<td th:text="${lote.imagenes}"></td>
+										<td th:text="${lote.tiempoProcesamiento}"></td>
+										<td th:text="${lote.ultimaModificacion}"></td>
+										<td><p data-placement="top" align="center"
+												data-toggle="tooltip" title="Eliminar">
+												<button class="btn btn-danger btn-xs" data-title="Delete"
+												 th:onclick="'location.href=\'/eliminarLote?lote=' + ${lote.nombre} + '\''"
+													data-toggle="modal" data-target="#delete">
+													<span class="glyphicon glyphicon-trash"></span>
+												</button>
+											</p></td>
+									</tr>
+								</tbody>
+
+							</table>
+
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+
+			<div class="modal fade" id="edit" tabindex="-1" role="dialog"
+				aria-labelledby="edit" aria-hidden="true">
+
+				<div class="modal-dialog">
+
+					<div class="modal-content">
+
+						<div class="modal-header">
+
+							<button type="button" class="close" data-dismiss="modal"
+								aria-hidden="true">
+								<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+							</button>
+
+							<h4 class="modal-title custom_align" id="Heading">Editar
+								detalle</h4>
+						</div>
+						<div class="modal-body">
+							<div class="form-group">
+								<div class="form-group">
+									<input class="form-control " type="text"
+										placeholder="Nombre del lote">
+
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer ">
+							<button type="button" class="btn btn-warning btn-lg"
+								style="width: 100%;">
+								<span class="glyphicon glyphicon-ok-sign"></span> Actualizar
+							</button>
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+				<!-- /.modal-dialog -->
+			</div>
+
+
+			<div class="modal fade" id="delete" tabindex="-1" role="dialog"
+				aria-labelledby="edit" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-hidden="true">
+								<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+							</button>
+							<h4 class="modal-title custom_align" id="Heading">Borrar
+								lote</h4>
+						</div>
+						<div class="modal-body">
+
+							<div class="alert alert-danger">
+								<span class="glyphicon glyphicon-warning-sign"></span> ¿Seguro
+								de que desea borrar este lote de imágenes?
+							</div>
+
+						</div>
+						<div class="modal-footer ">
+							<button type="button" class="btn btn-success">
+								<span class="glyphicon glyphicon-ok-sign"></span> Sí
+							</button>
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal">
+								<span class="glyphicon glyphicon-remove"></span> No
+							</button>
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+				<!-- /.modal-dialog -->
+			</div>
+
+		</div>
+
+	</div>
+
+
+</body>
+
+</html>

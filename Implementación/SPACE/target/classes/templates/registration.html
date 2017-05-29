@@ -3,49 +3,58 @@
 	xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title>Crear una cuenta - SPACE</title>
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/login.css">
-	<link rel="stylesheet" href="css/common.css">
-  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  	<script src="js/login.js"></script>
+<title>Nueva cuenta - SPACE</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/registration.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
 
-		
-<div class="pen-title">
-  <h1>SPACE</h1>
-</div>
-<div class="container">
-  <div class="card"></div>
-  <div class="card">
-    <h1 class="title">Registro</h1>
-    <form action="#" th:action="@{/registration}" method="POST" class="form-signin" th:object="${user}">
-      <div class="input-container">
-        <input type="text" id="username" name="username" th:field="*{username}" required="required"/>
-        <label for="Username">Usuario</label>
-        <div class="bar"></div>
-      </div>
-      <div class="input-container">
-        <input type="password" id="password" name="password" th:field="*{password}" required="required"/>
-        <label for="Password">Contraseña</label>
-        <div class="bar"></div>
-      </div>
-      <div class="alert alert-danger" th:if="${error}">
-      	<div class="text-center">
-      		<span th:text="${error}"></span>
-      	</div>
-      </div>
-      <div class="button-container">
-        <button><span>Registrar</span></button>
-      </div>
-      <div class="footer"><a href="login">Volver a login</a></div>
-    </form>
-  </div>
- 
-</div>
+	<script src="https://use.typekit.net/ayg4pcz.js"></script>
+	<script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+	<div class="container">
+		<h1 class="welcome text-center">Registro</h1>
+
+		<div class="card card-container">
+
+			<hr>
+
+			<form action="#" th:action="@{/registration}" method="POST"
+				class="form-signin" th:object="${user}">
+
+				<p class="input_title">Nombre de usuario</p>
+				<input type="text" id="username" name="username" class="login_box"
+					required autofocus>
+
+				<p class="input_title">Contraseña</p>
+				<input type="password" id="password" name="password"
+					class="login_box" required>
+
+				<div class="alert alert-danger" th:if="${error}">
+					<div class="text-center">
+						<span th:text="${error}"></span>
+					</div>
+				</div>
+
+				<button class="btn btn-lg btn-primary" type="submit">Registrar</button>
+
+			</form>
+			<!-- /form -->
+
+			<hr>
+
+			<div class="text-center">
+				<a href="/login" class="text-center">Volver al login</a>
+			</div>
+		</div>
+		<!-- /card-container -->
+	</div>
+	<!-- /container -->
 
 </body>
 </html>

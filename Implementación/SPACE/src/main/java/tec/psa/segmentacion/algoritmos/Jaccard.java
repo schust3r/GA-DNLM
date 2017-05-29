@@ -5,22 +5,22 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 
 /**
- * Clase para calcular la métrica de Jaccard para
- * analizar la similitud entre dos imágenes.
- * <br>
+ * Clase para calcular la métrica de Jaccard para analizar la similitud entre
+ * dos imágenes. <br>
  * Matematicamente - |A intersect B| / ( |A| + |B| - |A intersect B| )
  * 
  * @author Joel Barrantes
  *
  */
 public class Jaccard {
-  
+
   /**
-   * Calcula el coeficiente de similitud de Jaccard
-   * entre dos imagenes.
+   * Calcula el coeficiente de similitud de Jaccard entre dos imagenes.
    * 
-   * @param groundTruth Imagen segmentada manualmente
-   * @param imagenUmbralizada Imagen segmentada por kittler
+   * @param groundTruth
+   *          Imagen segmentada manualmente
+   * @param imagenUmbralizada
+   *          Imagen segmentada por kittler
    * @return Indice de Jaccard
    */
   public static double calcularJaccard(Mat groundTruth, Mat imagenUmbralizada) {
@@ -45,9 +45,8 @@ public class Jaccard {
 
           }
         }
-      }      
-      return (cardIntersection) / (sizeGroundTruth.area() 
-          + sizeImagenUmbralizada.area() - cardIntersection);
+      }
+      return (cardIntersection) / (sizeGroundTruth.area() + sizeImagenUmbralizada.area() - cardIntersection);
     } else {
       return 0;
     }

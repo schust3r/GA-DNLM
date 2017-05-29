@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>Explorar - SPACE</title>
+
+<!-- Bootstrap Core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/gallery.css" rel="stylesheet">
+
+<script
+ src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script
+ src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+	<div class="container">
+		<h3>
+			Bienvenid@, <span th:text="${usuario}"></span><br /> <small>Sistema
+				de Preprocesamiento y Análisis Celular</small>
+		</h3>
+		<br />
+
+		<div class="row">
+			<div class="col-sm-2">
+				<nav class="nav-sidebar">
+
+		
+    <ul class="nav">
+
+      <li><a href="/home"><i class="glyphicon glyphicon-home"></i>
+        Inicio</a></li>
+
+      <li><a href="/upload"><i
+        class="glyphicon glyphicon-upload"></i> Subir lote</a></li>
+
+      <li class="active"><a href="/lotes"><i
+        class="glyphicon glyphicon-picture"></i> Explorar lotes</a></li>
+
+      <li><a href="/about"><i class="glyphicon glyphicon-info-sign"></i>
+        Acerca de</a></li>
+
+      <li class="nav-divider"></li>
+      
+      <li><a href="" > <i class="glyphicon glyphicon-user"></i>
+       <span th:text="${usuario}"></span>
+       </a></li>
+      
+      <li><a href="/logout"><i class="glyphicon glyphicon-off"></i>
+        Salir</a></li>
+
+     </ul>
+
+
+				</nav>
+			</div>
+
+			<!-- Content -->
+			<div class="col-md-10">
+
+				<h3 th:text="${nombreLote}"></h3>
+				<hr>
+
+				<div class="alert alert-success" th:if="${eliminado}">
+					<div class="text-center">
+						<span th:text="${eliminado}"></span>
+					</div>
+				</div>
+
+				<div class="row">
+
+					<div class="col-md-12">
+
+						<!-- primera fila de imagenes -->
+						<div id="grid">
+
+							<div th:each="imagen1 : ${listaImgs1}"
+								class="mix col-sm-3 margin30">
+								<a th:href="${'/detalle?id=' + imagen1.id + '&i=' + indice}"
+									class="show-image"> <img
+									th:src="${'data:image/jpg;base64,' + imagen1.imgBase64}"
+									class="img-responsive"></a>
+							</div>
+
+						</div>
+
+					</div>
+
+					<div class="col-md-12">
+
+						<!-- segunda fila de imagenes -->
+						<div id="grid">
+
+							<div th:each="imagen2 : ${listaImgs2}"
+								class="mix col-sm-3 margin30">
+								<a th:href="${'/detalle?id=' + imagen2.id + '&i=' + indice}"
+									class="show-image"> <img
+									th:src="${'data:image/jpg;base64,' + imagen2.imgBase64}"
+									class="img-responsive"></a>
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<div class="row gallery-bottom">
+					<div class="col-sm-4">
+						<ul class="pagination">
+
+							<li><a th:class="${indice == 1}?'hidden':null"
+								th:href="${'gallery?lote='+nombreLote+'&i='+(indice-1)}"
+								aria-label="Anterior"> <span aria-hidden="true">«</span></a></li>
+
+							<li th:each="i : ${#numbers.sequence(1,maxIndice)}"
+								th:class="${indice == i}?'active':null"><a
+								th:href="${'gallery?lote='+nombreLote+'&i='+i}" th:text="${i}"></a>
+							</li>
+
+							<li><a th:class="${indice == maxIndice}?'hidden':null"
+								th:href="${'gallery?lote='+nombreLote+'&i='+(indice+1)}"
+								aria-label="Siguiente"> <span aria-hidden="true">»</span></a></li>
+
+						</ul>
+					</div>
+
+				</div>
+			</div>
+
+
+		</div>
+
+	</div>
+</body>
+
+</html>
