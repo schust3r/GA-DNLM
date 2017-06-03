@@ -29,7 +29,7 @@ public class MySqlConnectionTest {
     java.sql.Statement stmt = conn.createStatement();
     
     // Hacer consulta a la base de datos
-    ResultSet rs = stmt.executeQuery("SELECT username FROM user");
+    ResultSet rs = stmt.executeQuery("SELECT 1");
     rs.last();   
     
     assertTrue("El ResultSet es nulo.", rs.getRow() != 0);
