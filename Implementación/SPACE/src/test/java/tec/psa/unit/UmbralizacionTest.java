@@ -1,10 +1,11 @@
-package tec.psa.segmentacion.algoritmos;
+package tec.psa.unit;
 
 import static org.junit.Assert.assertArrayEquals;
 
 import org.junit.Test;
 import org.opencv.core.Mat;
 
+import tec.psa.segmentacion.algoritmos.Umbralizacion;
 import tec.psa.segmentacion.imagenes.ImageHandler;
 
 public class UmbralizacionTest {
@@ -13,9 +14,9 @@ public class UmbralizacionTest {
   public void testAplicarUmbral() {
 
     ImageHandler ih = new ImageHandler();
-    Mat img = ih.leerImagenGrises("ojo_original.png");
+    Mat img = ih.leerImagenGrises("test_files/input/ojo_original.png");
 
-    Mat imgRef = ih.leerImagenGrises("ojo_umbral_150.png");
+    Mat imgRef = ih.leerImagenGrises("test_files/input/ojo_umbral_150.png");
 
     Umbralizacion umb = new Umbralizacion();
     umb.aplicarUmbral(img, 150 - 1); // Empieza desde índice cero
@@ -33,7 +34,6 @@ public class UmbralizacionTest {
 
     // Verificar si el resultado es el mismo
     assertArrayEquals("Imágenes no dieron mismo resultado", data1, data2);
-
   }
 
 }

@@ -71,4 +71,45 @@ public class Dice {
     return (2 * cardIntersection) / (sizeGroundTruth.area() + sizeImagenUmbralizada.area());
   }
   
+  /**
+   * Sobrecarga de metodo para calcular el indice de similitud de Dice entre dos imagenes Mat.
+   * @param imagenUmbralizada Mat con imagen umbralizada
+   * @param groundTruth Mat con imagen groundtruth
+   * @return resultado de Dice
+   */
+  public static double calcularDice(Mat imagenUmbralizada, Mat groundTruth) {
+
+    // llamar librería nativa
+    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+    Imgproc.threshold(imagenUmbralizada, imagenUmbralizada, 1, Const.LIMITE, Imgproc.THRESH_BINARY);
+
+    Imgproc.threshold(groundTruth, groundTruth, 1, Const.LIMITE, Imgproc.THRESH_BINARY);
+
+    Size sizeGroundTruth = groundTruth.size();
+    Size sizeImagenUmbralizada = imagenUmbralizada.size();
+
+    if (!sizeGroundTruth.equals(sizeImagenUmbralizada)) {
+      Imgproc.resize(groundTruth, groundTruth, sizeGroundTruth, 0, 0, Imgproc.INTER_CUBIC);
+    }
+
+    int cardIntersection = 0;
+    int limImagenX = (int) sizeGroundTruth.width;
+    int limImagenY = (int) sizeGroundTruth.height;
+
+    for (int y = 0; y < limImagenY; y++) {
+      for (int x = 0; x < limImagenX; x++) {
+        double[] primer = imagenUmbralizada.get(y, x);
+
+        double[] segundo = groundTruth.get(y, x);
+
+        // Leer un "pixel" de la matriz
+        if (primer[0] == segundo[0]) {
+          cardIntersection = cardIntersection + 1;
+        }
+      }
+    }
+    return (2 * cardIntersection) / (sizeGroundTruth.area() + sizeImagenUmbralizada.area());
+  }  
+  
 }
