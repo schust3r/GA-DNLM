@@ -63,7 +63,7 @@ public class Dice {
         double[] segundo = groundTruth.get(y, x);
 
         // Leer un "pixel" de la matriz
-        if (primer[0] == segundo[0] || (primer[0] != 0 && segundo[0] != 0)) {
+        if (primer[0] == segundo[0]) {
           cardIntersection = cardIntersection + 1;
         }
       }

@@ -16,13 +16,7 @@ public class Kittler {
 
   // Tao inicializado en 0
   private int tao = 0;
-
-  // Vars auxiliares para almacenar valores (test)
-  public double mu0m;
-  public double mu1m;
-  public double var0m;
-  public double var1m;
-
+  
   /**
    * Constructor.
    * 
@@ -49,7 +43,7 @@ public class Kittler {
    */
   private int calcularP(int a, int b) {
     int res = 0;
-    for (int i = a; i < b; i++) {
+    for (int i = a; i < b - 1; i++) {
       res += hist.getHistograma()[i];
     }
     return res;
@@ -71,7 +65,7 @@ public class Kittler {
    */
   private double calcularMiu(int a, int b, int p) {
     double res = 0;
-    for (int i = a; i < b; i++) {
+    for (int i = a; i < b - 1; i++) {
       res += (double) (i * hist.getHistograma()[i]);
     }
     return res / (double) p;
@@ -80,8 +74,8 @@ public class Kittler {
   /**
    * Cálculo de var_i para obtener J(T) y buscar el mejor Tao La varianza es la
    * suma acumulada del cuadrado de u_i por el valor del histograma en i, en un
-   * rango de a hasta b.
-   * 
+   * rango de a hasta b. 
+   * <p>
    * Para var_i: si i = 1 => a = 0 , b = T , Px = P_1 , Ux = U_1 si i = 2 => a =
    * T + 1 , b = L , Px = P_2 , Ux = U_2
    * 
@@ -97,7 +91,7 @@ public class Kittler {
    */
   private double calcularVar(int a, int b, int p, double u) {
     double res = 0;
-    for (int i = a; i < b; i++) {
+    for (int i = a; i < b - 1; i++) {
       res += ((double) i - u) * ((double) i - u) * (double) hist.getHistograma()[i];
     }
     return res / (double) p;
@@ -152,12 +146,6 @@ public class Kittler {
       if (j < min && j != Double.NEGATIVE_INFINITY) {
         this.tao = t;
         min = j;
-
-        // Almacenar otros valores utilizados
-        this.mu0m = u1;
-        this.mu1m = u2;
-        this.var0m = var1;
-        this.var1m = var2;
       }
     }
     return this.tao;

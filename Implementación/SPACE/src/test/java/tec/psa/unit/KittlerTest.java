@@ -26,7 +26,7 @@ public class KittlerTest {
   @Test
   public void testCalcularUmbral() {
     Kittler test = new Kittler(hist);        
-    assertEquals("Umbral t no es igual", 167, test.calcularUmbral());
+    assertEquals("Umbral t no es igual", 168, test.calcularUmbral());
   }
 
 }
