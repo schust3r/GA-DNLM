@@ -8,6 +8,7 @@ import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import tec.psa.configuration.SpringMongoConfiguration;
@@ -35,12 +37,17 @@ public class UploadController {
 
   // Las extensiones permitidas
   private String[] allowedExts = { "bmp", "tif", "png", "jpg" };
-  
+
+  // limite de subida
+  private int maxFileSizeLimit = 2097152;
+
   /**
    * Atender método GET para subir un lote de imágenes.
    * 
-   * @param userForm formulario de datos del usuario
-   * @param model modelo de Spring
+   * @param userForm
+   *          formulario de datos del usuario
+   * @param model
+   *          modelo de Spring
    * @return ruta GET del upload
    */
   @RequestMapping(value = "/upload", method = RequestMethod.GET)
@@ -64,9 +71,12 @@ public class UploadController {
    * @param model
    *          modelo de Spring
    */
+  @ResponseBody
   @RequestMapping(value = "/upload", method = RequestMethod.POST)
-  public void saveFile(HttpServletRequest servletRequest, @ModelAttribute UploadedFile uploadedFile,
-      @RequestParam("loteNombre") String nombreLote, BindingResult bindingResult, Model model) {
+  public String saveFile(HttpServletRequest servletRequest, 
+      @ModelAttribute UploadedFile uploadedFile,
+      @RequestParam("loteNombre") String nombreLote, 
+      BindingResult bindingResult, Model model) {
 
     MultipartFile multipartFile = uploadedFile.getMultipartFile();
     String fileName = multipartFile.getOriginalFilename();
@@ -78,15 +88,28 @@ public class UploadController {
     try {
       // verificar que el tipo de archivo sea válido
       if (Arrays.asList(allowedExts).contains(ext)) {
+
+        if (multipartFile.getSize() < maxFileSizeLimit) {
+
+          // obtener input stream del archivo subido
+          byte[] inputStream = multipartFile.getBytes();
+
+          // comenzar procesamiento de la imagen - de momento FIFO
+          procesarImagen(inputStream, auth.getName(), nombreLote, fileName, ext);
+
+          return "s:Imagen procesada";
+          
+        } else {
+          return "e:El archivo excede el límite máximo de tamaño";
+        }
         
-        // obtener input stream del archivo subido
-        byte[] inputStream = multipartFile.getBytes();
-        
-        // comenzar procesamiento de la imagen - de momento FIFO
-        procesarImagen(inputStream, auth.getName(), nombreLote, fileName, ext);
       }
+
+      return "e:Extensión de imagen desconocida";
+
     } catch (Exception e) {
       e.printStackTrace();
+      return "e:Error al subir la imagen";
     }
   }
 
@@ -105,14 +128,12 @@ public class UploadController {
    *          extensión del archivo
    */
   @Async
-  private void procesarImagen(byte[] imagenInput, String nombreUsuario, 
-      String nombreLote, String fileName,
+  private void procesarImagen(byte[] imagenInput, String nombreUsuario, String nombreLote, String fileName,
       String ext) {
 
     try {
 
-      ApplicationContext ctx = 
-          new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+      ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
       final GridFsOperations gridOperations = (GridFsOperations) ctx.getBean("gridFsTemplate");
 
       // Llamar al procesador de imagen y pasarle los bytes
@@ -125,13 +146,13 @@ public class UploadController {
       metaData.put("conteo", imagen.getNumeroCelulas());
       metaData.put("tiempo_procesamiento", imagen.getTiempoProcesamiento());
       metaData.put("umbral", imagen.getTao());
-      
+
       // Extraer Stream desde MatOfBytes
-      InputStream inputStreamData = new ByteArrayInputStream(imagen.getImagenBytes());   
-      
+      InputStream inputStreamData = new ByteArrayInputStream(imagen.getImagenBytes());
+
       // guardar el archivo en la base de datos Mongo
       gridOperations.store(inputStreamData, fileName, "image/" + ext, metaData);
-      
+
     } catch (Exception ex) {
       ex.printStackTrace();
     }
