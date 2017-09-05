@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Iniciar sesión - SPACE</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/login.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+	<script src="https://use.typekit.net/ayg4pcz.js"></script>
+	<script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+	<div class="container">
+		<h1 class="welcome text-center">SPACE</h1>
+
+		<div class="card card-container">
+
+			<hr>
+
+			<form th:action="@{/login}" method="POST" class="form-signin"
+				th:object="${user}">
+
+				<p class="input_title">Nombre de usuario</p>
+				<input type="text" id="username" name="username" class="login_box"
+					required autofocus>
+
+				<p class="input_title">Contraseña</p>
+				<input type="password" id="password" name="password"
+					class="login_box" required>
+
+				<div class="alert alert-warning" th:if="${error}">
+					<div class="text-center">
+						<span th:text="${error}"></span>
+					</div>
+				</div>
+				
+				<div class="alert alert-success" th:if="${message}">
+					<div class="text-center">
+						<span th:text="${message}"></span>
+					</div>
+				</div>
+				
+				<div class="alert alert-success" th:if="${success}">
+					<div class="text-center">
+						<span th:text="${success}"></span>
+					</div>
+				</div>
+
+				<button class="btn btn-lg btn-primary" type="submit">Entrar</button>
+
+			</form>
+			<!-- /form -->
+
+			<hr>
+
+			<div class="text-center">
+				<a href="/registration" class="text-center">Crear una cuenta</a>
+			</div>
+		</div>
+		<!-- /card-container -->
+	</div>
+	<!-- /container -->
+
+</body>
+</html>
