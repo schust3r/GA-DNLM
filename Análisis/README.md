@@ -1,3 +1,3 @@
 ﻿1.0.0
  
- Items de configuracion - Análisis
+ Para documentos de análisis y requerimientos

@@ -1,3 +1,3 @@
 ﻿1.0.0
  
- Items de configuracion - Pruebas
+ Para pruebas sobre el sistema

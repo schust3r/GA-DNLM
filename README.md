@@ -1,3 +1,3 @@
 1.0.0
-# SPACE
-Sistema de Procesamiento y Análisis CElular
+# GA-DNLM
+Genetic Algorithms applied to DNLM-IFFT Filter
