@@ -9,7 +9,7 @@ import com.parma.segmentation.Thresholding;
  * @author Joel Schuster
  *
  */
-public class ImageFilter {
+public class ImageProcessor {
 
   // Manejo de imágenes
   private ImageHandler ih;
@@ -23,7 +23,7 @@ public class ImageFilter {
   /**
    * Constructor.
    */
-  public ImageFilter() {
+  public ImageProcessor() {
     this.otsu = new Otsu();
     this.ih = new ImageHandler();
     this.umb = new Thresholding();

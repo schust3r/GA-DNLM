@@ -3,7 +3,7 @@ package com.parma.controller;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.parma.configuration.SpringMongoConfiguration;
-import com.parma.images.ImageFilter;
+import com.parma.images.ImageProcessor;
 import com.parma.model.UploadedFile;
 import com.parma.model.User;
 
@@ -126,7 +126,7 @@ public class UploadController {
       final GridFsOperations gridOperations = (GridFsOperations) ctx.getBean("gridFsTemplate");
 
       // Llamar al procesador de imagen y pasarle los bytes
-      ImageFilter ip = new ImageFilter();
+      ImageProcessor ip = new ImageProcessor();
       
       /*
       Imagen imagen = ip.procesarImagen(imagenInput);

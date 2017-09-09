@@ -44,6 +44,14 @@ public class Population {
 		safebox.add(population.get(0));
 	}
 	
+	public void removeWorstFromSafebox() {
+		safebox.remove(safebox.size() - 1);
+	}
+	
+	public int getSize() {
+		return this.population.size();
+	}
+	
 	private int getRandomIntegerBetween(int lower, int upper) {
 		return random.nextInt(upper - lower + 1) + lower;
 	}
