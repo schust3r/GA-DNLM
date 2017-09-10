@@ -8,8 +8,8 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 /**
- * Clase para calcular la métrica de Dice o coeficiente de Sorensen-Dice.
- * Permite encontrar qué tan similares son dos imágenes. <br>
+ * Clase para calcular la métrica de Dice o coeficiente de Sorensen-Dice. Permite encontrar qué tan
+ * similares son dos imágenes. <br>
  * Matematicamente - 2 * |A intersect B| / ( |A| + |B| )
  * 
  * @author Joel Barrantes
@@ -20,12 +20,9 @@ public class Dice {
   /**
    * Calcula el indice de similitud de Dice entre dos imagenes.
    * 
-   * @param groundTruthBytes
-   *          Imagen segmentada manualmente
-   * @param imagenUmbralizadaBytes
-   *          Imagen segmentada con el tao de kittler
-   * @return indice de Dice = 2 * interseccion/(cantidad de pixeles de las 2
-   *         imagenes)
+   * @param groundTruthBytes Imagen segmentada manualmente
+   * @param imagenUmbralizadaBytes Imagen segmentada con el tao de kittler
+   * @return indice de Dice = 2 * interseccion/(cantidad de pixeles de las 2 imagenes)
    */
   public static double calcularDice(byte[] groundTruthBytes, byte[] imagenUmbralizadaBytes) {
 
@@ -36,7 +33,7 @@ public class Dice {
         Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);
     Size sz = imagenUmbralizada.size();
 
-    Mat groundTruth = 
+    Mat groundTruth =
         Imgcodecs.imdecode(new MatOfByte(groundTruthBytes), Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);
 
     Imgproc.threshold(imagenUmbralizada, imagenUmbralizada, 1, 256, Imgproc.THRESH_BINARY);
@@ -50,7 +47,8 @@ public class Dice {
       Imgproc.resize(groundTruth, groundTruth, sz, 0, 0, Imgproc.INTER_CUBIC);
     }
 
-    int cardIntersection = 0;
+    float cardIntersection = 0;
+    float cardinality = 0;
     int limImagenX = (int) sizeGroundTruth.width;
     int limImagenY = (int) sizeGroundTruth.height;
 
@@ -60,17 +58,24 @@ public class Dice {
 
         double[] segundo = groundTruth.get(y, x);
 
-        // Leer un "pixel" de la matriz
-        if (primer[0] == segundo[0]) {
-          cardIntersection = cardIntersection + 1;
+        // If the groundtruth's pixel is not black, then add it to the cardinality
+        if (segundo[0] != 0) {
+
+          cardinality++;
+
+          if (primer[0] == segundo[0]) {
+            cardIntersection++;
+          }
+
         }
       }
     }
-    return (2 * cardIntersection) / (sizeGroundTruth.area() + sizeImagenUmbralizada.area());
+    return (2.0 * cardIntersection) / cardinality;
   }
-  
+
   /**
    * Sobrecarga de metodo para calcular el indice de similitud de Dice entre dos imagenes Mat.
+   * 
    * @param imagenUmbralizada Mat con imagen umbralizada
    * @param groundTruth Mat con imagen groundtruth
    * @return resultado de Dice
@@ -91,7 +96,8 @@ public class Dice {
       Imgproc.resize(groundTruth, groundTruth, sizeGroundTruth, 0, 0, Imgproc.INTER_CUBIC);
     }
 
-    int cardIntersection = 0;
+    float cardIntersection = 0;
+    float cardinality = 0;
     int limImagenX = (int) sizeGroundTruth.width;
     int limImagenY = (int) sizeGroundTruth.height;
 
@@ -101,13 +107,20 @@ public class Dice {
 
         double[] segundo = groundTruth.get(y, x);
 
-        // Leer un "pixel" de la matriz
-        if (primer[0] == segundo[0]) {
-          cardIntersection = cardIntersection + 1;
+        // If the groundtruth's pixel is not black, then add it to the cardinality
+        if (segundo[0] != 0) {
+
+          cardinality++;
+
+          if (primer[0] == segundo[0]) {
+            cardIntersection++;
+          }
+
         }
       }
     }
-    return (2 * cardIntersection) / (sizeGroundTruth.area() + sizeImagenUmbralizada.area());
-  }  
-  
+    return (2.0 * cardIntersection) / cardinality;
+  }
+
+
 }

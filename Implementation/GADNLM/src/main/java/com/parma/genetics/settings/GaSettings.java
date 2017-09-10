@@ -1,5 +1,8 @@
 package com.parma.genetics.settings;
 
+import java.util.List;
+import org.opencv.core.Mat;
+
 /**
  * 
  * @author Joel S.
@@ -16,7 +19,7 @@ public class GaSettings {
 	private float upperLambda;
 	
 	// Lives in [5, 30]
-	private int lowerSigmaS;	
+	private int lowerSigmaS;
 	
 	private int upperSigmaS;
 	
@@ -25,6 +28,32 @@ public class GaSettings {
 
 	private int upperSigmaR;
 	
+	// images to filter and check against the ground truth	
+	private List<Mat> originalImages;
+	
+	// the ground truth
+	private List<Mat> groundtruthImages;
+	
+	public int getSampleCount() {
+	  return originalImages.size();
+	}
+	
+	public Mat getOriginalImage(int index) {
+	  return originalImages.get(index);
+	}
+	
+	public void addToOriginalImages(Mat imagen) {
+	  originalImages.add(imagen);
+	}
+    
+    public Mat getGroundtruthImage(int index) {
+      return groundtruthImages.get(index);
+    }
+	
+	public void addToGroundtruthImages(Mat imagen) {
+      groundtruthImages.add(imagen);
+    }
+		
 	public float getLowerLambda() {
 		return lowerLambda;
 	}
