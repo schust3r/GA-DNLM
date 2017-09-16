@@ -122,6 +122,8 @@ public class GaSettings {
 	
 	private Segmentation segmentationTechnique;
 	
+	private float selectionThreshold;
+	
 	public String getTitle() {
 		return title;
 	}
@@ -192,6 +194,14 @@ public class GaSettings {
 
 	public void setSegmentationTechnique(Segmentation segmentationTechnique) {
 		this.segmentationTechnique = segmentationTechnique;
+	}
+
+	public float getSelectionThreshold() {
+		return selectionThreshold;
+	}
+
+	public void setSelectionThreshold(float selectionThreshold) {
+		this.selectionThreshold = selectionThreshold;
 	}
 		
 }
