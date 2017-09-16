@@ -26,10 +26,11 @@ public class Mutator {
 	public void mutate(ParamIndividual p) {
 		
 		if (type == Mutation.RANDOM_BIT) {
-			int bitPlace = random.nextInt(6);
+			int bitPlace = random.nextInt(2);
 			int param = random.nextInt(3);
 			if (param == 0) {
-				//
+				int newW = p.getW() ^ (1 << bitPlace);
+				p.setW(newW);
 			}
 			if (param == 1) {
 				int newW_n = p.getW_n() ^ (1 << bitPlace);

@@ -28,14 +28,15 @@ public class GaCalibration {
 
     // run GA for the number of generations specified in settings
     for (int gen = 0; gen < settings.getMaxGenerations(); gen++) {
-
+      CrossoverOperator crossover = new CrossoverOperator(settings.getCrossoverType());
       /* fitness function step */
       calculatePopulationFitness();
 
       /* selection step */
       normalizePopulationFitness();
 
-      List<ParamIndividual>selectionIndividuals = getSelectionIndividuals();
+      List<ParamIndividual> selectionIndividuals = getSelectionIndividuals();
+      List<ParamIndividual> offspring = crossover.cross(selectionIndividuals);
       
       
 
@@ -91,6 +92,7 @@ public class GaCalibration {
 			  ParamIndividual p = population.getIndividual(index);
 			  mutator.mutate(p);
 		  }
+		  mutationFactor = random.nextDouble();
 	  }
   }
   
