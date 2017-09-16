@@ -8,7 +8,7 @@ package com.parma.genetics;
 
 public class ParamIndividual implements Comparable<ParamIndividual> {
 
-  private double w;
+  private int w;
   private int w_n;
   private int sigma_r;
   private double fitness;
@@ -17,11 +17,11 @@ public class ParamIndividual implements Comparable<ParamIndividual> {
     this.setFitness(0);
   }
 
-  public double getW() {
+  public int getW() {
     return w;
   }
 
-  public void setW(float w) {
+  public void setW(int w) {
     this.w = w;
   }
 

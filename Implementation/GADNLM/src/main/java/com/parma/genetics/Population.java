@@ -27,7 +27,7 @@ public class Population {
     for (int i = 0; i < maxInd; i++) {
       ParamIndividual p = new ParamIndividual();
 
-      p.setW(getRandomFloatBetween(settings.getLowerLambda(), settings.getUpperLambda()));
+      p.setW(getRandomIntegerBetween(settings.getLowerLambda(), settings.getUpperLambda()));
 
       p.setW_n(getRandomIntegerBetween(settings.getLowerSigmaS(), settings.getUpperSigmaS()));
 

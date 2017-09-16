@@ -14,9 +14,9 @@ public class GaSettings {
 	/** Initial parameter ranges **/
 	
 	// Lives in [0.5, 5]
-	private float lowerLambda;	
+	private int lowerLambda;	
 	
-	private float upperLambda;
+	private int upperLambda;
 	
 	// Lives in [5, 30]
 	private int lowerSigmaS;
@@ -54,19 +54,19 @@ public class GaSettings {
       groundtruthImages.add(imagen);
     }
 		
-	public float getLowerLambda() {
+	public int getLowerLambda() {
 		return lowerLambda;
 	}
 
-	public void setLowerLambda(float lowerLambda) {
+	public void setLowerLambda(int lowerLambda) {
 		this.lowerLambda = lowerLambda;
 	}
 
-	public float getUpperLambda() {
+	public int getUpperLambda() {
 		return upperLambda;
 	}
 
-	public void setUpperLambda(float upperLambda) {
+	public void setUpperLambda(int upperLambda) {
 		this.upperLambda = upperLambda;
 	}
 

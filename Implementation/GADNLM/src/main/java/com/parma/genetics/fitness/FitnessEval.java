@@ -15,9 +15,9 @@ public class FitnessEval {
 
   public double evaluate(ParamIndividual p, Mat original, Mat groundtruth) {
 
-    double w = p.getW();
-    double w_n = p.getW_n();
-    double sigma_r = p.getSigma_r();
+    int w = p.getW();
+    int w_n = p.getW_n();
+    int sigma_r = p.getSigma_r();
 
     // TODO add Filtering here
 
