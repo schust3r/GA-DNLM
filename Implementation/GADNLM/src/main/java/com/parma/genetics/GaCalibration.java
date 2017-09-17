@@ -39,6 +39,14 @@ public class GaCalibration {
       List<ParamIndividual> offspring = crossover.cross(selectionIndividuals);
       
       
+      
+      /*
+       * Put code here
+       * 
+       */
+      
+      applyMutation();
+      
 
     }
   }
