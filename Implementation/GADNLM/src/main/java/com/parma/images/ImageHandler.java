@@ -16,7 +16,8 @@ public class ImageHandler {
    */
   public Mat leerImagenColor(String ruta) {
     try {
-      Mat imagen = Imgcodecs.imread(ruta);
+      System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+      Mat imagen = Imgcodecs.imread(ruta, Imgcodecs.IMREAD_ANYCOLOR);
       return imagen;
     } catch (Exception e) {
       e.printStackTrace();
