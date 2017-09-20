@@ -27,9 +27,9 @@ public class Population {
     for (int i = 0; i < maxInd; i++) {
       ParamIndividual p = new ParamIndividual();
 
-      p.setW(getRandomIntegerBetween(settings.getLowerLambda(), settings.getUpperLambda()));
+      p.setW(getRandomIntegerBetween(settings.getLowerW(), settings.getUpperW()));
 
-      p.setW_n(getRandomIntegerBetween(settings.getLowerSigmaS(), settings.getUpperSigmaS()));
+      p.setW_n(getRandomIntegerBetween(settings.getLowerWn(), settings.getUpperWn()));
 
       p.setSigma_r(getRandomIntegerBetween(settings.getLowerSigmaR(), settings.getUpperSigmaR()));
 
@@ -69,6 +69,11 @@ public class Population {
 
   private float getRandomFloatBetween(float lower, float upper) {
     return random.nextFloat() * (upper - lower) + lower;
+  }
+
+  public void update(List<ParamIndividual> offspring) {
+	population.subList(getSize()- offspring.size(), getSize()).clear();
+	population.addAll(offspring);
   }
 
 }

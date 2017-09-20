@@ -1,5 +1,6 @@
 package com.parma.genetics.settings;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.opencv.core.Mat;
 
@@ -14,25 +15,30 @@ public class GaSettings {
 	/** Initial parameter ranges **/
 	
 	// Lives in [0.5, 5]
-	private int lowerLambda;	
+	private int lowerSigmaR;	
 	
-	private int upperLambda;
+	private int upperSigmaR;
 	
 	// Lives in [5, 30]
-	private int lowerSigmaS;
+	private int lowerW;
 	
-	private int upperSigmaS;
+	private int upperW;
 	
 	// Lives in [3, 21]
-	private int lowerSigmaR;			
+	private int lowerWn;			
 
-	private int upperSigmaR;
+	private int upperWn;
 	
 	// images to filter and check against the ground truth	
 	private List<Mat> originalImages;
 	
 	// the ground truth
 	private List<Mat> groundtruthImages;
+	
+	public GaSettings() {
+		originalImages = new ArrayList<Mat>();
+		groundtruthImages = new ArrayList<Mat>();
+	}
 	
 	public int getSampleCount() {
 	  return originalImages.size();
@@ -54,38 +60,6 @@ public class GaSettings {
       groundtruthImages.add(imagen);
     }
 		
-	public int getLowerLambda() {
-		return lowerLambda;
-	}
-
-	public void setLowerLambda(int lowerLambda) {
-		this.lowerLambda = lowerLambda;
-	}
-
-	public int getUpperLambda() {
-		return upperLambda;
-	}
-
-	public void setUpperLambda(int upperLambda) {
-		this.upperLambda = upperLambda;
-	}
-
-	public int getLowerSigmaS() {
-		return lowerSigmaS;
-	}
-
-	public void setLowerSigmaS(int lowerSigmaS) {
-		this.lowerSigmaS = lowerSigmaS;
-	}
-
-	public int getUpperSigmaS() {
-		return upperSigmaS;
-	}
-
-	public void setUpperSigmaS(int upperSigmaS) {
-		this.upperSigmaS = upperSigmaS;
-	}
-
 	public int getLowerSigmaR() {
 		return lowerSigmaR;
 	}
@@ -100,6 +74,38 @@ public class GaSettings {
 
 	public void setUpperSigmaR(int upperSigmaR) {
 		this.upperSigmaR = upperSigmaR;
+	}
+
+	public int getLowerW() {
+		return lowerW;
+	}
+
+	public void setLowerW(int lowerW) {
+		this.lowerW = lowerW;
+	}
+
+	public int getUpperW() {
+		return upperW;
+	}
+
+	public void setUpperW(int upperW) {
+		this.upperW = upperW;
+	}
+
+	public int getLowerWn() {
+		return lowerWn;
+	}
+
+	public void setLowerWn(int lowerWn) {
+		this.lowerWn = lowerWn;
+	}
+
+	public int getUpperWn() {
+		return upperWn;
+	}
+
+	public void setUpperWn(int upperWn) {
+		this.upperWn = upperWn;
 	}	
 	
 	/** Genetic Algorithm configuration **/

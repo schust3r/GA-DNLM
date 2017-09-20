@@ -4,6 +4,7 @@ import org.opencv.core.Mat;
 import com.parma.genetics.ParamIndividual;
 import com.parma.genetics.settings.Fitness;
 import com.parma.segmentation.Dice;
+import com.parma.segmentation.Thresholding;
 
 public class FitnessEval {
 
@@ -19,7 +20,13 @@ public class FitnessEval {
     int w_n = p.getW_n();
     int sigma_r = p.getSigma_r();
 
+    Thresholding thresholder = new Thresholding();
+    thresholder.applyThreshold(original, w+w_n+sigma_r);
+    thresholder.applyThreshold(groundtruth, 1);
+    
     // TODO add Filtering here
+    
+    
 
     // ~~~~~~~~~
 

@@ -70,7 +70,7 @@ public class Dice {
         }
       }
     }
-    return (2.0 * cardIntersection) / cardinality;
+    return (2.0 * cardIntersection) / (2.0)*cardinality;
   }
 
   /**
@@ -117,9 +117,14 @@ public class Dice {
           }
 
         }
+        else {
+        	if (primer[0] !=0) {
+        		cardinality++;
+        	}
+        }
       }
     }
-    return (2.0 * cardIntersection) / cardinality;
+    return (2.0 * cardIntersection) /( 2.0 * cardinality);
   }
 
 

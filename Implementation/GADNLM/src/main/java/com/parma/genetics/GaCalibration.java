@@ -19,6 +19,7 @@ public class GaCalibration {
 
   public GaCalibration(GaSettings settings) {
     this.settings = settings;
+    population = new Population(settings);
     this.population.initializePopulation(settings.getMaxIndividuals());
     this.safeboxSize = (int) ((double) settings.getMaxIndividuals() * 0.2);
   }
@@ -30,6 +31,9 @@ public class GaCalibration {
     for (int gen = 0; gen < settings.getMaxGenerations(); gen++) {
       CrossoverOperator crossover = new CrossoverOperator(settings.getCrossoverType());
       /* fitness function step */
+      
+      population.sortByFitness();
+      
       calculatePopulationFitness();
 
       /* selection step */
@@ -37,6 +41,9 @@ public class GaCalibration {
 
       List<ParamIndividual> selectionIndividuals = getSelectionIndividuals();
       List<ParamIndividual> offspring = crossover.cross(selectionIndividuals);
+      
+      population.update(offspring);
+      
       
       
       
@@ -69,7 +76,6 @@ public class GaCalibration {
   
 
   private void normalizePopulationFitness() {
-    population.sortByFitness();
     double accumulatedFitness = getAccumulatedFitness();
     for (int ind = 0; ind < settings.getMaxIndividuals(); ind++) {
       ParamIndividual p = population.getIndividual(ind);
