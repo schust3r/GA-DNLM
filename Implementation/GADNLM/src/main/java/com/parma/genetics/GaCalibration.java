@@ -34,8 +34,22 @@ public class GaCalibration {
       
       population.sortByFitness();
       
+      
       calculatePopulationFitness();
+      
+      ParamIndividual bestIndividual = population.getIndividual(0);
+      ParamIndividual worstIndividual = population.getIndividual(population.getSize()-1);
+      
+      System.out.println("Iteracion "+gen);
+      
+      System.out.println(bestIndividual.getFitness());
+      System.out.println(bestIndividual.getW()+bestIndividual.getW_n()+bestIndividual.getSigma_r());
 
+      System.out.println(worstIndividual.getFitness());
+      System.out.println(worstIndividual.getW()+worstIndividual.getW_n()+worstIndividual.getSigma_r());
+      
+      System.out.println("----------------");
+      
       /* selection step */
       normalizePopulationFitness();
 
@@ -53,8 +67,8 @@ public class GaCalibration {
        */
       
       applyMutation();
+ 
       
-
     }
   }
 
@@ -92,6 +106,7 @@ public class GaCalibration {
 	  int ind = 0;
 	  while(individualAccumulatedFitness >= threshold) {
 		  ParamIndividual p = population.getIndividual(ind);
+		  selectedIndividuals.add(p);
 		  individualAccumulatedFitness -= p.getFitness();
 		  ind++;
 	  }	  

@@ -37,8 +37,8 @@ public class GaCalibrationTest {
 		settings.setSelectionThreshold((float)0.65);
 		
 		ImageHandler imageHandler = new ImageHandler();
-		Mat imagen = imageHandler.leerImagenGrises("C:/Users/Eliot/Desktop/1_g.png");
-		Mat imagengd = imageHandler.leerImagenGrises("C:/Users/Eliot/Desktop/1_gg.png");
+		Mat imagen = imageHandler.leerImagenGrises("C:/Users/Eliot/Desktop/1.png");
+		Mat imagengd = imageHandler.leerImagenGrises("C:/Users/Eliot/Desktop/1_g.png");
 		
 		settings.addToOriginalImages(imagen);
 		settings.addToGroundtruthImages(imagengd);
