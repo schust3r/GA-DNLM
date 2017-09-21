@@ -34,11 +34,11 @@ public class GaCalibrationTest {
 		settings.setMutationPerc((float)0.05);
 		settings.setMutationType(Mutation.BIT_SWAPPING);
 		settings.setSegmentationTechnique(Segmentation.OTSU);
-		settings.setSelectionThreshold((float)0.65);
+		settings.setSelectionThreshold((float)0.75);
 		
 		ImageHandler imageHandler = new ImageHandler();
-		Mat imagen = imageHandler.leerImagenGrises("C:/Users/Eliot/Desktop/1.png");
-		Mat imagengd = imageHandler.leerImagenGrises("C:/Users/Eliot/Desktop/1_g.png");
+		Mat imagen = imageHandler.leerImagenGrises("C:/Users/Eliot/Desktop/1.tif");
+		Mat imagengd = imageHandler.leerImagenGrises("C:/Users/Eliot/Desktop/1g.png");
 		
 		settings.addToOriginalImages(imagen);
 		settings.addToGroundtruthImages(imagengd);

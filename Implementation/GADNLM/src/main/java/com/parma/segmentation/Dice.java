@@ -92,9 +92,7 @@ public class Dice {
     Size sizeGroundTruth = groundTruth.size();
     Size sizeImagenUmbralizada = imagenUmbralizada.size();
 
-    if (!sizeGroundTruth.equals(sizeImagenUmbralizada)) {
-      Imgproc.resize(groundTruth, groundTruth, sizeGroundTruth, 0, 0, Imgproc.INTER_CUBIC);
-    }
+    
 
     float cardIntersection = 0;
     float cardinality = 0;

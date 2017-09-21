@@ -32,15 +32,17 @@ public class GaCalibration {
       CrossoverOperator crossover = new CrossoverOperator(settings.getCrossoverType());
       /* fitness function step */
       
-      population.sortByFitness();
       
       
       calculatePopulationFitness();
+      population.sortByFitness();
+      
+      
       
       ParamIndividual bestIndividual = population.getIndividual(0);
       ParamIndividual worstIndividual = population.getIndividual(population.getSize()-1);
       
-      System.out.println("Iteracion "+gen);
+      System.out.println("Iteracion "+gen+" | average fitness: "+ getAverageFitness());
       
       System.out.println(bestIndividual.getFitness());
       System.out.println(bestIndividual.getW()+bestIndividual.getW_n()+bestIndividual.getSigma_r());
@@ -54,7 +56,7 @@ public class GaCalibration {
       normalizePopulationFitness();
 
       List<ParamIndividual> selectionIndividuals = getSelectionIndividuals();
-      List<ParamIndividual> offspring = crossover.cross(selectionIndividuals);
+      List<ParamIndividual> offspring = crossover.cross(selectionIndividuals,(int)( population.getSize()/2));
       
       population.update(offspring);
       
@@ -72,6 +74,16 @@ public class GaCalibration {
     }
   }
 
+  private double getAverageFitness() {
+	  double averageFitness = 0;
+	  for(int ind = 0 ; ind < settings.getMaxIndividuals();ind++) {
+		  averageFitness += population.getIndividual(ind).getFitness();
+		  
+	  }
+	  averageFitness = averageFitness / settings.getMaxIndividuals();
+	  return averageFitness;
+  }
+  
   private void calculatePopulationFitness() {
     for (int ind = 0; ind < settings.getMaxIndividuals(); ind++) {
       ParamIndividual p = population.getIndividual(ind);
@@ -83,7 +95,7 @@ public class GaCalibration {
               settings.getGroundtruthImage(imgInd));
         }
       }
-      p.setFitness(score);
+      population.getIndividual(ind).setFitness(score);
     }
   }
   

@@ -13,13 +13,13 @@ public class CrossoverOperator {
 		this.type = type;
 	}
 	
-	public List<ParamIndividual> cross(List<ParamIndividual> parents) {
+	public List<ParamIndividual> cross(List<ParamIndividual> parents,int limit) {
 		List<ParamIndividual> offspring = new ArrayList<ParamIndividual>();
 		
 		if (type == Crossover.CLUSTER || type == Crossover.SIMPLE) {
-			double fitnessAccum = 0;
-			for(int ind = 0; ind < parents.size();ind++) {
-				
+			
+			for(int ind = 0; ind < limit;ind++) {
+				double fitnessAccum = 0;
 				Collections.shuffle(parents);
 				ParamIndividual p = new ParamIndividual();
 
@@ -43,6 +43,10 @@ public class CrossoverOperator {
 				p.setW((int) w);
 				p.setW_n((int) w_n);
 				p.setSigma_r((int) sigma_r);
+				
+				if (p.getW_n()+p.getSigma_r()+p.getW() == 0 ){
+					System.out.println("asd");
+				}
 				offspring.add(p);
 				
 			}	
