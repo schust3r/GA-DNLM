@@ -27,17 +27,17 @@ public class GaCalibrationTest {
 		settings.setLowerWn(3);
 		settings.setUpperWn(5);
 		settings.setLowerSigmaR(0);
-		settings.setUpperSigmaR(100);
+		settings.setUpperSigmaR(150);
 		
-		settings.setMaxGenerations(100);
-		settings.setMaxIndividuals(100);
+		settings.setMaxGenerations(10);
+		settings.setMaxIndividuals(25);
 		settings.setMutationPerc((float)0.05);
 		settings.setMutationType(Mutation.BIT_SWAPPING);
 		settings.setSegmentationTechnique(Segmentation.OTSU);
-		settings.setSelectionThreshold((float)0.75);
+		settings.setSelectionThreshold((float)0.55);
 		
 		ImageHandler imageHandler = new ImageHandler();
-		Mat imagen = imageHandler.leerImagenGrises("C:/Users/Eliot/Desktop/1.tif");
+		Mat imagen = imageHandler.leerImagenGrises("C:/Users/Eliot/Desktop/1.png");
 		Mat imagengd = imageHandler.leerImagenGrises("C:/Users/Eliot/Desktop/1g.png");
 		
 		settings.addToOriginalImages(imagen);
@@ -48,10 +48,10 @@ public class GaCalibrationTest {
 		GaCalibration calibration = new GaCalibration(settings);
 		
 		calibration.runCalibration();
+		double bestman = calibration.getPopulation().getIndividual(0).getFitness();
 		
 		
-		
-		assertTrue(true);
+		assertTrue("Resultado incorrecto",Math.abs(bestman - 0.04000904462945238) <= 0.0001);
 		
 		
 		

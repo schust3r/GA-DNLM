@@ -56,7 +56,7 @@ public class GaCalibration {
       normalizePopulationFitness();
 
       List<ParamIndividual> selectionIndividuals = getSelectionIndividuals();
-      List<ParamIndividual> offspring = crossover.cross(selectionIndividuals,(int)( population.getSize()/2));
+      List<ParamIndividual> offspring = crossover.cross(selectionIndividuals,(int)(settings.getMaxIndividuals()/2));
       
       population.update(offspring);
       
@@ -72,9 +72,20 @@ public class GaCalibration {
  
       
     }
+    population.sortByFitness();
   }
 
-  private double getAverageFitness() {
+  public Population getPopulation() {
+	return population;
+}
+
+
+public void setPopulation(Population population) {
+	this.population = population;
+}
+
+
+private double getAverageFitness() {
 	  double averageFitness = 0;
 	  for(int ind = 0 ; ind < settings.getMaxIndividuals();ind++) {
 		  averageFitness += population.getIndividual(ind).getFitness();
