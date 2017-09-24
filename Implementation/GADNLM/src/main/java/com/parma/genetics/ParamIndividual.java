@@ -55,7 +55,7 @@ public class ParamIndividual implements Comparable<ParamIndividual> {
 
   @Override
   public int compareTo(ParamIndividual other) {
-    return Double.compare(this.fitness, other.fitness);
+    return Double.compare(other.fitness,this.fitness);
   }
 
 }
