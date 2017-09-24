@@ -2,7 +2,7 @@ package com.parma.controller;
 
 import com.mongodb.gridfs.GridFSDBFile;
 import com.parma.configuration.SpringMongoConfiguration;
-import com.parma.model.ImagenGaleria;
+import com.parma.model.GalleryImage;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -65,8 +65,8 @@ public class GalleryController {
       model.addAttribute("maxIndice", (int)Math.ceil((double)files.size() / 8.0)); 
       model.addAttribute("nombreLote", nombreLote);
 
-      List<ImagenGaleria> listaImagenes1 = new ArrayList<>();
-      List<ImagenGaleria> listaImagenes2 = new ArrayList<>();      
+      List<GalleryImage> listaImagenes1 = new ArrayList<>();
+      List<GalleryImage> listaImagenes2 = new ArrayList<>();      
 
       int i = (ival - 1) * 8;
       int midPoint = i + 4;
@@ -77,7 +77,7 @@ public class GalleryController {
         GridFSDBFile file = files.get(i);
         
         // Objeto ImagenGaleria
-        ImagenGaleria nuevaImagen = new ImagenGaleria();                
+        GalleryImage nuevaImagen = new GalleryImage();                
         
         // El identificador unico de la imagen
         nuevaImagen.setId(file.getId().toString());

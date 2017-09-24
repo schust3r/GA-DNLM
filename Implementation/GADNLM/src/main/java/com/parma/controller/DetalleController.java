@@ -2,7 +2,7 @@ package com.parma.controller;
 
 import com.mongodb.gridfs.GridFSDBFile;
 import com.parma.configuration.SpringMongoConfiguration;
-import com.parma.model.ImagenGaleria;
+import com.parma.model.GalleryImage;
 import com.parma.model.UploadedFile;
 import com.parma.segmentation.Dice;
 
@@ -66,7 +66,7 @@ public class DetalleController {
       // Seleccionar la unica imagen
       GridFSDBFile file = gridOperations.find(query).get(0);
 
-      ImagenGaleria imagenDetalle = new ImagenGaleria();
+      GalleryImage imagenDetalle = new GalleryImage();
 
       // settear id de la imagen
       imagenDetalle.setId(idImagen);

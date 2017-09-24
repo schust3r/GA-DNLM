@@ -27,29 +27,28 @@ public class LoginController {
   @Autowired
   private UserValidator userValidator;
 
-  @RequestMapping(value = "/registration", method = RequestMethod.GET)
+  @RequestMapping(value = "/register", method = RequestMethod.GET)
   public String registration(Model model) {
     model.addAttribute("user", new User());
 
-    return "registration";
+    return "register";
   }
 
-  @RequestMapping(value = "/registration", method = RequestMethod.POST)
+  @RequestMapping(value = "/register", method = RequestMethod.POST)
   public String registration(@ModelAttribute("user") User userForm, 
       BindingResult bindingResult, Model model) {
 
     userValidator.validate(userForm, bindingResult);
 
     if (bindingResult.hasErrors()) {
-      model.addAttribute("error", "No se pudo crear la cuenta.");
-      return "registration";
+      model.addAttribute("message", "Unable to create your account.");      
     } else {
-      model.addAttribute("success", "Se ha creado la cuenta de usuario.");
-    }
-
-    userService.save(userForm);
-
-    return "login";
+      userService.save(userForm);
+      model.addAttribute("message", "Your account has been registered.");
+      return "login";
+    }    
+    
+    return "register";
   }
 
   @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -63,26 +62,26 @@ public class LoginController {
 
     securityService.autologin(userForm.getUsername(), userForm.getPassword());
 
-    return "home";
+    return "calibrate";
   }
 
   @RequestMapping(value = { "/", "/login" }, method = RequestMethod.GET)
   public String login(Model model, String error, String logout) {
     if (error != null) {
-      model.addAttribute("error", "Usuario o contraseña inválida.");
+      model.addAttribute("message", "Invalid username or password.");
     }
     if (logout != null) {
-      model.addAttribute("message", "Ha salido del sistema con éxito.");
+      model.addAttribute("message", "You have logged out successfully.");
     }
     return "login";
   }
 
-  @RequestMapping(value = "/home", method = RequestMethod.GET)
+  @RequestMapping(value = "/calibrate", method = RequestMethod.GET)
   public String dashboard(@ModelAttribute("user") User userForm, Model model) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    model.addAttribute("usuario", auth.getName());
+    model.addAttribute("user", auth.getName());
 
-    return "home";
+    return "calibrate";
   }
 
   @RequestMapping(value = "/logout", method = RequestMethod.GET)

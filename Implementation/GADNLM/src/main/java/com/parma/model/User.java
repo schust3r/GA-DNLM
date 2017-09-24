@@ -9,7 +9,7 @@ import java.util.Set;
 public class User {
     private Long id;
     private String username;
-    private String password;
+    private String password;    
     private boolean enabled;
     private Set<Role> roles;
     
@@ -43,7 +43,7 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
+    }       
 
     @ManyToMany
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
