@@ -12,16 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class AboutController {
 
-  /**
-   * Retorna la pagina de Acerca de.
-   * 
-   * @param model modelo de Spring
-   * @return la pagina del acerca de
-   */
+  
   @RequestMapping(value = "/about", method = RequestMethod.GET)
   public String dashboard(HttpServletRequest servletRequest, Model model) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    model.addAttribute("usuario", auth.getName());
+    model.addAttribute("username", auth.getName());
     return "about";
   }
   

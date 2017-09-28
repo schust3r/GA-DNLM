@@ -255,58 +255,6 @@ a{
   filter: alpha(opacity=0);
   opacity: 0;
 }
-/***NAVBAR STYLE**/
-#custom-bootstrap-menu.navbar-default .navbar-brand {
-  color: rgba(82, 103, 115, 1);
-}
-#custom-bootstrap-menu.navbar-default {
-  font-size: 16px;
-  background-color: rgba(0, 0, 0, 1);
-  border-width: 0px;
-  border-radius: 0px;
-  border:1px solid #AAA;
-  border-bottom:3px solid #BBB;
-  margin-top:0px;
-  overflow:visible;
-  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  font-family: 'Roboto', sans-serif;
-  -webkit-transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: sticky;
-}
-#custom-bootstrap-menu.navbar-default .navbar-nav>li>a {
-  color: rgba(255, 255, 255, 1);
-  background-color: rgba(0, 0, 0, 1);
-}
-#custom-bootstrap-menu.navbar-default .navbar-nav>li>a:hover,
-#custom-bootstrap-menu.navbar-default .navbar-nav>li>a:focus {
-  color: rgba(255, 255, 255, 1);
-  background-color: rgba(82, 103, 115, 1);
-}
-#custom-bootstrap-menu.navbar-default .navbar-nav>.active>a,
-#custom-bootstrap-menu.navbar-default .navbar-nav>.active>a:hover,
-#custom-bootstrap-menu.navbar-default .navbar-nav>.active>a:focus {
-  color: rgba(255, 255, 255, 1);
-  background-color: rgba(82, 103, 115, 1);
-}
-#custom-bootstrap-menu.navbar-default .navbar-toggle {
-  border-color: #526773;
-}
-#custom-bootstrap-menu.navbar-default .navbar-toggle:hover,
-#custom-bootstrap-menu.navbar-default .navbar-toggle:focus {
-  background-color: #526773;
-}
-#custom-bootstrap-menu.navbar-default .navbar-toggle .icon-bar {
-  background-color: #526773;
-}
-#custom-bootstrap-menu.navbar-default .navbar-toggle:hover .icon-bar,
-#custom-bootstrap-menu.navbar-default .navbar-toggle:focus .icon-bar {
-  background-color: #000000;
-}
-
-/**NOSCROLLBAR**/
-::-webkit-scrollbar {
-}
 
 /**** BREAK *****/
 * {

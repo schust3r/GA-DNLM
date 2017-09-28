@@ -1,4 +1,6 @@
 <head>
+  <title>Image filtering - GA DNLM</title>
+  <link rel="stylesheet" type="text/css" href="css/common.css">
   <link rel="stylesheet" type="text/css" href="css/filter.css">
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -11,49 +13,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
         rel="stylesheet">
 
-<div class="header-top">
-    <div id="custom-bootstrap-menu" class="navbar navbar-default navbar-fixed-top" role="navigation">
-      <div class="container-fluid">
-        <div class="navbar-header">				
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </div>
-        <div class="collapse navbar-collapse navbar-menubuilder">
-          <ul class="nav navbar-nav navbar-left">
-            <li>
-              <a href="/"><b>GA-DNLM</b></a>
-            </li>
-            <li>
-              <a href="calibrate.html" class="active">Calibrate parameters</a>
-            </li>
-            <li>
-              <a href="reports.html">Reports</a>
-            </li>
-            <li class="dropdown ">
-              <a href="#" id="drop1" data-toggle="dropdown" class="dropdown-toggle" role="button">Images<b class="caret"></b></a>
-              <ul role="menu" class="dropdown-menu" aria-labelledby="drop1">
-                <li role="presentation"><a href="filter.html" role="menuitem">Filter</a></li>
-                <li role="presentation"><a href="gallery.html" role="menuitem">Gallery</a></li>                
-              </ul>
-            </li>
-            <li>
-              <a href="about.html">About</a>
-            </li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li>
-              <a href="">username </a>
-            </li>
-            <li>
-              <a href="login.html"> <span class="glyphicon glyphicon-log-out"></span> Logout</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div th:replace="common/navbar :: nav"></div>
 
   <div class="container">
 
@@ -69,7 +29,7 @@
               <button type="button" class="btn btn-default image-preview-clear" style="display:none;"> <span class="glyphicon glyphicon-remove"></span> Clear </button>
               <!-- image-preview-input -->
               <div class="btn btn-default image-preview-input"> <span class="glyphicon glyphicon-folder-open"></span> <span class="image-preview-input-title">Browse</span>
-                <input accept="image/png, image/jpeg, image/gif" name="input-file-preview" type="file">
+                <input accept="image/png, image/jpeg, image/gif, image/tif" name="input-file-preview" type="file">
                 <!-- rename it --> 
               </div>
               <button type="button" class="btn btn-labeled btn-default"> <span class="btn-label"><i class="glyphicon glyphicon-upload"></i> </span>Upload</button>
@@ -93,7 +53,6 @@
           </div>
         </div>
       </div>
-
     </div>
 
     <div class="col-md-6">
@@ -101,43 +60,34 @@
         <div class="panel-heading"><strong>FILTERING</strong> <small> </small></div>
         <fieldset>
 
-          <!-- Form Name -->
-
-          <div class="row" style="margin: 15px">
-
-            <!-- Text input-->
+          <div class="row row-margin">
             <div class="form-group">
-              <label class="col-md-4 control-label" for="modification_date">Lot name</label>  
+              <label class="col-md-4 control-label input-form" for="modification_date">Lot name</label>  
               <div class="col-md-6">
-                <input id="add_date" name="add_date" placeholder="Input an unique name" class="input_title_desc" required="" type="text"
-                       style="width:100%;height:35px;">
-
+                <input id="add_date" name="add_date" placeholder="Input an unique name" class="input_title_desc  input-form" required="" type="text">
               </div>
             </div>
           </div>
+          
 
-          <div class="row" style="margin: 15px">
-
-            <!-- Select Basic -->
+          <div class="row row-margin">
             <div class="form-group">
               <label class="col-md-4 control-label" for="category_name">Use previous configuration</label>
               <div class="col-md-6">
-                <select id="category_name" class="input_description_title" name="category_name" style="width:100%;height:35px">
+                <select id="category_name" class="input_description_title input-form" name="category_name">
                   <option>Config1</option>
                   <option>Config2</option>
                   <option>Config3</option>
-                  <option>Config4</option>
-                  <option>Config5</option>
-
                 </select>
               </div>
             </div>
           </div>
-          <div class="row" style="margin: 15px">
-
+          
+          
+          <div class="row row-margin">
             <!-- Select Basic -->
             <div class="form-group">
-              <label class="col-md-4 control-label" for="category_name_fr">Load from file</label>
+              <label class="col-md-4 control-label input-form" for="category_name_fr">Load from file</label>
               <div class="col-md-6">
 
                 <div class="input-group image-preview">
@@ -155,39 +105,36 @@
               </div>
             </div>
           </div>
-          <div class="row" style="margin: 15px">
-
+          
+          
+          <div class="row row-margin">
             <!-- Text input-->
             <div class="form-group">
-              <label class="col-md-4 control-label" for="add_date">Lambda value</label>  
+              <label class="col-md-4 control-label input-form" for="add_date">w value</label>  
               <div class="col-md-6">
-                <input id="add_date" name="add_date" placeholder="λ" class="input_title_desc" required="" type="text"
-                       style="width:100%;height:35px;">
-
+                <input id="add_date" name="add_date" placeholder="w" class="input_title_desc input-form" required="" type="text">
               </div>
             </div>
           </div>
 
-          <div class="row" style="margin: 15px">
-
+          
+          <div class="row row-margin">
             <!-- Text input-->
             <div class="form-group">
-              <label class="col-md-4 control-label" for="add_by">Sigma_s value</label>  
+              <label class="col-md-4 control-label input-form" for="add_by">w<sub>n</sub> value</label>  
               <div class="col-md-6">
-                <input id="add_date" name="add_date" placeholder="σₛ" class="input_title_desc" required="" type="text"
-                       style="width:100%;height:35px;">
+                <input id="add_date" name="add_date" placeholder="w_n" class="input_title_desc input-form" required="" type="text">
               </div>
             </div>
           </div>
-          <div class="row" style="margin: 15px">
-
+          
+          
+          <div class="row row-margin">
             <!-- Text input-->
             <div class="form-group">
-              <label class="col-md-4 control-label" for="modification_date">Sigma_r value</label>  
+              <label class="col-md-4 control-label input-form" for="modification_date">sigma r value</label>  
               <div class="col-md-6">
-                <input id="add_date" name="add_date" placeholder="σᵣ" class="input_title_desc" required="" type="text"
-                       style="width:100%;height:35px;">
-
+                <input id="add_date" name="add_date" placeholder="σᵣ" class="input_title_desc input-form" required="" type="text">
               </div>
             </div>
           </div>                    
@@ -197,7 +144,7 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for=""></label>
             <div class="col-md-4">
-              <button id="" name="" class="btn btn-primary">Filter images</button>
+              <button class="btn_add_fin">FILTER IMAGES</button>
             </div>
           </div>
 

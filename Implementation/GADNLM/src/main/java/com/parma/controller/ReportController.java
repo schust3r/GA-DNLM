@@ -9,15 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class GalleryController {
-  
-  @RequestMapping(value = "/gallery", method = RequestMethod.GET)
+public class ReportController {
+
+  @RequestMapping(value = "/reports", method = RequestMethod.GET)
   public String dashboard(HttpServletRequest servletRequest, Model model) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     model.addAttribute("username", auth.getName());
-    return "gallery";
+    return "reports";
   }
   
-  
-
 }

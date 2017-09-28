@@ -59,9 +59,9 @@ public class LoginController {
     if (bindingResult.hasErrors()) {
       return "login";
     }
-
     securityService.autologin(userForm.getUsername(), userForm.getPassword());
-
+    
+    model.addAttribute("username", userForm.getUsername());
     return "calibrate";
   }
 
@@ -74,15 +74,7 @@ public class LoginController {
       model.addAttribute("message", "You have logged out successfully.");
     }
     return "login";
-  }
-
-  @RequestMapping(value = "/calibrate", method = RequestMethod.GET)
-  public String dashboard(@ModelAttribute("user") User userForm, Model model) {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    model.addAttribute("user", auth.getName());
-
-    return "calibrate";
-  }
+  } 
 
   @RequestMapping(value = "/logout", method = RequestMethod.GET)
   public String logoutPage(Model model) {

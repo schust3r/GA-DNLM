@@ -1,4 +1,6 @@
 <head>
+  <title>Reports - GA DNLM</title>
+  <link rel="stylesheet" type="text/css" href="css/common.css">
   <link rel="stylesheet" type="text/css" href="css/reports.css">
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -64,53 +66,12 @@
   </script>
 
 </head>
+
 <body>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
         rel="stylesheet">
 
-  <div class="header-top">
-    <div id="custom-bootstrap-menu" class="navbar navbar-default navbar-fixed-top" role="navigation">
-      <div class="container-fluid">
-        <div class="navbar-header">				
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </div>
-        <div class="collapse navbar-collapse navbar-menubuilder">
-          <ul class="nav navbar-nav navbar-left">
-            <li>
-              <a href="/"><b>GA-DNLM</b></a>
-            </li>
-            <li>
-              <a href="calibrate.html" class="active">Calibrate parameters</a>
-            </li>
-            <li>
-              <a href="reports.html">Reports</a>
-            </li>
-            <li class="dropdown ">
-              <a href="#" id="drop1" data-toggle="dropdown" class="dropdown-toggle" role="button">Images<b class="caret"></b></a>
-              <ul role="menu" class="dropdown-menu" aria-labelledby="drop1">
-                <li role="presentation"><a href="filter.html" role="menuitem">Filter</a></li>
-                <li role="presentation"><a href="gallery.html" role="menuitem">Gallery</a></li>                
-              </ul>
-            </li>
-            <li>
-              <a href="about.html">About</a>
-            </li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li>
-              <a href="">username </a>
-            </li>
-            <li>
-              <a href="login.html"> <span class="glyphicon glyphicon-log-out"></span> Logout</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div th:replace="common/navbar :: nav"></div>
 
   <div class="container">    
 
@@ -124,7 +85,7 @@
             <tr>
               <td class="titl_description" style="vertical-align:middle;"><b>Calibration name</b></td>
               <td>
-                <select name="" class="input_description_title" id="date_select" style="width:98%;">
+                <select name="" class="input_title_desc" id="date_select">
                   <option value="TODAY">Footbal players</option>
                   <option value="TOMORROW">Image lot 2</option>                
                 </select>
@@ -152,10 +113,10 @@
             <table class="table">
               <tr>
                 <td>
-                  <button class="btn_export_points">EXPORT AS CSV</button>
+                  <button class="btn_export">EXPORT AS CSV</button>
                 </td>
                 <td>
-                  <button class="btn_export_image">EXPORT AS SVG</button>
+                  <button class="btn_add_fin">EXPORT AS SVG</button>
                 </td>
               </tr>
             </table>
@@ -178,10 +139,10 @@
           <table class="table">
               <tr>
                 <td>
-                  <button class="btn_export_points">EXPORT AS CSV</button>
+                  <button class="btn_export">EXPORT AS CSV</button>
                 </td>
                 <td>
-                  <button class="btn_export_image">EXPORT AS SVG</button>
+                  <button class="btn_add_fin">EXPORT AS SVG</button>
                 </td>
               </tr>
             </table>
@@ -196,7 +157,7 @@
             <tr>
               <td class="titl_description" style="vertical-align:middle;"><b>Calibration name</b></td>
               <td>
-                <select name="" class="input_description_title" id="date_select" style="width:98%;">
+                <select name="" class="input_title_desc" id="date_select">
                   <option value="TODAY">Footbal players</option>
                   <option value="TOMORROW">Image lot 2</option>                
                 </select>
@@ -205,7 +166,7 @@
             <tr>
               <td class="titl_description" style="vertical-align:middle;">Filter by</td>
               <td>
-                <select name="" class="input_description_title" id="date_select" style="width:98%;">
+                <select name="" class="input_title_desc" id="date_select">
                   <option value="TODAY">Individual</option>
                   <option value="TOMORROW">Generation</option>
                   <option value="TOMORROW">Total</option>
@@ -214,7 +175,7 @@
             </tr>
             <tr>
               <td colspan="3">
-                <button class="btn_add_fin"  onclick="add_to_list()">EXPORT</button>
+                <button class="btn_add_fin" onclick="add_to_list()">EXPORT</button>
               </td>
             </tr>
           </table>

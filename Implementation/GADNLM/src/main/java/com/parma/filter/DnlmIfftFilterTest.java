@@ -8,15 +8,13 @@ public class DnlmIfftFilterTest {
 
   @Test
   public void test() {
+    
     ImageHandler ih = new ImageHandler();
-    Mat image = ih.leerImagenGrises("C:\\Users\\Joel\\Desktop\\FastDnlmv2\\lena.jpg");
-    Mat matriz = ih.leerImagenGrises("C:\\Users\\Eliot\\Desktop\\FastDnlmv2\\lena.jpg");
+    Mat image = ih.leerImagenGrises("C:\\Users\\Joel\\Desktop\\FastDnlmv2\\lena.jpg");    
 
     double w = 21;
     double w_n = 3;
-    double sigma_r = 100;
-
-    long temp = System.currentTimeMillis();
+    double sigma_r = 100;   
     
     DnlmIfftFilter myFilter = new DnlmIfftFilter(image, w, w_n, sigma_r);
     myFilter.filterImage();
@@ -32,7 +30,8 @@ public class DnlmIfftFilterTest {
     
     System.out.println(checkSum + "");
        
-    //assertTrue("Mismatch.", );
+    //
+    
   }
 
 }
