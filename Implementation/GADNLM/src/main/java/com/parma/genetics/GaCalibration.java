@@ -31,12 +31,9 @@ public class GaCalibration {
     for (int gen = 0; gen < settings.getMaxGenerations(); gen++) {
       CrossoverOperator crossover = new CrossoverOperator(settings.getCrossoverType());
       /* fitness function step */
-      
-      
-      
+                  
       calculatePopulationFitness();
-      population.sortByFitness();
-      
+      population.sortByFitness();      
       
       
       ParamIndividual bestIndividual = population.getIndividual(0);

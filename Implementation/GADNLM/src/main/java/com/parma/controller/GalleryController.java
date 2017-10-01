@@ -18,6 +18,5 @@ public class GalleryController {
     return "gallery";
   }
   
-  
 
 }

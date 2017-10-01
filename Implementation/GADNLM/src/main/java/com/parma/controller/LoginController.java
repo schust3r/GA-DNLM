@@ -18,35 +18,36 @@ import com.parma.validator.UserValidator;
 
 @Controller
 public class LoginController {
+  
   @Autowired
   private UserService userService;
-
+  
   @Autowired
   private SecurityService securityService;
-
+  
   @Autowired
   private UserValidator userValidator;
-
+  
   @RequestMapping(value = "/register", method = RequestMethod.GET)
   public String registration(Model model) {
     model.addAttribute("user", new User());
 
     return "register";
   }
-
+  
   @RequestMapping(value = "/register", method = RequestMethod.POST)
   public String registration(@ModelAttribute("user") User userForm, 
       BindingResult bindingResult, Model model) {
-
+    
     userValidator.validate(userForm, bindingResult);
-
+    
     if (bindingResult.hasErrors()) {
       model.addAttribute("message", "Unable to create your account.");      
     } else {
       userService.save(userForm);
       model.addAttribute("message", "Your account has been registered.");
       return "login";
-    }    
+    }
     
     return "register";
   }

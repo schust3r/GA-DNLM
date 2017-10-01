@@ -1,234 +1,320 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <link rel="stylesheet" type="text/css" href="css/common.css">
-    <link rel="stylesheet" type="text/css" href="css/calibrate.css">
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!-- Latest compiled JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <title>Parameter calibration - GA DNLM</title>
-  </head>
-  <body>
+<head>
+<link rel="stylesheet" type="text/css" href="css/common.css">
+<link rel="stylesheet" type="text/css" href="css/calibrate.css">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<title>Parameter calibration - GA DNLM</title>
+</head>
+<body>
 
-    <div th:replace="common/navbar :: nav"></div>
+	<div th:replace="common/navbar :: nav"></div>
 
-    <div class="container">
-      <div class="col-md-6">
-        <div class="panel panel-default">
-          <div class="panel-heading"> <strong>CALIBRATION</strong> <small> </small> </div>
-          <div class="panel-body">
-            <fieldset>
-              <legend>
-                <h5>Initial parameters</h5>
-              </legend>
-              <div class="row row-margin">
-                <div class="form-group">
-                  <label class="col-md-4 control-label input-form" for="modification_date">w values</label>
-                  <div class="col-md-4">
-                    <input id="add_date" name="add_date" placeholder="Lower-bound w"
-                           class="input_title_desc input-form" required="" type="text"> 
-                  </div>
-                  <div class="col-md-4">
-                    <input id="add_date" name="add_date" placeholder="Upper-bound w"
-                           class="input_title_desc input-form" required="" type="text"> 
-                  </div>
-                </div>
-              </div>
-              <div class="row row-margin">
-                <div class="form-group">
-                  <label class="col-md-4 control-label input-form">w<sub>n</sub> values </label>
-                  <div class="col-md-4">
-                    <input id="add_date" name="add_date" placeholder="Lower-bound w_n"
-                           class="input_title_desc input-form" required="" type="text"> 
-                  </div>
-                  <div class="col-md-4">
-                    <input id="add_date" name="add_date" placeholder="Upper-bound w_n"
-                           class="input_title_desc input-form" required="" type="text"> 
-                  </div>
-                </div>
-              </div>
-              <div class="row row-margin">
-                <div class="form-group">
-                  <label class="col-md-4 control-label input-form">sigma r values </label>
-                  <div class="col-md-4">
-                    <input id="add_date" name="add_date" placeholder="Lower-bound s_r"
-                           class="input_title_desc input-form" required="" type="text"> 
-                  </div>
-                  <div class="col-md-4">
-                    <input id="add_date" name="add_date" placeholder="Upper-bound s_r"
-                           class="input_title_desc input-form" required="" type="text"> 
-                  </div>
-                </div>
-              </div>
-              <legend>
-                <h5>Genetic algorithm settings</h5>
-              </legend>
-              <div class="row row-margin">
-                <div class="form-group">
-                  <label class="col-md-4 control-label input-form">Title</label>
-                  <div class="col-md-8">
-                    <input id="add_date" name="add_date" placeholder="A title for the calibration job"
-                           class="input_title_desc input-form" required="" type="text"> 
-                  </div>
-                </div>
-              </div>
-              <div class="row row-margin">
-                <div class="form-group">
-                  <label class="col-md-4 control-label input-form">Description</label>
-                  <div class="col-md-8">
-                    <input id="add_date" name="add_date" placeholder="A brief description of the calibration"
-                           class="input_title_desc input-form" required="" type="text"> 
-                  </div>
-                </div>
-              </div>
-              <div class="row row-margin">
-                <div class="form-group">
-                  <label class="col-md-4 control-label input-form">Max. individuals </label>
-                  <div class="col-md-8">
-                    <input id="add_date" name="add_date" placeholder="Max number of individuals per generation"
-                           class="input_title_desc input-form" required="" type="text"> 
-                  </div>
-                </div>
-              </div>
-              <div class="row row-margin">
-                <div class="form-group">
-                  <label class="col-md-4 control-label input-form">Generations</label>
-                  <div class="col-md-8">
-                    <input id="add_date" name="add_date" placeholder="Max number of generations"
-                           class="input_title_desc input-form" required="" type="text"> 
-                  </div>
-                </div>
-              </div>
-              <div class="row row-margin">
-                <div class="form-group">
-                  <label class="col-md-4 control-label input-form">Mutation percentage </label>
-                  <div class="col-md-8">
-                    <input id="add_date" name="add_date" placeholder="Mutations scale (0 - 100%)"
-                           class="input_title_desc input-form" required="" type="text"> 
-                  </div>
-                </div>
-              </div>
-              <div class="row row-margin">
-                <div class="form-group">
-                  <label class="col-md-4 control-label input-form">Mutation type </label>
-                  <div class="col-md-8">
-                    <select name="" class="input_title_desc input-form" id="date_select">
-                      <option value="TODAY">Random</option>
-                      <option value="TOMORROW">Flip Bits</option>
-                      <option value="TOMORROW">Gaussian</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="row row-margin">
-                <div class="form-group">
-                  <label class="col-md-4 control-label input-form">Crossover type </label>
-                  <div class="col-md-8">
-                    <select name="" class="input_title_desc input-form" id="date_select">
-                      <option value="TODAY">Basic</option>
-                      <option value="TOMORROW">Multipoint</option>
-                      <option value="TOMORROW">Segmented</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="row row-margin">
-                <div class="form-group">
-                  <label class="col-md-4 control-label input-form">Fitness function </label>
-                  <div class="col-md-8">
-                    <select name="" class="input_title_desc input-form" id="date_select">
-                      <option value="TODAY">Dice</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="row row-margin">
-                <div class="form-group">
-                  <label class="col-md-4 control-label input-form">Segmentation method </label>
-                  <div class="col-md-8">
-                    <select name="" class="input_title_desc input-form" id="date_select">
-                      <option value="TODAY">Otsu</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="row row-margin">
-                <div class="form-group">
-                  <label class="col-md-4 control-label input-form">Original images </label>
-                  <div class="col-md-7 input-group image-preview">
-                    <input placeholder="" type="text" class="form-control image-preview-filename input-form"
-                           disabled="disabled"> 
-                    <span class="input-group-btn">
-                      <div class="btn btn-default image-preview-input">
-                        <span class="glyphicon glyphicon-folder-open"></span>
-                        <span
-                              class="image-preview-input-title">Browse</span>
-                        <input type="file" accept="image/tif, image/png, image/jpeg, image/gif"
-                               name="input-file-preview"> 
-                      </div>
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div class="row row-margin">
-                <div class="form-group">
-                  <label class="col-md-4 control-label input-form">Groundtruth images </label>
-                  <div class="col-md-7 input-group image-preview">
-                    <input placeholder="" type="text" class="form-control image-preview-filename input-form"
-                           disabled="disabled"> 
-                    <span class="input-group-btn">
-                      <div class="btn btn-default image-preview-input">
-                        <span class="glyphicon glyphicon-folder-open"></span>
-                        <span
-                              class="image-preview-input-title">Browse</span>
-                        <input type="file" accept="image/tif, image/png, image/jpeg, image/gif"
-                               name="input-file-preview"> 
-                      </div>
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <button class="btn_add_fin">BEGIN</button>
-            </fieldset>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="cont_princ_lists">
-          <ul>
-            <li class="list_shopping li_num_0_1">
-              <div class="col_md_1_list">
-                <p> 23/08/2017
-                  <br> 17:53 GMT 
-                </p>
-              </div>
-              <div class="col_md_2_list">
-                <h4>Football images</h4>
-                <p>Improving the DNLM filter parameters for football related images in order
-                  to achieve a better segme...
-                </p>
-                <p> w = 3.145669 &ensp; / &ensp; w<sub>n</sub> = 9 &ensp; / &ensp; sigma
-                  <sub>r</sub> = 18 
-                </p>
-              </div>
-              <div class="col-sm-3 text-left">
-                <br /> <a href=""><i class="glyphicon  glyphicon-eye-open"></i>
-                View</a>
-                <br /> <a href=""><i
-                                     class="glyphicon glyphicon-pencil"></i> Edit</a>
-                <br /> <a href=""><i
-                                     class="glyphicon glyphicon-export"></i> Export</a>
-                <br /> <a href="" style="color: #ad2d3a;"><i
-                                                             class="glyphicon glyphicon-trash"></i> Delete</a>
-                <br /> 
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <script src="js/calibrate.js"></script>
-  </body>
+	<div class="container">
+
+		<div class="col-md-6">
+
+			<div class="form-group">
+				<span th:text="${message}"></span>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<strong>CALIBRATION</strong> <small></small>
+				</div>
+
+				<div class="panel-body">
+
+					<form method="POST" th:action="@{/run-calibration}"
+						enctype="multipart/form-data">
+
+						<legend>
+							<h5>Initial parameters</h5>
+						</legend>
+						<div class="row row-margin">
+							<div class="form-group">
+								<label class="col-md-4 control-label input-form"
+									for="modification_date">w values</label>
+								<div class="col-md-4">
+									<input id="lower_w" name="lower_w" placeholder="Lower-bound w"
+										class="input_title_desc input-form" required="" type="number"
+										min="1" step="1">
+								</div>
+								<div class="col-md-4">
+									<input id="upper_w" name="upper_w" placeholder="Upper-bound w"
+										class="input_title_desc input-form" required="" type="number"
+										min="1" step="1">
+								</div>
+							</div>
+						</div>
+						<div class="row row-margin">
+							<div class="form-group">
+								<label class="col-md-4 control-label input-form"> w<sub>n</sub>
+									values
+								</label>
+								<div class="col-md-4">
+									<input id="lower_w_n" name="lower_w_n" type="number" min="1"
+										step="1" placeholder="Lower-bound w_n"
+										class="input_title_desc input-form" required="">
+								</div>
+								<div class="col-md-4">
+									<input id="upper_w_n" name="upper_w_n" type="number" min="1"
+										step="1" placeholder="Upper-bound w_n"
+										class="input_title_desc input-form" required="">
+								</div>
+							</div>
+						</div>
+						<div class="row row-margin">
+							<div class="form-group">
+								<label class="col-md-4 control-label input-form">sigma r
+									values </label>
+								<div class="col-md-4">
+									<input id="lower_s_r" name="lower_s_r"
+										placeholder="Lower-bound s_r"
+										class="input_title_desc input-form" required="" type="number"
+										min="1" step="1">
+								</div>
+								<div class="col-md-4">
+									<input id="upper_s_r" name="upper_s_r"
+										placeholder="Upper-bound s_r"
+										class="input_title_desc input-form" required="" type="number"
+										min="1" step="1">
+								</div>
+							</div>
+						</div>
+						<legend>
+							<h5>Genetic algorithm settings</h5>
+						</legend>
+						<div class="row row-margin">
+							<div class="form-group">
+								<label class="col-md-4 control-label input-form">Title</label>
+								<div class="col-md-8">
+									<input id="title" name="title"
+										placeholder="A title for the calibration job"
+										class="input_title_desc input-form" required="" type="text">
+								</div>
+							</div>
+						</div>
+						<div class="row row-margin">
+							<div class="form-group">
+								<label class="col-md-4 control-label input-form">Description</label>
+								<div class="col-md-8">
+									<input id="description" name="description"
+										placeholder="A brief description of the calibration"
+										class="input_title_desc input-form" required="" type="text">
+								</div>
+							</div>
+						</div>
+						<div class="row row-margin">
+							<div class="form-group">
+								<label class="col-md-4 control-label input-form">Max.
+									individuals </label>
+								<div class="col-md-8">
+									<input id="max_ind" name="max_ind"
+										placeholder="Max number of individuals per generation"
+										class="input_title_desc input-form" required="" type="number"
+										min="1" step="1">
+								</div>
+							</div>
+						</div>
+						<div class="row row-margin">
+							<div class="form-group">
+								<label class="col-md-4 control-label input-form">Generations</label>
+								<div class="col-md-8">
+									<input id="max_gen" name="max_gen"
+										placeholder="Max number of generations"
+										class="input_title_desc input-form" required="" type="number"
+										min="1" step="1">
+								</div>
+							</div>
+						</div>
+						<div class="row row-margin">
+							<div class="form-group">
+								<label class="col-md-4 control-label input-form">Mutation
+									percentage </label>
+								<div class="col-md-8">
+									<input id="mut_perc" name="mut_perc"
+										placeholder="Mutations scale (0.00 - 1.00)"
+										class="input_title_desc input-form" required="" type="number"
+										min="0" step="0.01" max="1">
+								</div>
+							</div>
+						</div>
+						<div class="row row-margin">
+							<div class="form-group">
+								<label class="col-md-4 control-label input-form">Mutation
+									type </label>
+								<div class="col-md-8">
+									<select name="mut_type" class="input_title_desc input-form">
+										<option value="RANDOM_BIT">Random Bit</option>
+										<option value="FLIP_BITS">Bit Swapping</option>
+										<option value="ADDITIVE">Additive</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row row-margin">
+							<div class="form-group">
+								<label class="col-md-4 control-label input-form">Crossover
+									type </label>
+								<div class="col-md-8">
+									<select name="cross_type" class="input_title_desc input-form">
+										<option value="SIMPLE">Simple</option>
+										<option value="BITWISE">Bitwise</option>
+										<option value="CLUSTER">Cluster</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row row-margin">
+							<div class="form-group">
+								<label class="col-md-4 control-label input-form">Fitness
+									function </label>
+								<div class="col-md-8">
+									<select name="fit_func" class="input_title_desc input-form">
+										<option value="DICE">Dice</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row row-margin">
+							<div class="form-group">
+								<label class="col-md-4 control-label input-form">Segmentation
+									method </label>
+								<div class="col-md-8">
+									<select name="seg_method" class="input_title_desc input-form">
+										<option value="OTSU">Otsu</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row row-margin">
+							<div class="form-group">
+								<label class="col-md-4 control-label input-form">Source
+									images </label>
+								<div class="input-group image-preview">
+									<input id="orig" type="text"
+										class="form-control image-preview-filename"
+										disabled="disabled"> <span class="input-group-btn">
+										<div class="btn btn-default image-preview-input">
+											<span class="glyphicon glyphicon-folder-open"></span> <span
+												class="image-preview-input-title">Browse</span> <input
+												id="origfile" type="file"
+												accept="application/octet-stream,application/zip,application/x-zip,application/x-zip-compressed"
+                                                onchange="show_file_orig()"
+												name="orig_images" />
+										</div>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="row row-margin">
+							<div class="form-group">
+								<label class="col-md-4 control-label input-form">Groundtruth
+									images </label>
+								<div class="input-group image-preview">
+									<input id="ground" type="text"
+										class="form-control image-preview-filename"
+										disabled="disabled"> <span class="input-group-btn">
+										<!-- image-preview-input -->
+										<div class="btn btn-default image-preview-input">
+											<span class="glyphicon glyphicon-folder-open"></span> <span
+												class="image-preview-input-title">Browse</span> <input
+												id="groundfile" type="file"
+												accept="application/octet-stream,application/zip,application/x-zip,application/x-zip-compressed"
+                                                onchange="show_file_ground()"
+												name="ground_images" />
+										</div>
+									</span>
+								</div>
+							</div>
+						</div>
+
+						<button class="btn_add_fin" type="submit">BEGIN</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-6">
+
+
+			<div class="cont_princ_lists">
+				<ul>
+					<li class="list_shopping li_num_0_1">
+						<table>
+							<tr>
+								<div class="col_md_1_list">
+									<p>
+										23/08/2017 <br> 17:53 GMT
+									</p>
+								</div>
+								<div class="col_md_2_list">
+									<h4>Football images</h4>
+									<p>Improving the DNLM filter parameters for football
+										related images in order to achieve a better segme...</p>
+									<p>
+										w = 3.145669 &ensp; / &ensp; w<sub>n</sub> = 9 &ensp; / &ensp;
+										sigma<sub>r</sub> = 18
+									</p>
+								</div>
+							</tr>
+							<tr>
+								<td class="col-md-3"><a href=""> <i
+										class="glyphicon glyphicon-eye-open"></i> <span
+										class="hidden-sm hidden-xs"> View</span>
+								</a></td>
+								<td class="col-md-3"><a href=""> <i
+										class="glyphicon glyphicon-pencil"></i> <span
+										class="hidden-sm hidden-xs"> Edit</span>
+								</a></td>
+								<td class="col-md-3"><a href=""> <i
+										class="glyphicon glyphicon-export"></i> <span
+										class="hidden-sm hidden-xs"> Export</span>
+								</a></td>
+								<td class="col-md-3"><a href="" style="color: #ad2d3a;">
+										<i class="glyphicon glyphicon-trash"></i> <span
+										class="hidden-sm hidden-xs"> Delete</span>
+								</a></td>
+							</tr>
+						</table>
+					</li>
+
+
+
+				</ul>
+			</div>
+
+
+		</div>
+
+
+	</div>
+
+	<script>
+		$('#BSbtndanger').filestyle({
+			buttonName : 'btn-danger',
+			buttonText : ' File selection'
+		});
+		$('#BSbtnsuccess').filestyle({
+			buttonName : 'btn-success',
+			buttonText : ' Open'
+		});
+		$('#BSbtninfo').filestyle({
+			buttonName : 'btn-info',
+			buttonText : ' Select a File'
+		});
+	</script>
+
+	<script src="js/calibrate.js"></script>
+	<script type="text/javascript" src="js/bootstrap-filestyle.min.js"></script>
+
+</body>

@@ -7,6 +7,7 @@ import java.util.List;
 import com.parma.genetics.settings.Crossover;
 
 public class CrossoverOperator {
+  
 	private Crossover type;
 	
 	public CrossoverOperator(Crossover type) {

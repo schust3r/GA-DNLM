@@ -14,26 +14,42 @@ public class GaSettings {
 	
 	/** Initial parameter ranges **/
 	
-	// Lives in [0.5, 5]
-	private int lowerSigmaR;	
-	
+	private int lowerSigmaR;		
 	private int upperSigmaR;
 	
-	// Lives in [5, 30]
 	private int lowerW;
-	
 	private int upperW;
 	
-	// Lives in [3, 21]
-	private int lowerWn;			
+	private int lowerWn;
+	private int upperWn;	
+	
+	/** Genetic Algorithm configuration **/
 
-	private int upperWn;
-	
-	// images to filter and check against the ground truth	
-	private List<Mat> originalImages;
-	
-	// the ground truth
-	private List<Mat> groundtruthImages;
+    private String title;
+    
+    private String description;
+    
+    private int maxIndividuals;
+    
+    private int maxGenerations;
+    
+    private double mutationPerc;
+    
+    private Mutation mutationType;
+    
+    private Crossover crossoverType;
+    
+    private Fitness fitnessFunction;
+    
+    private Segmentation segmentationTechnique;
+    
+    private double selectionThreshold;
+    
+    // images to filter and check against the ground truth  
+    private List<Mat> originalImages;
+    
+    // the ground truth
+    private List<Mat> groundtruthImages;
 	
 	public GaSettings() {
 		originalImages = new ArrayList<Mat>();
@@ -106,29 +122,7 @@ public class GaSettings {
 
 	public void setUpperWn(int upperWn) {
 		this.upperWn = upperWn;
-	}	
-	
-	/** Genetic Algorithm configuration **/
-
-	private String title;
-	
-	private String description;
-	
-	private int maxIndividuals;
-	
-	private int maxGenerations;
-	
-	private float mutationPerc;
-	
-	private Mutation mutationType;
-	
-	private Crossover crossoverType;
-	
-	private Fitness fitnessFunction;
-	
-	private Segmentation segmentationTechnique;
-	
-	private float selectionThreshold;
+	}		
 	
 	public String getTitle() {
 		return title;
@@ -162,11 +156,11 @@ public class GaSettings {
 		this.maxGenerations = maxGenerations;
 	}
 
-	public float getMutationPerc() {
+	public double getMutationPerc() {
 		return mutationPerc;
 	}
 
-	public void setMutationPerc(float mutationPerc) {
+	public void setMutationPerc(double mutationPerc) {
 		this.mutationPerc = mutationPerc;
 	}
 
@@ -202,11 +196,11 @@ public class GaSettings {
 		this.segmentationTechnique = segmentationTechnique;
 	}
 
-	public float getSelectionThreshold() {
+	public double getSelectionThreshold() {
 		return selectionThreshold;
 	}
 
-	public void setSelectionThreshold(float selectionThreshold) {
+	public void setSelectionThreshold(double selectionThreshold) {
 		this.selectionThreshold = selectionThreshold;
 	}
 		
