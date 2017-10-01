@@ -99,7 +99,10 @@ public class CalibrateController {
   @Async
   private void runCalibration(Calibration cal) {
 
-    try {
+    try {          
+     
+      // load opencv
+      System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
       GaSettings settings = new GaSettings();
 
@@ -125,7 +128,6 @@ public class CalibrateController {
       settings.setSegmentationTechnique(TypeUtils.getSegmentationType(cal.getSeg_method()));
 
       /* generate the openCV matrices */      
-      System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
       
       // for the original images
       ZipInputStream zisOrig = new ZipInputStream(cal.getOriginalImages().getInputStream());
