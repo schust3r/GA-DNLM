@@ -1,10 +1,11 @@
 package com.parma.controller;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.concurrent.Future;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -21,20 +22,18 @@ import com.parma.genetics.utils.TypeUtils;
 import com.parma.model.Calibration;
 import com.parma.model.User;
 import com.parma.validator.CalibrationValidator;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
-import org.apache.commons.io.IOUtils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
+import org.opencv.imgcodecs.Imgcodecs;
 
 @Controller
-public class CalibrateController {
-
+public class CalibrateController { 
+  
   @Autowired
   private CalibrationValidator calValidator;
+  
+  private boolean calibrationStarted;
 
   @RequestMapping(value = "/calibrate", method = RequestMethod.GET)
   public String dashboard(@ModelAttribute("user") User userForm, Model model) {
@@ -46,13 +45,14 @@ public class CalibrateController {
   @RequestMapping(value = "/run-calibration", method = RequestMethod.POST)
   public String getCalibrationSettings(HttpServletRequest request, Model model,
       @ModelAttribute("calibration") Calibration calForm, BindingResult bindingResult,
-      @RequestParam("orig_images") MultipartFile origImages,
-      @RequestParam("ground_images") MultipartFile groundImages) {
+      @RequestParam("orig_images") MultipartFile[] origImages,
+      @RequestParam("ground_images") MultipartFile[] groundImages) {
 
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     model.addAttribute("username", auth.getName());
 
     Calibration cal = new Calibration();
+    calibrationStarted = false;
 
     try {
 
@@ -83,14 +83,18 @@ public class CalibrateController {
 
       if (bindingResult.hasErrors()) {
         model.addAttribute("message", "Some parameters might be incorrect, please verify.");
-      } else {
-        model.addAttribute("message", "The calibration job is being processed.");
+      } else {        
         runCalibration(cal);
-      }
+        if (calibrationStarted) {
+          model.addAttribute("message", "The calibration job is being processed.");          
+        } else {
+          model.addAttribute("message", "The calibration job has failed to start.");
+        }
+      }      
 
     } catch (Exception ex) {
       // if parsing fails
-      model.addAttribute("message", "Please verify your input and try again.");
+      model.addAttribute("message", "An unexpected error has occured, try again.");
     }
 
     return "calibrate";
@@ -99,8 +103,8 @@ public class CalibrateController {
   @Async
   private void runCalibration(Calibration cal) {
 
-    try {          
-     
+    try {
+
       // load opencv
       System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
@@ -127,32 +131,58 @@ public class CalibrateController {
       settings.setFitnessFunction(TypeUtils.getFitnessType(cal.getFit_func()));
       settings.setSegmentationTechnique(TypeUtils.getSegmentationType(cal.getSeg_method()));
 
-      /* generate the openCV matrices */      
-      
-      // for the original images
-      ZipInputStream zisOrig = new ZipInputStream(cal.getOriginalImages().getInputStream());
-      ZipEntry zeOrig;
-      while ((zeOrig = zisOrig.getNextEntry()) != null) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        IOUtils.copy(zisOrig, out);
-        Mat imagen = new MatOfByte(out.toByteArray());
-        settings.addToOriginalImages(imagen);
+      /* generate the openCV matrices */
+
+      // Validity verification, since orig and ground images must match
+      boolean imagesPaired = true;
+      ArrayList<String> names = new ArrayList<String>();
+      ArrayList<String> groundNames = new ArrayList<String>();
+
+      /* for the original images */
+      for (int i = 0; i < cal.getOriginalImages().length; i++) {
+        // check if filename is not in name list
+        MultipartFile mpf = cal.getOriginalImages()[i];
+        String filename = mpf.getOriginalFilename();
+        if (names.contains(filename)) {
+          imagesPaired = false;
+          break;
+        }
+        names.add(filename);
+        // get bytes and create a Mat
+        byte[] imgBytes = mpf.getBytes();
+        Mat image = Imgcodecs.imdecode(new MatOfByte(imgBytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
+        settings.addToOriginalImages(image);
       }
-      zisOrig.close();
-      
-      ZipInputStream zisGround = new ZipInputStream(cal.getGroundtruthImages().getInputStream());
-      ZipEntry zeGround;
-      while ((zeGround = zisGround.getNextEntry()) != null) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        IOUtils.copy(zisGround, out);
-        Mat imagen = new MatOfByte(out.toByteArray());
-        settings.addToGroundtruthImages(imagen);
+
+      /* for the groundtruth images */
+      for (int i = 0; i < cal.getGroundtruthImages().length; i++) {
+        // verify correct filenames
+        MultipartFile mpf = cal.getOriginalImages()[i];
+        String filename = mpf.getOriginalFilename();
+        if (!names.contains(filename) || groundNames.contains(filename)) {
+          imagesPaired = false;
+          break;
+        }
+        groundNames.add(filename);
+        // get bytes and create a Mat
+        byte[] imgBytes = mpf.getBytes();
+        Mat image = Imgcodecs.imdecode(new MatOfByte(imgBytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
+        settings.addToGroundtruthImages(image);
       }
-      zisGround.close();
       
-      // call and run the calibration GA algorithm
-      GaCalibration gaCalibration = new GaCalibration(settings);
-      gaCalibration.runCalibration();
+      // check equal size of groundtruth and source image arrays
+      if (names.size() == groundNames.size()) {
+        imagesPaired = false;
+      }
+
+      if (imagesPaired) {
+        // call and run the calibration GA algorithm if correct
+        calibrationStarted = true;
+        GaCalibration gaCalibration = new GaCalibration(settings);        
+        gaCalibration.runCalibration();
+      } else {
+        calibrationStarted = false;        
+      }
 
     } catch (Exception ex) {
       System.out.println(ex.getMessage());
