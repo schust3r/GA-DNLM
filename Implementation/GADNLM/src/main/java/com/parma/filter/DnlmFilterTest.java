@@ -12,13 +12,15 @@ public class DnlmFilterTest {
   public void test() {
     
     ImageHandler ih = new ImageHandler();
-    Mat imagen = ih.leerImagenGrises("C:\\Users\\Joel\\Desktop\\TEMP\\lena.jpg");
+    Mat imagen = ih.leerImagenGrises("C:/Users/Joel/Desktop/TEMP/lena.jpg");
     
     DnlmFilter filter = new DnlmFilter();
     
     Mat res = filter.filter(imagen, 3, 4, 5);
     
-    System.out.println("Checksum: " + Core.sumElems(res).val[0]);
+    ih.guardarImagen("C:/Users/Joel/Desktop/TEMP", "dnlmLena", "jpg", res);
+    
+    System.out.println("Checksum: " + Core.sumElems(res).val[0]);        
     
   }
 
