@@ -1,17 +1,11 @@
-$(function() {
-    // Create the preview image
-    $(".image-preview-input input:file").change(function (){     
-        var img = $('<img/>', {
-            id: 'dynamic',
-            width:250,
-            height:200
-        });      
-        var file = this.files[0];
-        var reader = new FileReader();
-        // Set preview image into the popover data-content
-        reader.onload = function (e) {
-            $(".image-preview-filename").val(file.name);
-        }        
-        reader.readAsDataURL(file);
-    });  
-});
+function show_filenames(input_id,label_id) {
+  var inp = document.getElementById(input_id);
+  var filelist = "";
+  var i = 0;
+  for (i = 0; i < inp.files.length - 1; i++) {
+    var name = inp.files.item(i).name;
+    filelist += name + ", ";
+  }
+  filelist += inp.files.item(i).name;
+  $('#' + label_id).val(filelist);
+}

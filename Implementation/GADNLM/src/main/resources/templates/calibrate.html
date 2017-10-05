@@ -207,9 +207,9 @@
 										<div class="btn btn-default image-preview-input">
 											<span class="glyphicon glyphicon-folder-open"></span> <span
 												class="image-preview-input-title">Browse</span> <input
-												id="origfile" type="file"
-												accept="application/octet-stream,application/zip,application/x-zip,application/x-zip-compressed"
-                                                onchange="show_file_orig()"
+												id="origfile" type="file" required="" multiple
+												accept="image/jpeg,image/png,image/tif"
+												onchange="show_filenames('origfile','orig')"
 												name="orig_images" />
 										</div>
 									</span>
@@ -228,9 +228,9 @@
 										<div class="btn btn-default image-preview-input">
 											<span class="glyphicon glyphicon-folder-open"></span> <span
 												class="image-preview-input-title">Browse</span> <input
-												id="groundfile" type="file"
-												accept="application/octet-stream,application/zip,application/x-zip,application/x-zip-compressed"
-                                                onchange="show_file_ground()"
+												id="groundfile" type="file" required="" multiple
+												accept="image/jpeg,image/png,image/tif"
+												onchange="show_filenames('groundfile','ground')"
 												name="ground_images" />
 										</div>
 									</span>
@@ -299,22 +299,6 @@
 
 	</div>
 
-	<script>
-		$('#BSbtndanger').filestyle({
-			buttonName : 'btn-danger',
-			buttonText : ' File selection'
-		});
-		$('#BSbtnsuccess').filestyle({
-			buttonName : 'btn-success',
-			buttonText : ' Open'
-		});
-		$('#BSbtninfo').filestyle({
-			buttonName : 'btn-info',
-			buttonText : ' Select a File'
-		});
-	</script>
-
 	<script src="js/calibrate.js"></script>
-	<script type="text/javascript" src="js/bootstrap-filestyle.min.js"></script>
 
 </body>

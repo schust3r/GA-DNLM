@@ -24,8 +24,8 @@ public class Calibration {
   private String fit_func;
   private String seg_method;
   
-  private MultipartFile originalImages;
-  private MultipartFile groundtruthImages;
+  private MultipartFile[] originalImages;
+  private MultipartFile[] groundtruthImages;
 
   public int getLower_w() {
     return lower_w;
@@ -147,19 +147,19 @@ public class Calibration {
     this.seg_method = seg_method;
   }
 
-  public MultipartFile getOriginalImages() {
+  public MultipartFile[] getOriginalImages() {
     return originalImages;
   }
 
-  public void setOriginalImages(MultipartFile images) {
+  public void setOriginalImages(MultipartFile[] images) {
     this.originalImages = images;
   }
   
-  public MultipartFile getGroundtruthImages() {
+  public MultipartFile[] getGroundtruthImages() {
     return groundtruthImages;
   }
 
-  public void setGroundtruthImages(MultipartFile groundtruthImages) {
+  public void setGroundtruthImages(MultipartFile[] groundtruthImages) {
     this.groundtruthImages = groundtruthImages;
   }
   
