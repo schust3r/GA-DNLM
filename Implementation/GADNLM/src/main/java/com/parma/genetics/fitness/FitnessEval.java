@@ -1,5 +1,7 @@
 package com.parma.genetics.fitness;
 
+import java.util.concurrent.ExecutionException;
+
 import org.opencv.core.Mat;
 import com.parma.filter.DnlmFilter;
 import com.parma.genetics.ParamIndividual;
@@ -23,15 +25,34 @@ public class FitnessEval {
     int w_n = p.getW_n();
     int sigma_r = p.getSigma_r();
 
+    System.out.println(w);
+    System.out.println(w_n);
+    System.out.println(sigma_r);
+    
+    System.out.println(" -- ");
+    
+    if(w %2 == 0) w++;
+    if(w_n%2 == 0) w_n++;
+    
     Thresholding thresholder = new Thresholding();
     Mat original = new Mat();
     pOriginal.copyTo(original);
     
     DnlmFilter filter = new DnlmFilter();
-    Mat filteredImage = filter.filter(original, w, w_n, sigma_r);
+   
+	Mat filteredImage = filter.filter(original, w, w_n, sigma_r);
+    
+
+    /*ImageHandler ih = new ImageHandler();
+    ih.guardarImagen("C:/Users/Eliot/Desktop/horsecrap", ""+sigma_r, "png", filteredImage);
+    */
     
     int otsu = Otsu.getOtsusThreshold(filteredImage);
     thresholder.applyThreshold(filteredImage, otsu);
+    
+
+    //ih.guardarImagen("C:/Users/Eliot/Desktop/horsecrap", "sigma"+sigma_r+"_otsu", "png", filteredImage);
+    
     
     // TODO add Filtering here
 
