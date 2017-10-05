@@ -6,6 +6,7 @@ import com.mongodb.MongoClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 
 /**
@@ -17,13 +18,18 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 public class SpringMongoConfiguration extends AbstractMongoConfiguration {
 
   @Bean
+  public MongoTemplate mongoTemplate() throws Exception {
+    return new MongoTemplate(mongoDbFactory());
+  }
+  
+  @Bean
   public GridFsTemplate gridFsTemplate() throws Exception {
     return new GridFsTemplate(mongoDbFactory(), mappingMongoConverter());
   }
 
   @Override
   protected String getDatabaseName() {
-    return "space";
+    return "gadnlm";
   }
 
   @Override

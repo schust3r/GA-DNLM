@@ -1,9 +1,15 @@
 package com.parma.model;
 
-import java.util.ArrayList;
+import java.util.Date;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.web.multipart.MultipartFile;
 
+@Document(collection="Calibration")
 public class Calibration {
+  
+  private Date initTime;  
   
   private int lower_w;
   private int upper_w;
@@ -12,6 +18,7 @@ public class Calibration {
   private int lower_s_r;
   private int upper_s_r;
   
+  @Indexed(unique = true)
   private String title;
   private String description;
   
@@ -24,8 +31,21 @@ public class Calibration {
   private String fit_func;
   private String seg_method;
   
+  private String owner; 
+  
+  @Transient  
   private MultipartFile[] originalImages;
+  
+  @Transient
   private MultipartFile[] groundtruthImages;
+  
+  /**
+   * Constructor for Time
+   */
+  public Calibration() {
+    this.initTime = new Date();
+    this.initTime.getTime();
+  }
 
   public int getLower_w() {
     return lower_w;
@@ -162,6 +182,13 @@ public class Calibration {
   public void setGroundtruthImages(MultipartFile[] groundtruthImages) {
     this.groundtruthImages = groundtruthImages;
   }
-  
+
+  public String getOwner() {
+    return owner;
+  }
+
+  public void setOwner(String owner) {
+    this.owner = owner;
+  }
 
 }

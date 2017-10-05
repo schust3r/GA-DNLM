@@ -1,11 +1,9 @@
 package com.parma.controller;
 
 import java.util.ArrayList;
-import java.util.concurrent.Future;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import com.parma.dal.CalibrationDal;
 import com.parma.genetics.GaCalibration;
 import com.parma.genetics.settings.GaSettings;
 import com.parma.genetics.utils.TypeUtils;
@@ -77,13 +76,19 @@ public class CalibrateController {
 
       cal.setOriginalImages(origImages);
       cal.setGroundtruthImages(groundImages);
+      
+      cal.setOwner(auth.getName());
 
       // verify integrity of data
       calValidator.validate(calForm, bindingResult);
 
       if (bindingResult.hasErrors()) {
         model.addAttribute("message", "Some parameters might be incorrect, please verify.");
-      } else {        
+      } else {
+        
+        // Save in database
+        CalibrationDal.saveCalibration(cal);        
+        
         runCalibration(cal);
         if (calibrationStarted) {
           model.addAttribute("message", "The calibration job is being processed.");          
@@ -94,7 +99,7 @@ public class CalibrateController {
 
     } catch (Exception ex) {
       // if parsing fails
-      model.addAttribute("message", "An unexpected error has occured, try again.");
+      model.addAttribute("message", "An unexpected error has occured, please try again.");
     }
 
     return "calibrate";
@@ -171,7 +176,7 @@ public class CalibrateController {
       }
       
       // check equal size of groundtruth and source image arrays
-      if (names.size() == groundNames.size()) {
+      if (names.size() != groundNames.size()) {
         imagesPaired = false;
       }
 
