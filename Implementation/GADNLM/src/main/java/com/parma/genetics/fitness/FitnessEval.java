@@ -2,7 +2,6 @@ package com.parma.genetics.fitness;
 
 import org.opencv.core.Mat;
 
-import com.parma.filter.DnlmIfftFilter;
 import com.parma.genetics.ParamIndividual;
 import com.parma.genetics.settings.Fitness;
 import com.parma.segmentation.Dice;

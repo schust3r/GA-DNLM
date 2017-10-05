@@ -1,5 +1,6 @@
 package com.parma.filter;
 
+import java.util.ArrayList;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -20,7 +21,7 @@ public class DnlmFilter {
     int size_x = G.rows();
     int size_y = G.cols();
 
-    Mat R = Mat.zeros(size_x, size_y, CvType.CV_64FC1);       
+    Mat R = Mat.zeros(size_x, size_y, CvType.CV_64FC1);
 
     Mat II2 = Mat.zeros(new Size(size_x, size_y), CvType.CV_64FC1);
     Imgproc.integral(G.mul(G), II2, CvType.CV_64FC1);
@@ -32,28 +33,15 @@ public class DnlmFilter {
 
     X = X.mul(X);
     Y = Y.mul(Y);
-    Mat S = new Mat(X.size(), CvType.CV_64FC1);       
+    Mat S = new Mat(X.size(), CvType.CV_64FC1);
     Core.add(X, Y, S);
     Core.multiply(S, new Scalar(-1.0 / (2.0 * sigma_s * sigma_s)), S);
-    
-    System.out.println(S.dump());
-    System.out.println();
 
     Mat GaussW = new Mat(S.size(), CvType.CV_64FC1);
-    for (int i = 0; i < GaussW.width(); i++) {
-      for (int j = 0; j < GaussW.height(); j++) {
-        double pixel = Math.pow(Math.E, S.get(i, j)[0]);
-        GaussW.put(i, j, pixel);
-      }
-    }
-    
-    System.out.println(GaussW.dump());
-    System.out.println();
+    S.copyTo(GaussW);
+    Core.exp(GaussW, GaussW);
 
     Mat U = NoAdaptativeUSM(G, 3, 17, 0.005);
-    
-    System.out.println(U.dump());
-    System.out.println();
 
     for (int i = 0; i < size_x; i++) {
       for (int j = 0; j < size_y; j++) {
@@ -67,9 +55,6 @@ public class DnlmFilter {
           // get current window
           I = G.submat(iMin - 1, iMax, jMin - 1, jMax);
           I.convertTo(I, CvType.CV_64FC1);
-          
-          System.out.println(I.dump());
-          System.out.println();
 
           int sizeW_x = I.width();
           int sizeW_y = I.height();
@@ -77,22 +62,19 @@ public class DnlmFilter {
           Mat O = Mat.zeros((int) (sizeW_x - 2 * w_n), (int) (sizeW_y - 2 * w_n), CvType.CV_64FC1);
 
           // extract pixel neighborhood P local region
-          int mMin_p = (int) (i - w_n);
-          int mMax_p = (int) (i + w_n);
-          int nMin_p = (int) (j - w_n);
-          int nMax_p = (int) (j + w_n);
+          int mMin_p = (int) (i - w_n - 1);
+          int mMax_p = (int) (i + w_n - 1);
+          int nMin_p = (int) (j - w_n - 1);
+          int nMax_p = (int) (j + w_n - 1);
 
           // get sum of squad neighborhood P
           double sum_p = II2.get(mMin_p, nMin_p)[0] + II2.get(mMax_p + 1, nMax_p + 1)[0]
-              + II2.get(mMin_p, nMax_p + 1)[0] + II2.get(mMax_p + 1, nMin_p)[0];
+              - II2.get(mMin_p, nMax_p + 1)[0] - II2.get(mMax_p + 1, nMin_p)[0];
 
           // get current neighborhood p
-          Mat neighbor_p = G.submat(mMin_p, mMax_p, nMin_p, nMax_p);
+          Mat neighbor_p = G.submat(mMin_p, mMax_p + 1, nMin_p, nMax_p + 1);
           neighbor_p.convertTo(neighbor_p, CvType.CV_64FC1);
-          
-          System.out.println(neighbor_p.dump());
-          System.out.println();
-              
+
           int sizeP_x = neighbor_p.width();
           int sizeP_y = neighbor_p.height();
 
@@ -100,26 +82,45 @@ public class DnlmFilter {
           // output size
           int mm = sizeW_x + sizeP_x - 1;
           int nn = sizeW_y + sizeP_y - 1;
+          
           // pad, multiply and transform back
-          Mat C_a = Mat.zeros(new Size(mm, nn), CvType.CV_64FC1);
-          Mat C_b = Mat.zeros(new Size(mm, nn), CvType.CV_64FC1);
-          Core.copyMakeBorder(I, I, 0, nn - sizeW_y, 0, mm - sizeW_x, Core.BORDER_CONSTANT);
-          Core.dft(I, C_a);
-          Core.copyMakeBorder(neighbor_p, neighbor_p, 0, nn - sizeP_y, 0, mm - sizeP_x,
-              Core.BORDER_CONSTANT);
-          Core.dft(neighbor_p, C_b);
-          Core.flip(C_b, C_b, -1); // rot90 two times
-          C_b = C_b.mul(C_a);
-          Mat C = new Mat(new Size(mm, nn), CvType.CV_64FC1);
-          Core.dft(C_b, C, Core.DFT_INVERSE, 0);
+          // C_a fft2
+          Mat padded = Mat.zeros(new Size(mm, nn), CvType.CV_64FC1);
+          I.copyTo(padded);
+          Core.copyMakeBorder(padded, padded, 0, nn - sizeW_y, 0, nn - sizeW_x,
+              Core.BORDER_CONSTANT, Scalar.all(0));
+          ArrayList<Mat> planes = new ArrayList<Mat>();
+          planes.add(padded.clone());
+          planes.add(Mat.zeros(padded.size(), CvType.CV_64F));
+          Mat complexI_a = new Mat(padded.size(), CvType.CV_64FC2);
+          Core.merge(planes, complexI_a);
+          Core.dft(complexI_a, complexI_a);
+          planes.clear();
+
+          // C_b fft2 + flip
+          padded = Mat.zeros(new Size(mm, nn), CvType.CV_64FC1);
+          neighbor_p.copyTo(padded);
+          Core.flip(padded, padded, -1); // rot90 2 times
+          Core.copyMakeBorder(padded, padded, 0, nn - sizeP_y, 0, nn - sizeP_x,
+              Core.BORDER_CONSTANT, Scalar.all(0));
+          planes.add(padded);
+          planes.add(Mat.zeros(padded.size(), CvType.CV_64F));
+          Mat complexI_b = new Mat(padded.size(), CvType.CV_64FC2);
+          Core.merge(planes, complexI_b);
+          Core.dft(complexI_b, complexI_b);
+          planes.clear();         
+          
+          // complex C          
+          Mat C = new Mat(complexI_b.size(), CvType.CV_64FC2);                
+          Core.mulSpectrums(complexI_a, complexI_b, C, Core.DFT_ROWS);          
+          Core.idft(C, C, Core.DFT_COMPLEX_OUTPUT + Core.DFT_SCALE, 0);
+          Core.extractChannel(C, C, 0); // extract REAL channel
+
           // padding constants (for output of size == size(A))
           int padC_m = (int) Math.ceil((sizeP_x - 1) / 2.0);
           int padC_n = (int) Math.ceil((sizeP_y - 1) / 2.0);
           // convolution result
-          Mat correlation = C.submat(padC_m + 1, sizeW_x + padC_m, padC_n + 1, sizeW_y + padC_n);
-          
-          System.out.println(correlation.dump());
-          System.out.println();
+          Mat correlation = C.submat(padC_m, sizeW_x + padC_m, padC_n, sizeW_y + padC_n);
 
           for (int m = (int) w_n; m < sizeW_x - w_n; m++) {
             int mMin_w = (int) (iMin + m - 1 - w_n);
@@ -134,40 +135,25 @@ public class DnlmFilter {
             }
           }
 
-          for (int k0 = 0; i < O.width(); i++) {
-            for (int k1 = 0; j < O.height(); j++) {
-              double pixel = Math.pow(Math.E, O.get(i, j)[0] / (-2.0 * sigma_r * sigma_r));
-              O.put(k0, k1, pixel);
-            }
-          }
+          Core.multiply(O, new Scalar(1.0 / (-2.0 * sigma_r * sigma_r)), O);
+          Core.exp(O, O);
           O = O.mul(GaussW);
-          
-          System.out.println(O.dump());
-          System.out.println();
-          
+
           double norm_factor = Core.sumElems(O).val[0];
+          
           Mat OxU_sub = U.submat((int) (iMin + w_n - 1), (int) (iMax - w_n), (int) (jMin + w_n - 1),
               (int) (jMax - w_n));
-          
-          System.out.println(OxU_sub.dump());
-          System.out.println();
-          
+
           OxU_sub = OxU_sub.mul(O);
           
-          System.out.println(OxU_sub.dump());
-          System.out.println();
-          
-          Core.multiply(OxU_sub, new Scalar(1.0/norm_factor), OxU_sub);
-          R.put(i, j, Core.sumElems(OxU_sub).val[0]);
+          R.put(i, j, Core.sumElems(OxU_sub).val[0] / norm_factor);
         }
       }
     }
-    
-    System.out.println(R.dump());
-    System.out.println();
-    
+
     return R;
   } // end DNLM-IFFT Filter
+
 
   /**
    * No adaptative laplacian. CURRENT VERSION HAS HARDCODED KERNEL
@@ -176,22 +162,18 @@ public class DnlmFilter {
     Mat kernel = new Mat(kernelSize, kernelSize, CvType.CV_64FC1);
     for (int i = 0; i < kernelSize; i++) {
       for (int j = 0; j < kernelSize; j++) {
-        double value = (i == 8 && j == 8) ? 
-            79723.18339100346 : -276.8166089965398;
+        double value = (i == 8 && j == 8) ? 79723.18339100346 : -276.8166089965398;
         kernel.put(i, j, value);
       }
     }
-    Mat Z = new Mat(SrcImage.size(), CvType.CV_64FC1);    
-    Imgproc.filter2D(SrcImage, Z, -1, kernel, new Point(-1, -1), 0.0, Core.BORDER_CONSTANT);
-        
-    System.out.println(Z.dump());
-    System.out.println();    
-    
+    Mat Z = new Mat(SrcImage.size(), CvType.CV_64FC1);
+    Imgproc.filter2D(SrcImage, Z, -1, kernel, new Point(-1, -1), 0, Core.BORDER_CONSTANT);
+
     double maxZ = 0, maxSrc = 0;
     // get max (abs) of Z
     for (int i = 0; i < Z.width(); i++) {
       for (int j = 0; j < Z.height(); j++) {
-        double currVal = Math.abs(Z.get(i, j)[0]);
+        double currVal = Math.abs(Z.get(j, i)[0]);
         if (currVal > maxZ)
           maxZ = currVal;
       }
@@ -199,17 +181,22 @@ public class DnlmFilter {
     // get max of SrcImage
     for (int i = 0; i < SrcImage.width(); i++) {
       for (int j = 0; j < SrcImage.height(); j++) {
-        double currVal = SrcImage.get(i, j)[0];
+        double currVal = SrcImage.get(j, i)[0];
         if (currVal > maxSrc)
           maxSrc = currVal;
       }
-    }    
-    Core.multiply(Z, new Scalar(lambda * maxSrc / maxZ), Z);
+    }
+    Core.multiply(Z, new Scalar(lambda * maxSrc / maxZ), Z, 1.0, CvType.CV_64FC1);
+
     Mat U = new Mat(SrcImage.size(), CvType.CV_64FC1);
     Core.add(SrcImage, Z, U, Mat.ones(SrcImage.size(), CvType.CV_8UC1), CvType.CV_64FC1);
+
     return U;
   } // end NoAdaptativeUSM
 
+  /**
+   * Meshgrid generator
+   */
   private void meshgrid(Range xgv, Range ygv, Mat X, Mat Y) {
     double[] t_x = new double[xgv.size() + 1];
     double[] t_y = new double[ygv.size() + 1];
@@ -230,5 +217,3 @@ public class DnlmFilter {
   } // end Meshgrid
 
 } /* end DnlmFilter */
-
-
