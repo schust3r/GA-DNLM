@@ -2,9 +2,15 @@ package com.parma.genetics.fitness;
 
 import org.opencv.core.Mat;
 
+<<<<<<< HEAD
+=======
+import com.parma.filter.DnlmFilter;
+>>>>>>> fa3dc1ebf9eb7cb0a81bcfa57e4a044f74599b97
 import com.parma.genetics.ParamIndividual;
 import com.parma.genetics.settings.Fitness;
+import com.parma.images.ImageHandler;
 import com.parma.segmentation.Dice;
+import com.parma.segmentation.Otsu;
 import com.parma.segmentation.Thresholding;
 
 public class FitnessEval {
@@ -24,8 +30,19 @@ public class FitnessEval {
     Thresholding thresholder = new Thresholding();
     Mat original = new Mat();
     pOriginal.copyTo(original);
-    thresholder.applyThreshold(original, w+w_n+sigma_r);
     
+    DnlmFilter filter = new DnlmFilter();
+    Mat filteredImage = filter.filter(original, w, w_n, sigma_r);
+    
+    
+    
+    
+    
+    
+    ImageHandler ih = new ImageHandler();
+    ih.guardarImagen("C:/Users/Eliot/Desktop/horsecrap", ""+sigma_r, ".png" , filteredImage);
+    int otsu = Otsu.getOtsusThreshold(filteredImage);
+    thresholder.applyThreshold(filteredImage, otsu);
     
     // TODO add Filtering here
 
@@ -40,10 +57,11 @@ public class FitnessEval {
     // ~~~~~~~~~
 
     if (type == Fitness.DICE) {
-      return Dice.calcularDice(original, pGroundtruth);
+      return Dice.calcularDice(filteredImage, pGroundtruth);
     } else {
       return 0;
     }
+    
   }
 
 }

@@ -9,6 +9,7 @@ package com.parma.segmentation;
  */
 
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
 public class Otsu {
@@ -18,11 +19,14 @@ public class Otsu {
 	}
 
 	public static long[] getHistogram(Mat inputImage) {
+		inputImage.convertTo(inputImage, CvType.CV_8U);
 		long histogram[] = new long[256];
 		for (int r = 0; r < inputImage.rows(); r++) {
 			for (int c = 0; c < inputImage.cols(); c++) {
 				double intensity[] = inputImage.get(r, c);
 				int value = (int) intensity[0];
+				if(value > 255) System.out.println(value);
+				
 				histogram[value]++;
 			}
 		}
