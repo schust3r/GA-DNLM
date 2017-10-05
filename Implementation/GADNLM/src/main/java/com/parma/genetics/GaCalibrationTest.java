@@ -22,10 +22,10 @@ public class GaCalibrationTest {
 		GaSettings settings = new GaSettings();
 		settings.setCrossoverType(Crossover.SIMPLE);
 		settings.setFitnessFunction(Fitness.DICE);
-		settings.setLowerW(5);
-		settings.setUpperW(21);
+		settings.setLowerW(3);
+		settings.setUpperW(3);
 		settings.setLowerWn(3);
-		settings.setUpperWn(5);
+		settings.setUpperWn(3);
 		settings.setLowerSigmaR(0);
 		settings.setUpperSigmaR(150);
 		
@@ -37,8 +37,8 @@ public class GaCalibrationTest {
 		settings.setSelectionThreshold((float)0.55);
 		
 		ImageHandler imageHandler = new ImageHandler();
-		Mat imagen = imageHandler.leerImagenGrises("C:/Users/Eliot/Desktop/1.png");
-		Mat imagengd = imageHandler.leerImagenGrises("C:/Users/Eliot/Desktop/1g.png");
+		Mat imagen = imageHandler.leerImagenGrises("test_files/input/1.png");
+		Mat imagengd = imageHandler.leerImagenGrises("test_files/input/1g.png");
 		
 		settings.addToOriginalImages(imagen);
 		settings.addToGroundtruthImages(imagengd);

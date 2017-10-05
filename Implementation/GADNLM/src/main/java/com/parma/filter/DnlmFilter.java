@@ -36,9 +36,6 @@ public class DnlmFilter {
     Core.add(X, Y, S);
     Core.multiply(S, new Scalar(-1.0 / (2.0 * sigma_s * sigma_s)), S);
     
-    System.out.println(S.dump());
-    System.out.println();
-
     Mat GaussW = new Mat(S.size(), CvType.CV_64FC1);
     for (int i = 0; i < GaussW.width(); i++) {
       for (int j = 0; j < GaussW.height(); j++) {
@@ -46,14 +43,11 @@ public class DnlmFilter {
         GaussW.put(i, j, pixel);
       }
     }
-    
-    System.out.println(GaussW.dump());
-    System.out.println();
+
 
     Mat U = NoAdaptativeUSM(G, 3, 17, 0.005);
     
-    System.out.println(U.dump());
-    System.out.println();
+  
 
     for (int i = 0; i < size_x; i++) {
       for (int j = 0; j < size_y; j++) {
@@ -68,8 +62,6 @@ public class DnlmFilter {
           I = G.submat(iMin - 1, iMax, jMin - 1, jMax);
           I.convertTo(I, CvType.CV_64FC1);
           
-          System.out.println(I.dump());
-          System.out.println();
 
           int sizeW_x = I.width();
           int sizeW_y = I.height();
@@ -89,9 +81,7 @@ public class DnlmFilter {
           // get current neighborhood p
           Mat neighbor_p = G.submat(mMin_p, mMax_p, nMin_p, nMax_p);
           neighbor_p.convertTo(neighbor_p, CvType.CV_64FC1);
-          
-          System.out.println(neighbor_p.dump());
-          System.out.println();
+       
               
           int sizeP_x = neighbor_p.width();
           int sizeP_y = neighbor_p.height();
@@ -118,9 +108,7 @@ public class DnlmFilter {
           // convolution result
           Mat correlation = C.submat(padC_m + 1, sizeW_x + padC_m, padC_n + 1, sizeW_y + padC_n);
           
-          System.out.println(correlation.dump());
-          System.out.println();
-
+  
           for (int m = (int) w_n; m < sizeW_x - w_n; m++) {
             int mMin_w = (int) (iMin + m - 1 - w_n);
             int mMax_w = (int) (iMin + m - 1 + w_n);
@@ -134,28 +122,26 @@ public class DnlmFilter {
             }
           }
 
-          for (int k0 = 0; i < O.width(); i++) {
-            for (int k1 = 0; j < O.height(); j++) {
-              double pixel = Math.pow(Math.E, O.get(i, j)[0] / (-2.0 * sigma_r * sigma_r));
+          /*for (int k0 = 0; k0 < O.height(); k0++) {
+            for (int k1 = 0; k1 < O.width(); k1++) {
+              double pixel = O.get(k0, k1)[0] / (-2.0 * sigma_r * sigma_r);
               O.put(k0, k1, pixel);
             }
-          }
-          O = O.mul(GaussW);
+          }*/
+          Core.divide(1.0/(-2.0 * sigma_r * sigma_r), O ,O);
+          Core.exp(O, O);
+          Core.multiply(O, GaussW, O);
           
-          System.out.println(O.dump());
-          System.out.println();
+
           
           double norm_factor = Core.sumElems(O).val[0];
           Mat OxU_sub = U.submat((int) (iMin + w_n - 1), (int) (iMax - w_n), (int) (jMin + w_n - 1),
               (int) (jMax - w_n));
           
-          System.out.println(OxU_sub.dump());
-          System.out.println();
-          
+
           OxU_sub = OxU_sub.mul(O);
           
-          System.out.println(OxU_sub.dump());
-          System.out.println();
+ 
           
           Core.multiply(OxU_sub, new Scalar(1.0/norm_factor), OxU_sub);
           R.put(i, j, Core.sumElems(OxU_sub).val[0]);
@@ -163,8 +149,6 @@ public class DnlmFilter {
       }
     }
     
-    System.out.println(R.dump());
-    System.out.println();
     
     return R;
   } // end DNLM-IFFT Filter
@@ -184,21 +168,24 @@ public class DnlmFilter {
     Mat Z = new Mat(SrcImage.size(), CvType.CV_64FC1);    
     Imgproc.filter2D(SrcImage, Z, -1, kernel, new Point(-1, -1), 0.0, Core.BORDER_CONSTANT);
         
-    System.out.println(Z.dump());
-    System.out.println();    
-    
+
+
     double maxZ = 0, maxSrc = 0;
     // get max (abs) of Z
-    for (int i = 0; i < Z.width(); i++) {
-      for (int j = 0; j < Z.height(); j++) {
+    for (int i = 0; i < Z.height(); i++) {
+  
+      for (int j = 0; j < Z.width(); j++) {
         double currVal = Math.abs(Z.get(i, j)[0]);
+
+      
+        
         if (currVal > maxZ)
           maxZ = currVal;
       }
     }
     // get max of SrcImage
-    for (int i = 0; i < SrcImage.width(); i++) {
-      for (int j = 0; j < SrcImage.height(); j++) {
+    for (int i = 0; i < SrcImage.height(); i++) {
+      for (int j = 0; j < SrcImage.width(); j++) {
         double currVal = SrcImage.get(i, j)[0];
         if (currVal > maxSrc)
           maxSrc = currVal;

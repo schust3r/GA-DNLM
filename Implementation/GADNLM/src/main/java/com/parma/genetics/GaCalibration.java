@@ -101,7 +101,9 @@ private double getAverageFitness() {
         for (int imgInd = 0; imgInd < settings.getSampleCount(); imgInd++) {
           score += fitEval.evaluate(p, settings.getOriginalImage(imgInd),
               settings.getGroundtruthImage(imgInd));
+         
         }
+        System.out.println(score);
       }
       population.getIndividual(ind).setFitness(score);
     }
