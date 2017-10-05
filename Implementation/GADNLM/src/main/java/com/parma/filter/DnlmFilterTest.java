@@ -17,12 +17,7 @@ public class DnlmFilterTest {
     DnlmFilter filter = new DnlmFilter();
     
     Mat res = filter.filter(imagen, 3, 3, 5);
-    
-<<<<<<< HEAD
-    ih.guardarImagen("C:/Users/Joel/Desktop/TEMP", "celula", "jpg", res);
-=======
     ih.guardarImagen("C:/Users/Eliot/Desktop", "2", "png", res);
->>>>>>> fa3dc1ebf9eb7cb0a81bcfa57e4a044f74599b97
     
     System.out.println("Checksum: " + Core.sumElems(res).val[0]);        
     
