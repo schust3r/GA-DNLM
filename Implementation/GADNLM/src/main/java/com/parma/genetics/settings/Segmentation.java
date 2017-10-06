@@ -1,7 +1,7 @@
 package com.parma.genetics.settings;
 
 public enum Segmentation {
-
-	OTSU
+  
+	OTSU, KITTLER, WATERSHED
 	
 }

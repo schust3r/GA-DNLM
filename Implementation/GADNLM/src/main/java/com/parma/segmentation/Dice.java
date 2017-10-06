@@ -6,6 +6,7 @@ import org.opencv.core.MatOfByte;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import com.parma.images.ImageHandler;
 
 /**
  * Clase para calcular la métrica de Dice o coeficiente de Sorensen-Dice. Permite encontrar qué tan
@@ -70,7 +71,7 @@ public class Dice {
         }
       }
     }
-    return (2.0 * cardIntersection) / (2.0)*cardinality;
+    return (2.0 * cardIntersection) / (2.0) * cardinality;
   }
 
   /**
@@ -85,14 +86,7 @@ public class Dice {
     // llamar librería nativa
     System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-    Imgproc.threshold(imagenUmbralizada, imagenUmbralizada, 1, 256, Imgproc.THRESH_BINARY);
-
-    Imgproc.threshold(groundTruth, groundTruth, 1, 256, Imgproc.THRESH_BINARY);
-
     Size sizeGroundTruth = groundTruth.size();
-    Size sizeImagenUmbralizada = imagenUmbralizada.size();
-
-    
 
     float cardIntersection = 0;
     float cardinality = 0;
@@ -114,15 +108,14 @@ public class Dice {
             cardIntersection++;
           }
 
-        }
-        else {
-        	if (primer[0] !=0) {
-        		cardinality++;
-        	}
+        } else {
+          if (primer[0] != 0) {
+            cardinality++;
+          }
         }
       }
     }
-    return (2.0 * cardIntersection) /( 2.0 * cardinality);
+    return (2.0 * cardIntersection) / (2.0 * cardinality);
   }
 
 

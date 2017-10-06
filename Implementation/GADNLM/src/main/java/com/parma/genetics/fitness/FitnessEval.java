@@ -1,22 +1,23 @@
 package com.parma.genetics.fitness;
 
 import java.util.concurrent.ExecutionException;
-
 import org.opencv.core.Mat;
 import com.parma.filter.DnlmFilter;
 import com.parma.genetics.ParamIndividual;
 import com.parma.genetics.settings.Fitness;
-import com.parma.images.ImageHandler;
+import com.parma.genetics.settings.Segmentation;
 import com.parma.segmentation.Dice;
 import com.parma.segmentation.Otsu;
 import com.parma.segmentation.Thresholding;
 
 public class FitnessEval {
 
-  private Fitness type;
+  private Fitness fitnessFunction;
+  private Segmentation segTechnique;
 
-  public FitnessEval(Fitness type) {
-    this.type = type;
+  public FitnessEval(Fitness fitness, Segmentation seg) {
+    this.fitnessFunction = fitness;
+    this.segTechnique = seg;
   }
 
   public double evaluate(ParamIndividual p, Mat pOriginal, Mat pGroundtruth) {
@@ -28,50 +29,74 @@ public class FitnessEval {
     System.out.println(w);
     System.out.println(w_n);
     System.out.println(sigma_r);
-    
     System.out.println(" -- ");
-    
-    if(w %2 == 0) w++;
-    if(w_n%2 == 0) w_n++;
-    
-    Thresholding thresholder = new Thresholding();
+
+    w = (w % 2 == 0) ? w++ : w;
+    w_n = (w % 2 == 0) ? w_n++ : w_n;
+
     Mat original = new Mat();
     pOriginal.copyTo(original);
-    
+
     DnlmFilter filter = new DnlmFilter();
-   
-	Mat filteredImage = filter.filter(original, w, w_n, sigma_r);
-    
 
-    /*ImageHandler ih = new ImageHandler();
-    ih.guardarImagen("C:/Users/Eliot/Desktop/horsecrap", ""+sigma_r, "png", filteredImage);
-    */
+    // filter the image with DNLM-IDFT
+    Mat filteredImage = filter.filter(original, w, w_n, sigma_r);
     
-    int otsu = Otsu.getOtsusThreshold(filteredImage);
-    thresholder.applyThreshold(filteredImage, otsu);
-    
+    // segmentation of the filtered image
+    filteredImage = applySegmentation(filteredImage);
 
-    //ih.guardarImagen("C:/Users/Eliot/Desktop/horsecrap", "sigma"+sigma_r+"_otsu", "png", filteredImage);
-    
-    
-    // TODO add Filtering here
+    // calculate fitness with the specified similarity check function
+    double fitness = getFitnessResult(filteredImage, pGroundtruth);
 
-    //if (w % 2 == 0) w++;
-    
-    //DnlmIfftFilter filter = new  DnlmIfftFilter(original, w, 3, sigma_r);
-    //filter.filterImage();
+    return fitness;
+  }
 
- 
-    //Mat newImagen = new Mat();
-    //newImagen
-    // ~~~~~~~~~
 
-    if (type == Fitness.DICE) {
-      return Dice.calcularDice(filteredImage, pGroundtruth);
-    } else {
-      return 0;
+  private Mat applySegmentation(Mat image) {
+    /*
+     * Watershed segmentation does not return a Threshold and must be implemented differently
+     */
+    if (segTechnique == Segmentation.WATERSHED) {
+      // TODO implementation of watershed
+      return new Mat();
+    }
+
+    else {
+      // calculate the binary threshold with the specified technique
+      int threshold = getThreshold(image);
+      Thresholding thresholder = new Thresholding();
+      // apply the binary segmentation to DNLM-IFFT filtered image
+      thresholder.applyThreshold(image, threshold);
+      return image;  
     }
     
   }
+
+  
+  private int getThreshold(Mat image) {
+    switch (segTechnique) {
+      case OTSU:
+        return Otsu.getOtsusThreshold(image);
+      /*
+       * More methods to be added ...
+       */        
+      default:
+        return 0;
+    }
+  }
+
+
+  private double getFitnessResult(Mat image, Mat groundtruth) {
+    switch (fitnessFunction) {
+      case DICE:
+        return Dice.calcularDice(image, groundtruth);
+      /*
+       * More methods to be added ...
+       */
+      default:
+        return 0;
+    }
+  }
+
 
 }

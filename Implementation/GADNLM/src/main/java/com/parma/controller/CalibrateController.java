@@ -19,63 +19,66 @@ import com.parma.dal.CalibrationDal;
 import com.parma.genetics.GaCalibration;
 import com.parma.genetics.settings.GaSettings;
 import com.parma.genetics.utils.TypeUtils;
+import com.parma.images.ImageHandler;
 import com.parma.model.Calibration;
 import com.parma.model.User;
 import com.parma.validator.CalibrationValidator;
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 
 @Controller
-public class CalibrateController { 
-  
+public class CalibrateController {
+
   @Autowired
   private CalibrationValidator calValidator;
-  
+
   private boolean calibrationStarted;
 
   @RequestMapping(value = "/calibrate", method = RequestMethod.GET)
   public String dashboard(@ModelAttribute("user") User userForm, Model model) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     model.addAttribute("username", auth.getName());
-    
+
     List<Calibration> calibrations = CalibrationDal.loadAllCalibrations();
     model.addAttribute("calibrations", calibrations);
-    
+
     return "calibrate";
   }
-  
-  @RequestMapping(value = "/delete-cal", params = { "id" }, method = RequestMethod.GET)
-  public String removeCalibration(@RequestParam(value = "id") String title, 
+
+  @RequestMapping(value = "/delete-cal", params = {"id"}, method = RequestMethod.GET)
+  public String removeCalibration(@RequestParam(value = "id") String title,
       HttpServletRequest servletRequest, Model model) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     model.addAttribute("username", auth.getName());
-    
+
     CalibrationDal.removeCalibration(title);
-    
+
     model.addAttribute("message", "The calibration '" + title + "' has been deleted");
-    
+
     return "redirect:/calibrate";
   }
-  
-  @RequestMapping(value = "/view-cal", params = { "id" }, method = RequestMethod.GET)
-  public String viewCalibration(@RequestParam(value = "id") String title, 
+
+  @RequestMapping(value = "/view-cal", params = {"id"}, method = RequestMethod.GET)
+  public String viewCalibration(@RequestParam(value = "id") String title,
       HttpServletRequest servletRequest, Model model) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     model.addAttribute("username", auth.getName());
-    
+
     // all calibrations
     List<Calibration> calibrations = CalibrationDal.loadAllCalibrations();
     model.addAttribute("calibrations", calibrations);
-    
+
     // details of a single calibration
     Calibration cal = CalibrationDal.loadCalibration(title);
     model.addAttribute("cal", cal);
-    
+
     return "calibrate";
   }
-  
+
 
   @RequestMapping(value = "/run-calibration", method = RequestMethod.POST)
   public String getCalibrationSettings(HttpServletRequest request, Model model,
@@ -112,7 +115,7 @@ public class CalibrateController {
 
       cal.setOriginalImages(origImages);
       cal.setGroundtruthImages(groundImages);
-      
+
       cal.setOwner(auth.getName());
 
       // verify integrity of data
@@ -121,17 +124,17 @@ public class CalibrateController {
       if (bindingResult.hasErrors()) {
         model.addAttribute("message", "Some parameters might be incorrect, please verify.");
       } else {
-        
+
         // Save in database
-        CalibrationDal.saveCalibration(cal);        
-        
+        CalibrationDal.saveCalibration(cal);
+
         runCalibration(cal);
         if (calibrationStarted) {
-          model.addAttribute("message", "The calibration job is being processed.");          
+          model.addAttribute("message", "The calibration job is being processed.");
         } else {
           model.addAttribute("message", "The calibration job has failed to start.");
         }
-      }      
+      }
 
     } catch (Exception ex) {
       // if parsing fails
@@ -192,13 +195,21 @@ public class CalibrateController {
         // get bytes and create a Mat
         byte[] imgBytes = mpf.getBytes();
         Mat image = Imgcodecs.imdecode(new MatOfByte(imgBytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
-        settings.addToOriginalImages(image);
+
+        // conversion to grayscale
+        Mat imageGray = image.clone();
+        if (imageGray.channels() > 2) {
+          Imgproc.cvtColor(image, imageGray, Imgproc.COLOR_RGB2GRAY);
+          imageGray.convertTo(imageGray, CvType.CV_64FC1);
+        }
+
+        settings.addToOriginalImages(imageGray);
       }
 
       /* for the groundtruth images */
       for (int i = 0; i < cal.getGroundtruthImages().length; i++) {
         // verify correct filenames
-        MultipartFile mpf = cal.getOriginalImages()[i];
+        MultipartFile mpf = cal.getGroundtruthImages()[i];
         String filename = mpf.getOriginalFilename();
         if (!names.contains(filename) || groundNames.contains(filename)) {
           imagesPaired = false;
@@ -208,9 +219,18 @@ public class CalibrateController {
         // get bytes and create a Mat
         byte[] imgBytes = mpf.getBytes();
         Mat image = Imgcodecs.imdecode(new MatOfByte(imgBytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
-        settings.addToGroundtruthImages(image);
+
+        // convert to gray if needed
+        Mat imageGray = image.clone();
+        if (imageGray.channels() > 2) {
+          Imgproc.cvtColor(image, imageGray, Imgproc.COLOR_RGB2GRAY);
+          imageGray.convertTo(imageGray, CvType.CV_64FC1);
+        }
+        Imgproc.threshold(imageGray, imageGray, 1, 256, Imgproc.THRESH_BINARY);
+
+        settings.addToGroundtruthImages(imageGray);
       }
-      
+
       // check equal size of groundtruth and source image arrays
       if (names.size() != groundNames.size()) {
         imagesPaired = false;
@@ -219,10 +239,10 @@ public class CalibrateController {
       if (imagesPaired) {
         // call and run the calibration GA algorithm if correct
         calibrationStarted = true;
-        GaCalibration gaCalibration = new GaCalibration(settings);        
+        GaCalibration gaCalibration = new GaCalibration(settings);
         gaCalibration.runCalibration();
       } else {
-        calibrationStarted = false;        
+        calibrationStarted = false;
       }
 
     } catch (Exception ex) {

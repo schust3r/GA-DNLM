@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.parma.genetics.fitness.FitnessEval;
 import com.parma.genetics.settings.Fitness;
 import com.parma.genetics.settings.GaSettings;
+import com.parma.images.ImageHandler;
 
 public class GaCalibration {
 
@@ -24,92 +25,89 @@ public class GaCalibration {
     this.safeboxSize = (int) ((double) settings.getMaxIndividuals() * 0.2);
   }
 
-  
+
   public void runCalibration() {
 
     // run GA for the number of generations specified in settings
     for (int gen = 0; gen < settings.getMaxGenerations(); gen++) {
       CrossoverOperator crossover = new CrossoverOperator(settings.getCrossoverType());
       /* fitness function step */
-                  
+
       calculatePopulationFitness();
-      population.sortByFitness();      
-      
-      
+      population.sortByFitness();
+
+
       ParamIndividual bestIndividual = population.getIndividual(0);
-      ParamIndividual worstIndividual = population.getIndividual(population.getSize()-1);
-      
-      System.out.println("Iteracion "+gen+" | average fitness: "+ getAverageFitness());
-      
+      ParamIndividual worstIndividual = population.getIndividual(population.getSize() - 1);
+
+      System.out.println("Iteracion " + gen + " | average fitness: " + getAverageFitness());
+
       System.out.println(bestIndividual.getFitness());
-      System.out.println(bestIndividual.getW()+bestIndividual.getW_n()+bestIndividual.getSigma_r());
+
+      System.out
+          .println(bestIndividual.getW() + bestIndividual.getW_n() + bestIndividual.getSigma_r());
 
       System.out.println(worstIndividual.getFitness());
-      System.out.println(worstIndividual.getW()+worstIndividual.getW_n()+worstIndividual.getSigma_r());
-      
+
+      System.out.println(
+          worstIndividual.getW() + worstIndividual.getW_n() + worstIndividual.getSigma_r());
+
       System.out.println("----------------");
-      
+
       /* selection step */
       normalizePopulationFitness();
 
       List<ParamIndividual> selectionIndividuals = getSelectionIndividuals();
-      List<ParamIndividual> offspring = crossover.cross(selectionIndividuals,(int)(settings.getMaxIndividuals()/2));
-      
+      List<ParamIndividual> offspring =
+          crossover.cross(selectionIndividuals, (int) (settings.getMaxIndividuals() / 2));
+
       population.update(offspring);
-      
-      
-      
-      
-      /*
-       * Put code here
-       * 
-       */
-      
+
       applyMutation();
- 
-      
     }
+
     population.sortByFitness();
   }
 
   public Population getPopulation() {
-	return population;
-}
-
-
-public void setPopulation(Population population) {
-	this.population = population;
-}
-
-
-private double getAverageFitness() {
-	  double averageFitness = 0;
-	  for(int ind = 0 ; ind < settings.getMaxIndividuals();ind++) {
-		  averageFitness += population.getIndividual(ind).getFitness();
-		  
-	  }
-	  averageFitness = averageFitness / settings.getMaxIndividuals();
-	  return averageFitness;
+    return population;
   }
-  
+
+
+  public void setPopulation(Population population) {
+    this.population = population;
+  }
+
+
+  private double getAverageFitness() {
+    double averageFitness = 0;
+    for (int ind = 0; ind < settings.getMaxIndividuals(); ind++) {
+      averageFitness += population.getIndividual(ind).getFitness();
+
+    }
+    averageFitness = averageFitness / settings.getMaxIndividuals();
+    return averageFitness;
+  }
+
   private void calculatePopulationFitness() {
     for (int ind = 0; ind < settings.getMaxIndividuals(); ind++) {
       ParamIndividual p = population.getIndividual(ind);
-      FitnessEval fitEval = new FitnessEval(settings.getFitnessFunction());
+      FitnessEval fitEval =
+          new FitnessEval(settings.getFitnessFunction(), settings.getSegmentationTechnique());
+
       double score = 0;
       if (settings.getFitnessFunction() == Fitness.DICE) {
-        for (int imgInd = 0; imgInd < settings.getSampleCount(); imgInd++) {
-          score += fitEval.evaluate(p, settings.getOriginalImage(imgInd),
-              settings.getGroundtruthImage(imgInd));
-         
+        for (int index = 0; index < settings.getSampleCount(); index++) {
+          score += fitEval.evaluate(p, settings.getOriginalImage(index),
+              settings.getGroundtruthImage(index));
         }
         System.out.println(score);
       }
       population.getIndividual(ind).setFitness(score);
     }
   }
-  
-  
+
+
 
   private void normalizePopulationFitness() {
     double accumulatedFitness = getAccumulatedFitness();
@@ -119,45 +117,44 @@ private double getAverageFitness() {
       p.setFitness(normFitness);
     }
   }
-  
-  private List<ParamIndividual> getSelectionIndividuals(){
-	  
-	  double individualAccumulatedFitness = 1;
-	  List<ParamIndividual> selectedIndividuals = new ArrayList<ParamIndividual>();
-	  double threshold = settings.getSelectionThreshold();
-	  int ind = 0;
-	  while(individualAccumulatedFitness >= threshold) {
-		  ParamIndividual p = population.getIndividual(ind);
-		  selectedIndividuals.add(p);
-		  individualAccumulatedFitness -= p.getFitness();
-		  ind++;
-	  }	  
-	  return selectedIndividuals;
+
+  private List<ParamIndividual> getSelectionIndividuals() {
+
+    double individualAccumulatedFitness = 1;
+    List<ParamIndividual> selectedIndividuals = new ArrayList<ParamIndividual>();
+    double threshold = settings.getSelectionThreshold();
+    int ind = 0;
+    while (individualAccumulatedFitness >= threshold) {
+      ParamIndividual p = population.getIndividual(ind);
+      selectedIndividuals.add(p);
+      individualAccumulatedFitness -= p.getFitness();
+      ind++;
+    }
+    return selectedIndividuals;
   }
-  
+
   private void applyMutation() {
-	  Mutator mutator = new Mutator(settings.getMutationType());
-	  double mutationFactor = random.nextDouble();
-	  for (int index = 0; index < settings.getMaxIndividuals(); index++) {
-		  if (mutationFactor <= settings.getMutationPerc()) {
-			  ParamIndividual p = population.getIndividual(index);
-			  mutator.mutate(p);
-		  }
-		  mutationFactor = random.nextDouble();
-	  }
+    Mutator mutator = new Mutator(settings.getMutationType());
+    double mutationFactor = random.nextDouble();
+    for (int index = 0; index < settings.getMaxIndividuals(); index++) {
+      if (mutationFactor <= settings.getMutationPerc()) {
+        ParamIndividual p = population.getIndividual(index);
+        mutator.mutate(p);
+      }
+      mutationFactor = random.nextDouble();
+    }
   }
-  
+
   private double getAccumulatedFitness() {
-	  double accumulatedFitness = 0;
-	  for (int ind = 0; ind < settings.getMaxIndividuals(); ind++) {
-		  ParamIndividual p = population.getIndividual(ind);
-		  accumulatedFitness += p.getFitness();
-	  }
-	  return accumulatedFitness;
-	  
+    double accumulatedFitness = 0;
+    for (int ind = 0; ind < settings.getMaxIndividuals(); ind++) {
+      ParamIndividual p = population.getIndividual(ind);
+      accumulatedFitness += p.getFitness();
+    }
+    return accumulatedFitness;
+
   }
-  
-  
+
 
 
 }

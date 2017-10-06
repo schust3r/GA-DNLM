@@ -29,7 +29,7 @@ public class Thresholding {
    *          valor de umbral para definir blancos y negros
    */
   public void applyThreshold(Mat imagen, int t) {
-    Imgproc.threshold(imagen, imagen, t, 256, Imgproc.THRESH_BINARY);
+    Imgproc.threshold(imagen, imagen, t, 256, Imgproc.THRESH_BINARY);    
   }
 
   /**
