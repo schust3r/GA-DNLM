@@ -58,6 +58,7 @@ public class FitnessEval {
      */
     if (segTechnique == Segmentation.WATERSHED) {
       // TODO implementation of watershed
+    	
       return new Mat();
     }
 
