@@ -1,6 +1,7 @@
 package com.parma.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -38,8 +39,43 @@ public class CalibrateController {
   public String dashboard(@ModelAttribute("user") User userForm, Model model) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     model.addAttribute("username", auth.getName());
+    
+    List<Calibration> calibrations = CalibrationDal.loadAllCalibrations();
+    model.addAttribute("calibrations", calibrations);
+    
     return "calibrate";
   }
+  
+  @RequestMapping(value = "/delete-cal", params = { "id" }, method = RequestMethod.GET)
+  public String removeCalibration(@RequestParam(value = "id") String title, 
+      HttpServletRequest servletRequest, Model model) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    model.addAttribute("username", auth.getName());
+    
+    CalibrationDal.removeCalibration(title);
+    
+    model.addAttribute("message", "The calibration '" + title + "' has been deleted");
+    
+    return "redirect:/calibrate";
+  }
+  
+  @RequestMapping(value = "/view-cal", params = { "id" }, method = RequestMethod.GET)
+  public String viewCalibration(@RequestParam(value = "id") String title, 
+      HttpServletRequest servletRequest, Model model) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    model.addAttribute("username", auth.getName());
+    
+    // all calibrations
+    List<Calibration> calibrations = CalibrationDal.loadAllCalibrations();
+    model.addAttribute("calibrations", calibrations);
+    
+    // details of a single calibration
+    Calibration cal = CalibrationDal.loadCalibration(title);
+    model.addAttribute("cal", cal);
+    
+    return "calibrate";
+  }
+  
 
   @RequestMapping(value = "/run-calibration", method = RequestMethod.POST)
   public String getCalibrationSettings(HttpServletRequest request, Model model,
@@ -102,7 +138,7 @@ public class CalibrateController {
       model.addAttribute("message", "An unexpected error has occured, please try again.");
     }
 
-    return "calibrate";
+    return "redirect:/calibrate";
   }
 
   @Async

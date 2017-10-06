@@ -34,11 +34,6 @@ body{
 }
 
 /**** BREAK *****/
-* {
-  margin: 0px auto;
-  padding: 0px;
-  text-align: center;  
-}
 
 body {
   background: rgb(250,249,247);
@@ -46,7 +41,6 @@ body {
   background: -webkit-linear-gradient(-45deg,  rgba(250,249,247,1) 0%,rgba(221,218,209,1) 100%);
   background: linear-gradient(135deg,  rgba(250,249,247,1) 0%,rgba(221,218,209,1) 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#faf9f7', endColorstr='#dddad1',GradientType=1 );
-
 }
 
 .table th {
@@ -120,6 +114,10 @@ body {
   -webkit-transition: all 0.5s;
   -o-transition: all 0.5s;
   transition: all 0.5s;
+}
+
+li.list_shopping.li_num_0_1 {
+  margin-bottom: 20px;
 }
 
 .col_md_1_list {

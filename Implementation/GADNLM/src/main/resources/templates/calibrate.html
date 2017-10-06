@@ -46,12 +46,12 @@
 								<div class="col-md-4">
 									<input id="lower_w" name="lower_w" placeholder="Lower-bound w"
 										class="input_title_desc input-form" required="" type="number"
-										min="1" step="1">
+										min="1" step="1" th:value="${cal?.lower_w}">
 								</div>
 								<div class="col-md-4">
 									<input id="upper_w" name="upper_w" placeholder="Upper-bound w"
 										class="input_title_desc input-form" required="" type="number"
-										min="1" step="1">
+										min="1" step="1" th:value="${cal?.upper_w}">
 								</div>
 							</div>
 						</div>
@@ -63,12 +63,14 @@
 								<div class="col-md-4">
 									<input id="lower_w_n" name="lower_w_n" type="number" min="1"
 										step="1" placeholder="Lower-bound w_n"
-										class="input_title_desc input-form" required="">
+										class="input_title_desc input-form" required=""
+										th:value="${cal?.lower_w_n}">
 								</div>
 								<div class="col-md-4">
 									<input id="upper_w_n" name="upper_w_n" type="number" min="1"
 										step="1" placeholder="Upper-bound w_n"
-										class="input_title_desc input-form" required="">
+										class="input_title_desc input-form" required=""
+										th:value="${cal?.upper_w_n}">
 								</div>
 							</div>
 						</div>
@@ -80,13 +82,13 @@
 									<input id="lower_s_r" name="lower_s_r"
 										placeholder="Lower-bound s_r"
 										class="input_title_desc input-form" required="" type="number"
-										min="1" step="1">
+										min="1" step="1" th:value="${cal?.lower_s_r}">
 								</div>
 								<div class="col-md-4">
 									<input id="upper_s_r" name="upper_s_r"
 										placeholder="Upper-bound s_r"
 										class="input_title_desc input-form" required="" type="number"
-										min="1" step="1">
+										min="1" step="1" th:value="${cal?.upper_s_r}">
 								</div>
 							</div>
 						</div>
@@ -99,7 +101,8 @@
 								<div class="col-md-8">
 									<input id="title" name="title"
 										placeholder="A title for the calibration job"
-										class="input_title_desc input-form" required="" type="text">
+										class="input_title_desc input-form" required="" type="text"
+										th:value="${cal?.title}">
 								</div>
 							</div>
 						</div>
@@ -109,7 +112,8 @@
 								<div class="col-md-8">
 									<input id="description" name="description"
 										placeholder="A brief description of the calibration"
-										class="input_title_desc input-form" required="" type="text">
+										class="input_title_desc input-form" required="" type="text"
+										th:value="${cal?.description}">
 								</div>
 							</div>
 						</div>
@@ -121,7 +125,7 @@
 									<input id="max_ind" name="max_ind"
 										placeholder="Max number of individuals per generation"
 										class="input_title_desc input-form" required="" type="number"
-										min="1" step="1">
+										min="1" step="1" th:value="${cal?.max_ind}">
 								</div>
 							</div>
 						</div>
@@ -132,7 +136,7 @@
 									<input id="max_gen" name="max_gen"
 										placeholder="Max number of generations"
 										class="input_title_desc input-form" required="" type="number"
-										min="1" step="1">
+										min="1" step="1" th:value="${cal?.max_gen}">
 								</div>
 							</div>
 						</div>
@@ -144,7 +148,7 @@
 									<input id="mut_perc" name="mut_perc"
 										placeholder="Mutations scale (0,00 - 1,00)"
 										class="input_title_desc input-form" required="" type="number"
-										min="0" step="0.01" max="1">
+										min="0" step="0.01" max="1" th:value="${cal?.mut_perc}">
 								</div>
 							</div>
 						</div>
@@ -154,9 +158,12 @@
 									type </label>
 								<div class="col-md-8">
 									<select name="mut_type" class="input_title_desc input-form">
-										<option value="RANDOM_BIT">Random Bit</option>
-										<option value="FLIP_BITS">Bit Swapping</option>
-										<option value="ADDITIVE">Additive</option>
+										<option value="RANDOM_BIT"
+											th:selected="${cal?.mut_type=='RANDOM_BIT'}">Random Bit</option>
+										<option value="BIT_SWAPPING"
+											th:selected="${cal?.mut_type=='BIT_SWAPPING'}">Bit Swapping</option>
+										<option value="ADDITIVE"
+											th:selected="${cal?.mut_type=='ADDITIVE'}">Additive</option>
 									</select>
 								</div>
 							</div>
@@ -167,9 +174,12 @@
 									type </label>
 								<div class="col-md-8">
 									<select name="cross_type" class="input_title_desc input-form">
-										<option value="SIMPLE">Simple</option>
-										<option value="BITWISE">Bitwise</option>
-										<option value="CLUSTER">Cluster</option>
+										<option value="SIMPLE"
+											th:selected="${cal?.cross_type=='SIMPLE'}">Simple</option>
+										<option value="BITWISE"
+											th:selected="${cal?.cross_type=='BITWISE'}">Bitwise</option>
+										<option value="CLUSTER"
+											th:selected="${cal?.cross_type=='CLUSTER'}">Cluster</option>
 									</select>
 								</div>
 							</div>
@@ -246,46 +256,63 @@
 
 		<div class="col-md-6">
 
+			<div class="panel-heading">
+				<strong>PREVIOUS JOBS</strong> <small></small>
+			</div>
+
+			<div class="cont_princ_lists" th:if="${calibrations.empty}">
+				<h4>Nothing to see here yet...</h4>
+			</div>
 
 			<div class="cont_princ_lists">
 				<ul>
-					<li class="list_shopping li_num_0_1">
+
+					<li class="list_shopping li_num_0_1"
+						th:each="cal : ${calibrations}">
 						<table>
 							<tr>
 								<div class="col_md_1_list">
 									<p>
-										23/08/2017 <br> 17:53 GMT
+										<span th:utext="${cal.initTime}">23/08/2017 <br>
+											17:53 GMT
+										</span>
 									</p>
 								</div>
 								<div class="col_md_2_list">
-									<h4>Football images</h4>
-									<p>Improving the DNLM filter parameters for football
-										related images in order to achieve a better segme...</p>
+									<h4 th:text="${cal.title}">Football images</h4>
 									<p>
-										w = 3.145669 &ensp; / &ensp; w<sub>n</sub> = 9 &ensp; / &ensp;
-										sigma<sub>r</sub> = 18
+										<span th:text="${cal.description}">Improving the DNLM
+											filter parameters for football related images in order to
+											achieve a better segme...</span>
 									</p>
+									<p th:if="${cal.best_w != 0}">
+										w = <span th:text="${cal.best_w}">0</span> &ensp; / &ensp; w<sub>n</sub>
+										= <span th:text="${cal.best_w_n}">0</span> &ensp; / &ensp;
+										sigma<sub>r</sub> = <span th:text="${cal.best_s_r}">0</span>
+									</p>
+									<p th:if="${cal.best_w == 0}">In progress...</p>
 								</div>
 							</tr>
 							<tr>
-								<td class="col-md-3"><a href=""> <i
+								<td class="col-md-4"><a
+									th:href="'/view-cal?id=' + ${cal.title}"> <i
 										class="glyphicon glyphicon-eye-open"></i> <span
 										class="hidden-sm hidden-xs"> View</span>
 								</a></td>
-								<td class="col-md-3"><a href=""> <i
-										class="glyphicon glyphicon-pencil"></i> <span
-										class="hidden-sm hidden-xs"> Edit</span>
-								</a></td>
-								<td class="col-md-3"><a href=""> <i
+								<td class="col-md-4"><a
+									th:href="'/export-cal?id=' + ${cal.title}"> <i
 										class="glyphicon glyphicon-export"></i> <span
 										class="hidden-sm hidden-xs"> Export</span>
 								</a></td>
-								<td class="col-md-3"><a href="" style="color: #ad2d3a;">
-										<i class="glyphicon glyphicon-trash"></i> <span
+								<td class="col-md-4"><a
+									th:href="'/delete-cal?id=' + ${cal.title}"
+									style="color: #ad2d3a;"> <i
+										class="glyphicon glyphicon-trash"></i> <span
 										class="hidden-sm hidden-xs"> Delete</span>
 								</a></td>
 							</tr>
 						</table>
+
 					</li>
 
 
