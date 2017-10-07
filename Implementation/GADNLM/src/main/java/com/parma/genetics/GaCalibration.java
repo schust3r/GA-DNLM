@@ -107,8 +107,7 @@ public class GaCalibration {
     }
   }
 
-
-
+  
   private void normalizePopulationFitness() {
     double accumulatedFitness = getAccumulatedFitness();
     for (int ind = 0; ind < settings.getMaxIndividuals(); ind++) {
@@ -117,6 +116,7 @@ public class GaCalibration {
       p.setFitness(normFitness);
     }
   }
+  
 
   private List<ParamIndividual> getSelectionIndividuals() {
 
@@ -132,6 +132,7 @@ public class GaCalibration {
     }
     return selectedIndividuals;
   }
+  
 
   private void applyMutation() {
     Mutator mutator = new Mutator(settings.getMutationType());
@@ -144,6 +145,7 @@ public class GaCalibration {
       mutationFactor = random.nextDouble();
     }
   }
+  
 
   private double getAccumulatedFitness() {
     double accumulatedFitness = 0;
@@ -152,7 +154,6 @@ public class GaCalibration {
       accumulatedFitness += p.getFitness();
     }
     return accumulatedFitness;
-
   }
 
 

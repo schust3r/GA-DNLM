@@ -67,7 +67,7 @@ public class FitnessEval {
       Thresholding thresholder = new Thresholding();
       // apply the binary segmentation to DNLM-IFFT filtered image
       thresholder.applyThreshold(image, threshold);
-      return image;  
+      return image;
     }
     
   }

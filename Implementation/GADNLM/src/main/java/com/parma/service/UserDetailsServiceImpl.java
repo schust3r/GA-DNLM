@@ -1,37 +1,40 @@
 package com.parma.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.parma.model.Role;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.parma.configuration.SpringMongoConfiguration;
 import com.parma.model.User;
-import com.parma.repository.UserRepository;
+import java.util.List;
 
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-  @Autowired
-  private UserRepository userRepository;
+
+  private ApplicationContext ctx;
 
   @Override
   @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = userRepository.findByUsername(username);
-
-    Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-    for (Role role : user.getRoles()) {
-      grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+    ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+    final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
+    Query query = new Query(Criteria.where("username").is(username));
+    User user = mongoOps.findOne(query, User.class);
+    if (user != null) {
+      return user;
+    } else {
+      throw new UsernameNotFoundException("Username not found.");
     }
-
-    return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-        grantedAuthorities);
   }
+
+
 }

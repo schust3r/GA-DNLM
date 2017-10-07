@@ -1,11 +1,9 @@
 package com.parma.configuration;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -13,27 +11,19 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import com.parma.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Autowired
-  private BCryptPasswordEncoder bcryptPasswordEncoder;
-
-  @Autowired
-  private DataSource dataSource;
-
-  @Value("${spring.queries.users-query}")
-  private String usersQuery;
-
-  @Value("${spring.queries.auth-query}")
-  private String authQuery;
+  private BCryptPasswordEncoder bcryptPasswordEncoder; 
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.jdbcAuthentication().usersByUsernameQuery(usersQuery).authoritiesByUsernameQuery(authQuery)
-        .dataSource(dataSource).passwordEncoder(bcryptPasswordEncoder);
+    UserDetailsServiceImpl userDetailsService = mongoUserDetails();    
+    auth.userDetailsService(userDetailsService).passwordEncoder(bcryptPasswordEncoder);
   }
 
   @Override
@@ -57,10 +47,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
   }
   
+  @Primary
+  @Bean
+  public UserDetailsServiceImpl mongoUserDetails() {
+    return new UserDetailsServiceImpl();
+  }
+  
   @Bean
   public BCryptPasswordEncoder passwordEncoder() {
     BCryptPasswordEncoder beCryptPasswordEncoder = new BCryptPasswordEncoder();
     return beCryptPasswordEncoder;
   }
-
+  
 }
+
+
+

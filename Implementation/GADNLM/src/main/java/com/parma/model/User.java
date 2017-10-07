@@ -2,64 +2,75 @@ package com.parma.model;
 
 
 import javax.persistence.*;
-import java.util.Set;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Collection;
+import java.util.List;
 
-@Entity
-@Table(name = "user")
-public class User {
-    private Long id;
-    private String username;
-    private String password;    
-    private boolean enabled;
-    private Set<Role> roles;
-    
-    public User() {
-        super();
-        // Usuario habilitado por defecto
-        this.enabled = true;
-    }    
+@Document(collection = "user")
+public class User implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long getId() {
-        return id;
-    }
+  @Id
+  private String username;
+  private String password;
+  private List<GrantedAuthority> grantedAuthorities;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public User(String username, String password, String[] authorities) {
+    this.username = username;
+    this.password = password;
+    this.grantedAuthorities = AuthorityUtils.createAuthorityList(authorities);
+  }
 
-    public String getUsername() {
-        return username;
-    }
+  public User() { }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return grantedAuthorities;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  @Override
+  public String getPassword() {
+    return password;
+  }
+  
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }       
+  @Override
+  public String getUsername() {
+    return username;
+  }
+  
+  public void setUsername(String username) {
+    this.username = username;
+  }
+  
+  public void setRoles(String[] authorities) {
+    this.grantedAuthorities = AuthorityUtils.createAuthorityList(authorities);
+  }
 
-    @ManyToMany
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    public Set<Role> getRoles() {
-        return roles;
-    }
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
 
-	public boolean isEnabled() {
-		return enabled;
-	}
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+  @Override
+  public boolean isEnabled() {
+    return true;
+  }
+
+
 }

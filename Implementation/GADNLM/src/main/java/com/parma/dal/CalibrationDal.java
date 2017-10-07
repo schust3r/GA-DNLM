@@ -15,17 +15,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class CalibrationDal {
 
   private static Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-  
-  public static Calibration loadCalibration(String title) {
-    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+  private static ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+
+  public static Calibration loadCalibration(String title) {    
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // get a single calibration linked to the user  
     Query query = new Query(Criteria.where("title").is(title).and("owner").is(auth.getName()));
     return mongoOps.findOne(query, Calibration.class);    
   }
 
-  public static List<Calibration> loadAllCalibrations() {
-    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+  public static List<Calibration> loadAllCalibrations() {    
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // generate array of calibrations linked to the user
     List<Calibration> cals = new ArrayList<Calibration>();
@@ -34,15 +33,13 @@ public class CalibrationDal {
     return cals;
   }
 
-  public static void saveCalibration(Calibration cal) {
-    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+  public static void saveCalibration(Calibration cal) {    
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // save the calibration in mongodb
     mongoOps.save(cal, "Calibration");
   }
 
-  public static void removeCalibration(String title) {
-    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+  public static void removeCalibration(String title) {    
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // search calibration by title
     Query query = new Query(Criteria.where("title").is(title).and("owner").is(auth.getName()));
