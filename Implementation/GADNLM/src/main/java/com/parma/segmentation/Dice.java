@@ -6,7 +6,6 @@ import org.opencv.core.MatOfByte;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import com.parma.images.ImageHandler;
 
 /**
  * Clase para calcular la métrica de Dice o coeficiente de Sorensen-Dice. Permite encontrar qué tan

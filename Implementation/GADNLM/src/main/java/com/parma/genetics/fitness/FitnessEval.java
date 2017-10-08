@@ -1,6 +1,5 @@
 package com.parma.genetics.fitness;
 
-import java.util.concurrent.ExecutionException;
 import org.opencv.core.Mat;
 import com.parma.filter.DnlmFilter;
 import com.parma.genetics.ParamIndividual;
@@ -25,11 +24,6 @@ public class FitnessEval {
     int w = p.getW();
     int w_n = p.getW_n();
     int sigma_r = p.getSigma_r();
-
-    System.out.println(w);
-    System.out.println(w_n);
-    System.out.println(sigma_r);
-    System.out.println(" -- ");
 
     w = (w % 2 == 0) ? w++ : w;
     w_n = (w % 2 == 0) ? w_n++ : w_n;

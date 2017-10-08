@@ -64,12 +64,20 @@ public class GaSettings {
 	  return originalImages.get(index);
 	}
 	
+	public void setOriginalImages(List<Mat> oList) {
+      this.originalImages = oList;
+    }
+	
 	public void addToOriginalImages(Mat imagen) {
 	  originalImages.add(imagen);
 	}
     
     public Mat getGroundtruthImage(int index) {
       return groundtruthImages.get(index);
+    }
+    
+    public void setGroundtruthImages(List<Mat> gList) {
+      this.groundtruthImages = gList;
     }
 	
 	public void addToGroundtruthImages(Mat imagen) {

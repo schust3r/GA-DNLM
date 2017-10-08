@@ -1,7 +1,9 @@
 package com.parma.model;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.TreeSet;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class Calibration {
 
   private Date initTime;
+  private Date endTime;
 
   private int lower_w;
   private int upper_w;
@@ -30,13 +33,16 @@ public class Calibration {
   private String mut_type;
   private String cross_type;
   private String fit_func;
-  private String seg_method;
-
-  private String status;
+  private String seg_method; 
 
   private int best_w;
   private int best_w_n;
   private int best_s_r;
+  
+  // Progress trackers for MongoDB
+  private String status;
+  private int current_gen;
+  private double current_fitness;
 
   private String owner;
 
@@ -52,9 +58,14 @@ public class Calibration {
   public Calibration() {
     this.initTime = new Date();
     this.initTime.getTime();
+    this.endTime = new Date();
+    this.endTime.getTime();
     this.best_w = 0;
     this.best_w_n = 0;
-    this.best_s_r = 0;
+    this.best_s_r = 0;    
+    this.status = "RUNNING";
+    this.current_gen = 1;
+    this.current_fitness = 0.0;
   }
 
   public int getLower_w() {
@@ -243,5 +254,44 @@ public class Calibration {
     this.best_s_r = best_s_r;
   }
 
+  public Collection<String> getOriginalFilenames() {
+    Collection<String> names = new TreeSet<String>();
+    for (MultipartFile file : originalImages) {
+      names.add(file.getOriginalFilename());
+    }
+    return names;
+  }
+
+  public Collection<String> getGroundtruthFilenames() {
+    Collection<String> names = new TreeSet<String>();
+    for (MultipartFile file : groundtruthImages) {
+      names.add(file.getOriginalFilename());
+    }
+    return names;
+  }
+  
+  public int getCurrent_gen() {
+    return current_gen;
+  }
+
+  public void setCurrent_gen(int current_gen) {
+    this.current_gen = current_gen;
+  }
+
+  public double getCurrent_fitness() {
+    return current_fitness;
+  }
+
+  public void setCurrent_fitness(double current_fitness) {
+    this.current_fitness = current_fitness;
+  }
+
+  public Date getEndTime() {
+    return endTime;
+  }
+
+  public void setEndTime() {    
+    this.endTime.getTime();
+  }
 
 }

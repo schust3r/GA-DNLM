@@ -271,9 +271,10 @@
 						th:each="cal : ${calibrations}">
 						<table>
 							<tr>
-								<div class="col_md_1_list">
+								<div class="col_md_1_list"
+									th:classappend="${cal.status == 'RUNNING'} ? unfinished : finished">
 									<p>
-										<span th:utext="${cal.initTime}">23/08/2017 <br>
+										<span th:utext="${cal.initTime}"> 23/08/2017 <br>
 											17:53 GMT
 										</span>
 									</p>
@@ -281,16 +282,23 @@
 								<div class="col_md_2_list">
 									<h4 th:text="${cal.title}">Football images</h4>
 									<p>
-										<span th:text="${cal.description}">Improving the DNLM
-											filter parameters for football related images in order to
-											achieve a better segme...</span>
+										<span class="truncate" th:text="${cal.description}">Improving
+											the DNLM filter parameters for football related images in
+											order to achieve a better segme...</span>
 									</p>
-									<p th:if="${cal.best_w != 0}">
+									<p th:if="${cal.status == 'DONE'}">
 										w = <span th:text="${cal.best_w}">0</span> &ensp; / &ensp; w<sub>n</sub>
 										= <span th:text="${cal.best_w_n}">0</span> &ensp; / &ensp;
 										sigma<sub>r</sub> = <span th:text="${cal.best_s_r}">0</span>
 									</p>
-									<p th:if="${cal.best_w == 0}">In progress...</p>
+									<p th:if="${cal.status == 'RUNNING'}">
+										Current generation: <span th:text="${cal.current_gen}"></span>
+										out of <span th:text="${cal.max_gen}"></span> | Max. fitness:
+										<span th:text="${cal.current_fitness}"></span>
+									</p>
+									<p>
+										Status: <span th:text="${cal.status}">UNKNOWN</span>
+									</p>
 								</div>
 							</tr>
 							<tr>
@@ -299,7 +307,11 @@
 										class="glyphicon glyphicon-eye-open"></i> <span
 										class="hidden-sm hidden-xs"> View</span>
 								</a></td>
-								<td class="col-md-4"><a
+								<td class="col-md-4"><a th:if="${cal.status == 'RUNNING'}"
+									href="" style="color: gray;"> <i
+										class="glyphicon glyphicon-export"></i> <span
+										class="hidden-sm hidden-xs"> Export</span>
+								</a> <a th:if="${cal.status == 'DONE'}"
 									th:href="'/export-cal?id=' + ${cal.title}"> <i
 										class="glyphicon glyphicon-export"></i> <span
 										class="hidden-sm hidden-xs"> Export</span>
@@ -312,6 +324,7 @@
 								</a></td>
 							</tr>
 						</table>
+
 
 					</li>
 

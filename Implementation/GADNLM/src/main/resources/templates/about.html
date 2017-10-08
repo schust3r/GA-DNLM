@@ -1,60 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <link rel="stylesheet" type="text/css" href="css/common.css">
-  <link rel="stylesheet" type="text/css" href="css/about.css">
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <!-- jQuery library -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <!-- Latest compiled JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <title>About GA-DNLM</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<link rel="stylesheet" type="text/css" href="css/about.css">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- jQuery library -->
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<!-- Latest compiled JavaScript -->
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<title>About GA-DNLM</title>
 </head>
 <body>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        rel="stylesheet">
 
-  <div th:replace="common/navbar :: nav"></div>
+	<div th:replace="common/navbar :: nav"></div>
 
-  <div class="container">
+	<div class="container">
 
-    <div class="info-card-container">
+		<div class="info-card-container">
 
-      <div class="info-card">
+			<div class="info-card">
 
-        <div class="info-card__image-exposure info-card__content">
-          <div class="info-card__image-exposure--blend">
-          </div>
-          <div class="info-card__image-exposure__item">
-          </div>
+				<div class="info-card__image-exposure info-card__content">
+					<div class="info-card__image-exposure--blend"></div>
+					<div class="info-card__image-exposure__item"></div>
 
-        </div>
+				</div>
 
-        <div class="info-card__bio info-card__content">
-          <h2 class="info-card__bio--title">GA-DNLM</h2>
+				<div class="info-card__bio info-card__content">
+					<h2 class="info-card__bio--title">GA-DNLM</h2>
 
-          <p class="info-card__bio--copy">
-            GA-DNLM stands for Genetic Algorithms and Deceived Non Local Means (using Fast Fourier Transforms),
-            as proposed by professor Sa�l Calder�n on his <a href="https://scholar.google.com.ar/citations?view_op=view_citation&hl=en&user=O3hhdFQAAAAJ&citation_for_view=O3hhdFQAAAAJ:2osOgNQ5qMEC">original
-            paper</a>. 
-          </p>
-          
-          <p class="info-card__bio--copy">
-            This implementation of Genetic Algorithms attempts to simplify the use and improve the results 
-            obtained from DNLM-IFFT Filter by providing a better calibration than if manually adjusted. 
-          </p>
-          
-          <p class="info-card__bio--copy">
-            This website has been developed by <a href="www.itcr.ac.cr">ITCR</a> students Joel Schuster, Reggie Barker and 
-            Joel Barrantes under the guidance of professor Saúl Calderón and 
-            <a href="https://www.facebook.com/ParmaResearchGroup/">PARMA-Group</a>.
-          </p>
+					<p class="info-card__bio--copy">
+						GA-DNLM stands for Genetic Algorithms and Deceived Non Local Means
+						(using Fast Fourier Transforms), as proposed by professor Saúl
+						Calderón on his <a
+							href="https://scholar.google.com.ar/citations?view_op=view_citation&hl=en&user=O3hhdFQAAAAJ&citation_for_view=O3hhdFQAAAAJ:2osOgNQ5qMEC">original
+							paper</a>.
+					</p>
 
-        </div>
-      </div>
+					<p class="info-card__bio--copy">This implementation of Genetic
+						Algorithms attempts to simplify the use and improve the results
+						obtained from DNLM-IFFT Filter by providing a better calibration
+						than if manually adjusted.</p>
 
-    </div>
-  </div>
+					<p class="info-card__bio--copy">
+						This website has been developed by <a href="www.itcr.ac.cr">ITCR</a>
+						students Joel Schuster, Joel Barrantes and Reggie Barker under the
+						guidance of professor Saúl Calderón and <a
+							href="https://www.facebook.com/ParmaResearchGroup/">PARMA-Group</a>.
+					</p>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
 
 </body>
-
-

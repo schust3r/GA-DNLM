@@ -3,10 +3,10 @@ package com.parma.genetics;
 import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
+import com.parma.dal.CalibrationDal;
 import com.parma.genetics.fitness.FitnessEval;
 import com.parma.genetics.settings.Fitness;
 import com.parma.genetics.settings.GaSettings;
-import com.parma.images.ImageHandler;
 
 public class GaCalibration {
 
@@ -28,6 +28,8 @@ public class GaCalibration {
 
   public void runCalibration() {
 
+    ParamIndividual bestIndividual;
+
     // run GA for the number of generations specified in settings
     for (int gen = 0; gen < settings.getMaxGenerations(); gen++) {
       CrossoverOperator crossover = new CrossoverOperator(settings.getCrossoverType());
@@ -36,23 +38,14 @@ public class GaCalibration {
       calculatePopulationFitness();
       population.sortByFitness();
 
+      bestIndividual = population.getIndividual(0);
+      //ParamIndividual worstIndividual = population.getIndividual(population.getSize() - 1);
 
-      ParamIndividual bestIndividual = population.getIndividual(0);
-      ParamIndividual worstIndividual = population.getIndividual(population.getSize() - 1);
-
-      System.out.println("Iteracion " + gen + " | average fitness: " + getAverageFitness());
-
-      System.out.println(bestIndividual.getFitness());
-
-      System.out
-          .println(bestIndividual.getW() + bestIndividual.getW_n() + bestIndividual.getSigma_r());
-
-      System.out.println(worstIndividual.getFitness());
-
-      System.out.println(
-          worstIndividual.getW() + worstIndividual.getW_n() + worstIndividual.getSigma_r());
-
-      System.out.println("----------------");
+      /*
+       * update the Calibration in the database
+       */
+      CalibrationDal.updateStatus(settings.getTitle(), bestIndividual.getFitness(), gen + 1,
+          "RUNNING");
 
       /* selection step */
       normalizePopulationFitness();
@@ -66,8 +59,23 @@ public class GaCalibration {
       applyMutation();
     }
 
+    calculatePopulationFitness();
     population.sortByFitness();
+    
+    bestIndividual = population.getIndividual(0);
+
+    /*
+     * Update calibration with final status and parameters
+     */
+    
+    CalibrationDal.updateStatus(settings.getTitle(), bestIndividual.getFitness(),
+        settings.getMaxGenerations(), "DONE");
+    
+    CalibrationDal.updateParams(settings.getTitle(), bestIndividual.getW(), 
+        bestIndividual.getW_n(), bestIndividual.getSigma_r());
+
   }
+
 
   public Population getPopulation() {
     return population;
@@ -101,13 +109,13 @@ public class GaCalibration {
           score += fitEval.evaluate(p, settings.getOriginalImage(index),
               settings.getGroundtruthImage(index));
         }
-        System.out.println(score);
       }
       population.getIndividual(ind).setFitness(score);
+
     }
   }
 
-  
+
   private void normalizePopulationFitness() {
     double accumulatedFitness = getAccumulatedFitness();
     for (int ind = 0; ind < settings.getMaxIndividuals(); ind++) {
@@ -116,23 +124,25 @@ public class GaCalibration {
       p.setFitness(normFitness);
     }
   }
-  
+
 
   private List<ParamIndividual> getSelectionIndividuals() {
 
     double individualAccumulatedFitness = 1;
     List<ParamIndividual> selectedIndividuals = new ArrayList<ParamIndividual>();
     double threshold = settings.getSelectionThreshold();
-    int ind = 0;
-    while (individualAccumulatedFitness >= threshold) {
-      ParamIndividual p = population.getIndividual(ind);
+
+    int index = 0;
+    while (individualAccumulatedFitness >= threshold && index < population.getSize()) {
+      ParamIndividual p = population.getIndividual(index);
       selectedIndividuals.add(p);
       individualAccumulatedFitness -= p.getFitness();
-      ind++;
+      index++;
     }
+
     return selectedIndividuals;
   }
-  
+
 
   private void applyMutation() {
     Mutator mutator = new Mutator(settings.getMutationType());
@@ -145,7 +155,7 @@ public class GaCalibration {
       mutationFactor = random.nextDouble();
     }
   }
-  
+
 
   private double getAccumulatedFitness() {
     double accumulatedFitness = 0;
