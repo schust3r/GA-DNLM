@@ -293,11 +293,12 @@
 									</p>
 									<p th:if="${cal.status == 'RUNNING'}">
 										Current generation: <span th:text="${cal.current_gen}"></span>
-										out of <span th:text="${cal.max_gen}"></span> | Max. fitness:
+										out of <span th:text="${cal.max_gen}"></span> | Max fitness:
 										<span th:text="${cal.current_fitness}"></span>
 									</p>
 									<p>
 										Status: <span th:text="${cal.status}">UNKNOWN</span>
+										- Max fitness: <span th:text="${cal.current_fitness}"></span>									
 									</p>
 								</div>
 							</tr>

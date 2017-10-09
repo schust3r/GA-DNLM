@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Image filtering - GA DNLM</title>
 <link rel="stylesheet" type="text/css" href="css/common.css">
@@ -22,6 +24,11 @@
 	<div class="container">
 
 		<div class="center-div">
+
+			<div class="form-group">
+				<span th:text="${message}"></span>
+			</div>
+
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<strong>EXECUTE FILTER</strong>
@@ -48,7 +55,9 @@
 								previous configuration</label>
 							<div class="col-md-7">
 								<select id="configs" name="configs"
+									onchange="load_from_select()"
 									class="input_description_title input-form">
+									<option selected value>None</option>
 									<option th:each="cal : ${calibrations}"
 										th:value="${cal.best_w + ',' + cal.best_w_n + ',' + cal.best_s_r}"
 										th:text="${cal.title}"></option>
@@ -81,8 +90,7 @@
 
 					<div class="row row-margin">
 						<div class="form-group">
-							<label class="col-md-4 control-label input-form">w
-								value</label>
+							<label class="col-md-4 control-label input-form">w value</label>
 							<div class="col-md-7">
 								<input id="w_value" name="w_value" placeholder="w"
 									class="input_title_desc input-form" required="" type="text">
@@ -129,7 +137,7 @@
 										<div class="btn btn-default image-preview-input">
 											<span class="glyphicon glyphicon-folder-open"></span> <span
 												class="image-preview-input-title">Browse</span> <input
-												id="image_files" name="image_files"
+												id="image_files" name="image_files" required=""
 												accept="image/png, image/jpeg, image/gif, image/tif"
 												onchange="show_filenames('image_files','files_input')"
 												multiple type="file">
@@ -151,3 +159,4 @@
 	</div>
 	<script src="js/filter.js"></script>
 </body>
+</html>

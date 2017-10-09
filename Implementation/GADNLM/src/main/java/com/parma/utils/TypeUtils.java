@@ -1,4 +1,4 @@
-package com.parma.genetics.utils;
+package com.parma.utils;
 
 import com.parma.genetics.settings.Crossover;
 import com.parma.genetics.settings.Fitness;

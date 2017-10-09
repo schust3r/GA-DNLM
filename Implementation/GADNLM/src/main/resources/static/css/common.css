@@ -5,6 +5,11 @@ body {
   font-family: 'Roboto Condensed', sans-serif;
 }
 
+.disabled {
+   pointer-events: none;
+   cursor: default;
+}
+
 .center-div {
   position: absolute;
   margin: auto;

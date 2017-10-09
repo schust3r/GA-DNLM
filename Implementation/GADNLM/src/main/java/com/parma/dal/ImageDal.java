@@ -19,8 +19,14 @@ public class ImageDal {
   public static Image loadImage(String id) {
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // get a single calibration linked to the user
-    Query query = new Query(Criteria.where("id").is(id).and("owner").is(auth.getName()));
+    Query query = new Query(Criteria.where("_id").is(id).and("owner").is(auth.getName()));
     return mongoOps.findOne(query, Image.class);
+  }
+  
+  public static void saveImage(Image img) {
+    final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
+    // save image to the database    
+    mongoOps.save(img, "Image");
   }
   
 }

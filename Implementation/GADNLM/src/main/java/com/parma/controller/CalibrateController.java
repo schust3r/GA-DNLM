@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
-import java.util.TreeMap;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -22,17 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.parma.dal.CalibrationDal;
 import com.parma.genetics.settings.GaSettings;
-import com.parma.genetics.utils.TypeUtils;
 import com.parma.model.Calibration;
 import com.parma.model.User;
 import com.parma.service.AsyncProcessService;
+import com.parma.utils.ControllerUtils;
+import com.parma.utils.TypeUtils;
 import com.parma.validator.CalibrationValidator;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
 
 @Controller
 public class CalibrateController {
@@ -203,57 +198,18 @@ public class CalibrateController {
     settings.setSegmentationTechnique(TypeUtils.getSegmentationType(cal.getSeg_method()));
 
     // map for the original images
-    SortedMap<String, Mat> origImgMap = getNameMatrixMap(cal.getOriginalImages(), false);
+    SortedMap<String, Mat> origImgMap =
+        ControllerUtils.getNameMatrixMap(cal.getOriginalImages(), false);
 
     // map for the groundtruth images
-    SortedMap<String, Mat> groundImgMap = getNameMatrixMap(cal.getGroundtruthImages(), true);
+    SortedMap<String, Mat> groundImgMap =
+        ControllerUtils.getNameMatrixMap(cal.getGroundtruthImages(), true);
 
     settings.setOriginalImages(new ArrayList<Mat>(origImgMap.values()));
     settings.setGroundtruthImages(new ArrayList<Mat>(groundImgMap.values()));
 
     return settings;
   }
-
-  /**
-   * Generate the OpenCV matrices from a multipart file list.
-   * 
-   * @param files bytes to generate the images
-   * @param applyThreshold indicate if binary threshold must be applied
-   * @return a sorted map of filenames and opencv matrices
-   */
-  private SortedMap<String, Mat> getNameMatrixMap(MultipartFile[] files, boolean groundtruth) {
-    try {
-      // load opencv
-      System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
-      SortedMap<String, Mat> matList = new TreeMap<>();
-      for (int i = 0; i < files.length; i++) {
-        // check if filename is not in name list
-        MultipartFile mpf = files[i];
-        String filename = mpf.getOriginalFilename();
-        // get bytes and create a Mat
-        byte[] imgBytes = mpf.getBytes();
-        Mat image = Imgcodecs.imdecode(new MatOfByte(imgBytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
-        // conversion to grayscale
-        Mat imageGray = image.clone();
-        if (imageGray.channels() > 2) {
-          Imgproc.cvtColor(image, imageGray, Imgproc.COLOR_RGB2GRAY);
-          if (!groundtruth) {
-            imageGray.convertTo(imageGray, CvType.CV_64FC1);
-          }
-        }
-        // must apply threshold for groundtruth images
-        if (groundtruth) {
-          Imgproc.threshold(imageGray, imageGray, 1, 256, Imgproc.THRESH_BINARY);
-        }
-        matList.put(filename, imageGray);
-      }
-      return matList;
-    } catch (Exception ex) {
-      return null;
-    }
-  }
-
 
 
 }

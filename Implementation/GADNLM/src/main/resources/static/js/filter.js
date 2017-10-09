@@ -13,6 +13,17 @@ function show_filenames(input_id,label_id) {
   }
 }
 
+function load_from_select() {
+  var select = document.getElementById('configs');
+  var par = select.value;
+  if (par != null && par != "") {
+    par = par.split(',')
+    set_params(par[0], par[1], par[2]);
+  } else {
+    set_params("","","");
+  }
+}
+
 function read_text() {
   var fileInput = document.getElementById('text_file');
   var file = fileInput.files[0];
