@@ -1,0 +1,116 @@
+<head>
+<meta charset="utf-8" />
+<title>Image gallery - GA DNLM</title>
+<link rel="stylesheet" type="text/css" href="css/common.css">
+<link rel="stylesheet" type="text/css" href="css/gallery.css">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+		rel="stylesheet">
+
+	<div th:replace="common/navbar :: nav"></div>
+
+	<div class="container">
+		<div class="row"></div>
+		<!-- /row -->
+		<div class="row">
+			<div class="col-xs-12 col-sm-3">
+
+				<div class="panel-heading">
+					<strong>GALLERIES</strong> <small></small>
+				</div>
+
+				<div class="list-group">
+					<span th:if="${groups.empty}"><br />No galleries found</span> <a
+						th:each="group : ${groups}" class="list-group-item"
+						th:classappend="${(id != null and id == group) ? 'active' : ''}"
+						th:href="'/gallery?id=' + ${group}" th:text="${group}"></a>
+				</div>
+			</div>
+
+			<div class="col-xs-12 col-sm-9" th:if="${imageList1?.empty}">
+				<div class="panel-heading">
+					<strong>IMAGES</strong> <small></small>
+				</div>
+				<span><br />No images found</span>
+			</div>
+
+			<div class="col-xs-12 col-sm-9" th:if="${!imageList1?.empty}">
+
+				<div class="panel-heading">
+					<strong>IMAGES</strong> <small></small>
+				</div>
+
+				<div class="row">
+					<div th:each="img : ${imageList1}" class="col-xs-12 col-sm-4">
+						<a href="" class="thumbnail disabled"> <img
+							th:src="${'data:image/jpg;base64,' + img.base64}">
+						</a>
+					</div>
+				</div>
+
+
+				<div class="row">
+					<div th:each="img : ${imageList2}" class="col-xs-12 col-sm-4">
+						<a href="" class="thumbnail disabled"> <img
+							th:src="${'data:image/jpg;base64,' + img.base64}">
+						</a>
+					</div>
+				</div>
+
+				<div class="row" th:if="${max_i > 0}">
+					<ul class="pagination">
+						<li><a th:class="${i == 1}?'disabled':null"
+							th:href="${'gallery?id=' + id + '&i=' + (i - 1)}"
+							aria-label="Anterior"> <span aria-hidden="true">«</span></a></li>
+
+						<li th:each="index : ${#numbers.sequence(1, max_i)}"
+							th:class="${index == i}?'active':null"><a
+							th:href="${'gallery?id=' + id + '&i=' + index}" th:text="${index}"></a></li>
+
+						<li><a th:class="${i == max_i}?'disabled':null"
+							th:href="${'gallery?id=' + id + '&i=' + (i + 1)}"
+							aria-label="Siguiente"> <span aria-hidden="true">»</span></a></li>
+					</ul>
+				</div>
+
+
+				<div class="row">
+				
+					<form class="btn-group pull-right" method="POST" th:action="@{/remove-images}">
+						<input name="image_group" class="hidden" th:value="${id}"
+							type="text">
+						<button class="btn_add_fin" type="submit"
+							style="background: #ad2d3a; margin-left: 15px;">
+							<span class="glyphicon glyphicon-warning-sign" aria-hidden="true">
+							</span> REMOVE
+						</button>
+					</form>
+				
+					<form class="btn-group pull-right" method="POST"
+						th:action="@{/download-images}">
+						<input name="image_group" class="hidden" th:value="${id}"
+							type="text">
+						<button class="btn_add_fin" type="submit">DOWNLOAD</button>
+					</form>
+
+				</div>
+
+				<br />
+
+			</div>
+			
+		</div>
+
+	</div>
+
+</body>
