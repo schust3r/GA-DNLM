@@ -13,7 +13,8 @@ public class ThresholdingTest {
 	public void test() {
 		
 		ImageHandler imageHandler = new ImageHandler();
-		Mat imagen1  = imageHandler.leerImagenGrises("test_files/input/gradient.png");
+		
+		Mat imagen1  = imageHandler.leerImagenGrises("test_files/input/gradient.png");	
 		
 		Mat imagen2  = imageHandler.leerImagenGrises("test_files/input/output.png");
 		

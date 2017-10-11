@@ -24,7 +24,7 @@ public class CalibrationDal {
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // get a single calibration linked to the user
     Query query = new Query(Criteria.where("title").is(title).and("owner").is(auth.getName()));
-    return mongoOps.findOne(query, Calibration.class);
+    return mongoOps.findOne(query, Calibration.class);   
   }
 
   public static List<Calibration> loadFinishedCalibrations() {

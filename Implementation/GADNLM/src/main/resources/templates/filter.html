@@ -16,8 +16,6 @@
 </head>
 
 <body>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-		rel="stylesheet">
 
 	<div th:replace="common/navbar :: nav"></div>
 
@@ -57,7 +55,7 @@
 								<select id="configs" name="configs"
 									onchange="load_from_select()"
 									class="input_description_title input-form">
-									<option selected value>None</option>
+									<option selected value> -- Select a calibration --</option>
 									<option th:each="cal : ${calibrations}"
 										th:value="${cal.best_w + ',' + cal.best_w_n + ',' + cal.best_s_r}"
 										th:text="${cal.title}"></option>

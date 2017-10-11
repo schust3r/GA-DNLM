@@ -39,7 +39,7 @@ public class GaCalibration {
       population.sortByFitness();
 
       bestIndividual = population.getIndividual(0);
-      //ParamIndividual worstIndividual = population.getIndividual(population.getSize() - 1);
+      // ParamIndividual worstIndividual = population.getIndividual(population.getSize() - 1);
 
       /*
        * update the Calibration in the database
@@ -57,22 +57,25 @@ public class GaCalibration {
       population.update(offspring);
 
       applyMutation();
+      
+      
+      
     }
 
     calculatePopulationFitness();
     population.sortByFitness();
-    
+
     bestIndividual = population.getIndividual(0);
 
     /*
      * Update calibration with final status and parameters
      */
-    
+
     CalibrationDal.updateStatus(settings.getTitle(), bestIndividual.getFitness(),
         settings.getMaxGenerations(), "DONE");
-    
-    CalibrationDal.updateParams(settings.getTitle(), bestIndividual.getW(), 
-        bestIndividual.getW_n(), bestIndividual.getSigma_r());
+
+    CalibrationDal.updateParams(settings.getTitle(), bestIndividual.getW(), bestIndividual.getW_n(),
+        bestIndividual.getSigma_r());
 
   }
 
@@ -91,14 +94,15 @@ public class GaCalibration {
     double averageFitness = 0;
     for (int ind = 0; ind < settings.getMaxIndividuals(); ind++) {
       averageFitness += population.getIndividual(ind).getFitness();
-
     }
     averageFitness = averageFitness / settings.getMaxIndividuals();
     return averageFitness;
   }
 
   private void calculatePopulationFitness() {
+    
     for (int ind = 0; ind < settings.getMaxIndividuals(); ind++) {
+      
       ParamIndividual p = population.getIndividual(ind);
       FitnessEval fitEval =
           new FitnessEval(settings.getFitnessFunction(), settings.getSegmentationTechnique());
@@ -110,8 +114,9 @@ public class GaCalibration {
               settings.getGroundtruthImage(index));
         }
       }
+      // calculate the mean score
+      score = score / (double) settings.getSampleCount();
       population.getIndividual(ind).setFitness(score);
-
     }
   }
 
