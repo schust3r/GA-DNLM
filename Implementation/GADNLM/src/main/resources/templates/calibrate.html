@@ -23,7 +23,7 @@
 		<div class="col-md-6">
 
 			<div class="form-group">
-				<span th:text="${message}"></span>
+				<span id="message" th:text="${message}"></span>
 			</div>
 
 			<div class="panel panel-default">
@@ -304,21 +304,27 @@
 								</div>
 							</tr>
 							<tr>
-								<td class="col-md-4"><a
+								<td class="col-md-4"><a th:id="'cal_view_' + ${cal.title}"
 									th:href="'/view-cal?id=' + ${cal.title}"> <i
 										class="glyphicon glyphicon-eye-open"></i> <span
 										class="hidden-sm hidden-xs"> View</span>
 								</a></td>
-								<td class="col-md-4"><a th:if="${cal.status == 'RUNNING'}"
-									href="" style="color: gray;"> <i
-										class="glyphicon glyphicon-export"></i> <span
-										class="hidden-sm hidden-xs"> Export</span>
-								</a> <a th:if="${cal.status == 'DONE'}"
-									th:href="'/export-cal?id=' + ${cal.title}"> <i
-										class="glyphicon glyphicon-export"></i> <span
-										class="hidden-sm hidden-xs"> Export</span>
-								</a></td>
-								<td class="col-md-4"><a
+								
+								<td class="col-md-4">								
+									<a th:if="${cal.status == 'RUNNING'}"
+									   href="" style="color: gray;"> <i
+											class="glyphicon glyphicon-export"></i> <span
+											class="hidden-sm hidden-xs"> Export</span>
+									</a> 
+									<a th:id="'cal_exp_' + ${cal.title}" 
+									   th:if="${cal.status == 'DONE'}"
+									   th:href="'/export-cal?id=' + ${cal.title}"> <i
+											class="glyphicon glyphicon-export"></i> <span
+											class="hidden-sm hidden-xs"> Export</span>
+									</a>
+								</td>
+								
+								<td class="col-md-4"><a th:id="'cal_rem_' + ${cal.title}"
 									th:href="'/delete-cal?id=' + ${cal.title}"
 									style="color: #ad2d3a;"> <i
 										class="glyphicon glyphicon-trash"></i> <span

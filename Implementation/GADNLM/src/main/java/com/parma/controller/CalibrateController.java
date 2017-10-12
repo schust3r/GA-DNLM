@@ -100,6 +100,7 @@ public class CalibrateController {
     // details of a single calibration
     Calibration cal = CalibrationDal.loadCalibration(title);
     model.addAttribute("cal", cal);
+    model.addAttribute("message", "Details for calibration '" + title + "' are shown");
 
     return "calibrate";
   }
