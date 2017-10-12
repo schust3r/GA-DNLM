@@ -248,7 +248,8 @@
 							</div>
 						</div>
 
-						<button class="btn_add_fin" type="submit">BEGIN</button>
+						<button id="calibrate_button" class="btn_add_fin" type="submit">BEGIN</button>
+						
 					</form>
 				</div>
 			</div>
@@ -271,7 +272,7 @@
 						th:each="cal : ${calibrations}">
 						<table>
 							<tr>
-								<div class="col_md_1_list"
+								<div class="col_md_1_list hidden-sm hidden-xs"
 									th:classappend="${cal.status == 'RUNNING'} ? unfinished : finished">
 									<p>
 										<span th:utext="${cal.initTime}"> 23/08/2017 <br>

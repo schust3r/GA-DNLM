@@ -279,7 +279,7 @@ public class Calibration {
   }
 
   public double getCurrent_fitness() {
-    return current_fitness;
+    return (double)Math.round(current_fitness * 100000d) / 100000d;
   }
 
   public void setCurrent_fitness(double current_fitness) {
