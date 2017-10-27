@@ -18,34 +18,41 @@
 <body>
     <div class="container">
         <div class="col-sm-8 col-sm-offset-2 main">
-            <div class="col-sm-6 left-side">
-                <h1>GA<br>DNLM</h1>
+            <div class="col-sm-6 left-side hidden-xs">
+                <h1>
+                    GA<br>DNLM
+                </h1>
                 <p>Genetic algorithms applied to parameter calibration for DNLM-IFFT Filter.</p>
                 <br>
                 <p>Not registered?</p>
-                <br>
-                <a class="fb" href="/register">Create your account</a>
+                <br> <a class="fb" href="/register">Create your account</a>
             </div>
+
             <!--col-sm-6-->
+
+
             <div class="col-sm-6 right-side">
-                <h1>Sign in</h1>
-                <p>If you don't have an account, you can create one in seconds <a href="/register">here.</a></p>
+
+                <h1>
+                    <span class="mobile-title visible-xs">GA DNLM<br/></span> Sign in
+                </h1>
+                <p>
+                    If you don't have an account, you can create one in seconds <a href="/register">here.</a>
+                </p>
 
                 <!--Form with header-->
                 <form th:action="@{/login}" method="POST" class="form" th:object="${user}">
                     <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" class="form-control">
+                        <label for="username">Username</label> <input type="text" id="username" name="username" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" class="form-control">
+                        <label for="password">Password</label> <input type="password" id="password" name="password" class="form-control">
                     </div>
                     <div class="form-group">
                         <span th:text="${message}"></span>
                     </div>
 
-                    <button id="login_button"class="btn btn-deep-purple" type="submit">Log in</button>
+                    <button id="login_button" class="btn btn-deep-purple" type="submit">Log in</button>
 
                 </form>
                 <!--/Form with header-->

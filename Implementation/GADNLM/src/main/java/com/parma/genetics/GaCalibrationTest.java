@@ -15,9 +15,7 @@ import com.parma.images.ImageHandler;
 public class GaCalibrationTest {
 
 	@Test
-	public void test() {
-		
-		
+	public void test() {				
 		
 		GaSettings settings = new GaSettings();
 		settings.setCrossoverType(Crossover.SIMPLE);

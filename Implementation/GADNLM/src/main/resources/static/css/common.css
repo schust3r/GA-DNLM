@@ -38,7 +38,7 @@ body {
 }
 
 .center-div {
-	position: absolute;
+	position: absolute !important;
 	margin: auto;
 	right: 0;
 	left: 0;
