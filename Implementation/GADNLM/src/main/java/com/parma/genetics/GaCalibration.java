@@ -32,6 +32,7 @@ public class GaCalibration {
 
     // run GA for the number of generations specified in settings
     for (int gen = 0; gen < settings.getMaxGenerations(); gen++) {
+    	
       CrossoverOperator crossover = new CrossoverOperator(settings.getCrossoverType());
       /* fitness function step */
 
@@ -46,10 +47,16 @@ public class GaCalibration {
        */
       CalibrationDal.updateStatus(settings.getTitle(), bestIndividual.getFitness(), gen + 1,
           "RUNNING");
+      
+      // TESTING LOG
+      System.out.println((gen+1) + "," + bestIndividual.getFitness() + "," + getAverageFitness() 
+      + "|" + (gen+1) + "," + bestIndividual.getW() + "," + bestIndividual.getW_n() + "," + bestIndividual.getSigma_r());
 
       /* selection step */
       normalizePopulationFitness();
-
+      
+      
+      
       List<ParamIndividual> selectionIndividuals = getSelectionIndividuals();
       List<ParamIndividual> offspring =
           crossover.cross(selectionIndividuals, (int) (settings.getMaxIndividuals() / 2));
@@ -116,6 +123,8 @@ public class GaCalibration {
       }
       // calculate the mean score
       score = score / (double) settings.getSampleCount();
+      System.gc();
+      System.out.println("Fitness of " +ind +": "+score+"");
       population.getIndividual(ind).setFitness(score);
     }
   }

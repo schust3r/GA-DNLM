@@ -20,7 +20,7 @@ public class GaDnlmApplication extends SpringBootServletInitializer {
   public static void main(String[] args) {
     try {
       // load opencv dll path from properties
-      setLibraryPath("C:\\opencv33\\opencv\\build\\java\\x64");      
+      setLibraryPath("C:\\OpenCV\\opencv\\build\\java\\x64");      
       // run spring boot app
       SpringApplication.run(GaDnlmApplication.class, args);
     } catch (Exception ex) {

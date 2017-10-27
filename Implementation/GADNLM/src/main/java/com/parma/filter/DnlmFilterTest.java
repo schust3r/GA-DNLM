@@ -28,7 +28,7 @@ public class DnlmFilterTest {
     double checksum = Core.sumElems(res).val[0];
     System.out.printf("Checksum: %f\n", checksum);
 
-    assertTrue("Resultado inaceptable.", checksum - 10827950.3390755 < 1750);
+    assertTrue("Resultado inaceptable.", Math.abs(checksum - 7909846.59852662) < 1750);
 
   }
 
