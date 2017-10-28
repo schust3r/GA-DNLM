@@ -74,14 +74,18 @@ public class FilterController {
       } else {
 
         model.addAttribute("message", "The images are being filtered");
-
+        System.out.println("The image is filtering");
+        	
         // run AsyncService to process the images
         asyncService.processImages(settings);
+        
+        System.out.println("The image is filtered");
       }
 
     } catch (Exception ex) {
       System.out.println(ex.getMessage());
     }
+   
     return "filter";
   }
 
