@@ -11,12 +11,10 @@ import com.parma.configuration.SpringMongoConfiguration;
 import com.parma.model.Image;
 
 public class ImageDal {
-
-  private static Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-  private static ApplicationContext ctx =
-      new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
   
   public static Image loadImage(String id) {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // get a single calibration linked to the user
     Query query = new Query(Criteria.where("_id").is(id).and("owner").is(auth.getName()));
@@ -24,6 +22,8 @@ public class ImageDal {
   }
   
   public static void saveImage(Image img) {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // save image to the database    
     mongoOps.save(img, "Image");

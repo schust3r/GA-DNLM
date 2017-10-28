@@ -14,11 +14,9 @@ import com.parma.model.Image;
 
 public class GalleryDal {
 
-  private static Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-  private static ApplicationContext ctx =
-      new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
-
   public static List<Image> loadGalleries() {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // get all images linked to the user
     List<Image> galleries = new ArrayList<Image>();
@@ -28,6 +26,8 @@ public class GalleryDal {
   }
 
   public static List<Image> loadGallery(String group) {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // get a single gallery linked to the user
     List<Image> images = new ArrayList<Image>();
@@ -37,6 +37,8 @@ public class GalleryDal {
   }
   
   public static void removeGallery(String group) {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // get a single calibration linked to the user    
     Query query = new Query(Criteria.where("owner").is(auth.getName()).and("group").is(group));    

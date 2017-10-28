@@ -45,7 +45,8 @@ public class DnlmFilter {
 
     Mat GaussW = new Mat(S.size(), CvType.CV_64FC1);
     S.copyTo(GaussW);
-    Core.exp(GaussW, GaussW);
+    Core.exp(GaussW, GaussW);       
+
 
     Mat U = NoAdaptativeUSM(G, 3, 17, 0.005);
 
@@ -167,15 +168,12 @@ public class DnlmFilter {
               Mat OxU_sub = U.submat((int) (iMin + w_n - 1), (int) (iMax - w_n),
                   (int) (jMin + w_n - 1), (int) (jMax - w_n));
 
-
               OxU_sub = OxU_sub.mul(O);
-              	
-              output.put(i - 1, j - 1, Core.sumElems(OxU_sub).val[0] / norm_factor);
-            }
-          }
 
+              output.put(i - 1, j - 1, Core.sumElems(OxU_sub).val[0] / norm_factor);                           
+            }
+          }                    
           // process your input here and compute the output
-          
           return output;
         }
       };
@@ -188,7 +186,6 @@ public class DnlmFilter {
     for (Future<Mat> future : futures) {
       try {
         outputs.add(future.get());
-      
       } catch (InterruptedException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -201,10 +198,11 @@ public class DnlmFilter {
 
     for (Mat mat : outputs)
       Core.add(R, mat, R);
-
+    
+    // release unreferenced matrices
     System.gc();
+    
     return R;
-
 
   } // end DNLM-IFFT Filter
 

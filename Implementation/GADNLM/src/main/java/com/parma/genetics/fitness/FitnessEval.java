@@ -31,6 +31,7 @@ public class FitnessEval {
     Mat original = new Mat();
     pOriginal.copyTo(original);
 
+    // TESTING STATIC FILTER
     //DnlmFilter filter = new DnlmFilter();
 
     // filter the image with DNLM-IDFT
@@ -38,14 +39,14 @@ public class FitnessEval {
     
     // segmentation of the filtered image
     filteredImage = applySegmentation(filteredImage);
-    
 
     // calculate fitness with the specified similarity check function
     double fitness = getFitnessResult(filteredImage, pGroundtruth);
+    
+    original.release();
     filteredImage.release();
-    
+
     return fitness;
-    
   }
 
 

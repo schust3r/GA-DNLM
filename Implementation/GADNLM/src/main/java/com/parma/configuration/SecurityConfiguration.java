@@ -36,8 +36,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .anyRequest().authenticated().and().csrf()
         .disable().formLogin().loginPage("/login").failureUrl("/login?error=true")
         .defaultSuccessUrl("/calibrate")
-        .usernameParameter("username").passwordParameter("password").and().logout()
-        .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/")
+        .usernameParameter("username").passwordParameter("password").and()
+        .logout().logoutUrl("/logout")
+        .deleteCookies("JSESSIONID").invalidateHttpSession(true)
         .and().exceptionHandling()
         .accessDeniedPage("/access-denied");
   }

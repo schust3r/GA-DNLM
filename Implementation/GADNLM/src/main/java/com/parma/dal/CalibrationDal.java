@@ -16,11 +16,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class CalibrationDal {
 
-  private static Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-  private static ApplicationContext ctx =
-      new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
-
   public static Calibration loadCalibration(String title) {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // get a single calibration linked to the user
     Query query = new Query(Criteria.where("title").is(title).and("owner").is(auth.getName()));
@@ -28,6 +26,8 @@ public class CalibrationDal {
   }
 
   public static List<Calibration> loadFinishedCalibrations() {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // generate array of calibrations linked to the user
     List<Calibration> cals = new ArrayList<Calibration>();
@@ -37,6 +37,8 @@ public class CalibrationDal {
   }
 
   public static List<Calibration> loadAllCalibrations() {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // generate array of calibrations linked to the user
     List<Calibration> cals = new ArrayList<Calibration>();
@@ -46,12 +48,16 @@ public class CalibrationDal {
   }
 
   public static void saveCalibration(Calibration cal) {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // save the calibration in mongodb
     mongoOps.save(cal, "Calibration");
   }
 
   public static void removeCalibration(String title) {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // search calibration by title
     Query query = new Query(Criteria.where("title").is(title).and("owner").is(auth.getName()));
@@ -60,6 +66,8 @@ public class CalibrationDal {
   }
 
   public static void updateStatus(String title, double fitness, int curr_gen, String status) {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // find and update params in the calibration
     Query query = new Query(Criteria.where("title").is(title).and("owner").is(auth.getName()));
@@ -71,6 +79,8 @@ public class CalibrationDal {
   }
 
   public static void updateParams(String title, int w, int w_n, int sigma_r) {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // find and update params in the calibration
     Query query = new Query(Criteria.where("title").is(title).and("owner").is(auth.getName()));

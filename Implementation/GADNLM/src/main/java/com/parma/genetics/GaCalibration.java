@@ -38,7 +38,6 @@ public class GaCalibration {
 
     // run GA for the number of generations specified in settings
     for (int gen = 0; gen < settings.getMaxGenerations(); gen++) {
-    	
       CrossoverOperator crossover = new CrossoverOperator(settings.getCrossoverType());
       /* fitness function step */
 
@@ -62,14 +61,12 @@ public class GaCalibration {
           "RUNNING");
       
       // TESTING LOG
-      System.out.println((gen+1) + "," + bestIndividual.getFitness() + "," + getAverageFitness() 
+      System.out.println("GEN:"+ (gen + 1) + "," + bestIndividual.getFitness() + "," + getAverageFitness() 
       + "|" + (gen+1) + "," + bestIndividual.getW() + "," + bestIndividual.getW_n() + "," + bestIndividual.getSigma_r());
 
       /* selection step */
-      normalizePopulationFitness();
-      
-      
-      
+      normalizePopulationFitness();      
+
       List<ParamIndividual> selectionIndividuals = getSelectionIndividuals();
       System.out.println("Number of parents: "+selectionIndividuals.size());
       List<ParamIndividual> offspring =
@@ -77,10 +74,8 @@ public class GaCalibration {
 
       population.update(offspring);
 
-      applyMutation();
-      
-      
-      
+      applyMutation();            
+               
     }
 
     calculatePopulationFitness();
@@ -119,10 +114,11 @@ public class GaCalibration {
     averageFitness = averageFitness / settings.getMaxIndividuals();
     return averageFitness;
   }
-
+  
+  
   private void calculatePopulationFitness() {
     
-    for (int ind = 0; ind < settings.getMaxIndividuals(); ind++) {
+    for (int ind = 0; ind < settings.getMaxIndividuals(); ind++) {            
       
       ParamIndividual p = population.getIndividual(ind);
       FitnessEval fitEval =
@@ -132,15 +128,19 @@ public class GaCalibration {
       if (settings.getFitnessFunction() == Fitness.DICE) {
         for (int index = 0; index < settings.getSampleCount(); index++) {
           score += fitEval.evaluate(p, settings.getOriginalImage(index),
-              settings.getGroundtruthImage(index));
+              settings.getGroundtruthImage(index));                
         }
       }
+      
       // calculate the mean score
       score = score / (double) settings.getSampleCount();
-      System.gc();
-      System.out.println("Fitness of " +ind +": "+score+"");
       population.getIndividual(ind).setFitness(score);
+      
+      // TEST LOG
+      System.out.println("-- Calculated fitness for sample " + (ind+1) + " of " + settings.getMaxIndividuals() + " --");
+     
     }
+    
   }
 
 

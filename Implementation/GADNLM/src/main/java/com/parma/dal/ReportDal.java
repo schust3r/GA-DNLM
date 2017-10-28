@@ -12,12 +12,10 @@ import com.parma.model.FitnessReport;
 import com.parma.model.TimeReport;
 
 public class ReportDal {
-
-  private static Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-  private static ApplicationContext ctx =
-      new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
   
   public static TimeReport saveTimeReport() {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // get a single calibration linked to the user
     Query query = new Query(Criteria.where("owner").is(auth.getName()));
@@ -25,6 +23,8 @@ public class ReportDal {
   }
   
   public static void removeReports(String calibration) {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     // remove all reports associated with the calibration and user 
     Query query = new Query(Criteria.where("calibration").is(calibration).and("owner").is(auth.getName()));

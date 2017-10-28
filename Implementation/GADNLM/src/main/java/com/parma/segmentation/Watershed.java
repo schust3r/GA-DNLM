@@ -38,8 +38,7 @@ public class Watershed {
 	    for (int i = 0; i < contours.size(); i++) {
 	        Imgproc.drawContours(markers, contours, i, Scalar.all(i+1), -1);
 	    }
-	    //Core.multiply(markers, new Scalar(10000), markers);
-	    
+	    //Core.multiply(markers, new Scalar(10000), markers);	    
 	    
 	    Imgproc.watershed(imagen, markers);
 	    
