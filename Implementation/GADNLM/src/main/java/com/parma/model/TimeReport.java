@@ -11,6 +11,14 @@ public class TimeReport {
   private String calibrationName;
   private String owner;
   
+  public TimeReport(long timeElapsed, String type, int generation, String calibrationName, String owner) {
+    this.timeElapsed = timeElapsed;
+    this.type = type;
+    this.generation = generation;
+    this.calibrationName = calibrationName;
+    this.owner = owner;
+}
+  
   public long getTimeElapsed() {
     return timeElapsed;
   }
