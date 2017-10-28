@@ -18,7 +18,7 @@ import org.opencv.imgproc.Imgproc;
 
 public class DnlmFilter {
 
-  public Mat filter(Mat I, double w, double w_n, double sigma_r) {
+  public static Mat filter(Mat I, double w, double w_n, double sigma_r) {
 
     Mat G = new Mat(I.size(), CvType.CV_64FC1);
     I.copyTo(G);
@@ -45,7 +45,8 @@ public class DnlmFilter {
 
     Mat GaussW = new Mat(S.size(), CvType.CV_64FC1);
     S.copyTo(GaussW);
-    Core.exp(GaussW, GaussW);
+    Core.exp(GaussW, GaussW);       
+
 
     Mat U = NoAdaptativeUSM(G, 3, 17, 0.005);
 
@@ -167,13 +168,11 @@ public class DnlmFilter {
               Mat OxU_sub = U.submat((int) (iMin + w_n - 1), (int) (iMax - w_n),
                   (int) (jMin + w_n - 1), (int) (jMax - w_n));
 
-
               OxU_sub = OxU_sub.mul(O);
 
-              output.put(i - 1, j - 1, Core.sumElems(OxU_sub).val[0] / norm_factor);
+              output.put(i - 1, j - 1, Core.sumElems(OxU_sub).val[0] / norm_factor);                           
             }
-          }
-
+          }                    
           // process your input here and compute the output
           return output;
         }
@@ -199,10 +198,11 @@ public class DnlmFilter {
 
     for (Mat mat : outputs)
       Core.add(R, mat, R);
-
-
+    
+    // release unreferenced matrices
+    System.gc();
+    
     return R;
-
 
   } // end DNLM-IFFT Filter
 
@@ -210,7 +210,7 @@ public class DnlmFilter {
   /**
    * No adaptative laplacian. CURRENT VERSION HAS HARDCODED KERNEL
    */
-  private Mat NoAdaptativeUSM(Mat SrcImage, double lambda, int kernelSize, double kernelSigma) {
+  private static Mat NoAdaptativeUSM(Mat SrcImage, double lambda, int kernelSize, double kernelSigma) {
     Mat kernel = new Mat(kernelSize, kernelSize, CvType.CV_64FC1);
     for (int i = 0; i < kernelSize; i++) {
       for (int j = 0; j < kernelSize; j++) {
@@ -249,7 +249,7 @@ public class DnlmFilter {
   /**
    * Meshgrid generator
    */
-  private void meshgrid(Range xgv, Range ygv, Mat X, Mat Y) {
+  private static void meshgrid(Range xgv, Range ygv, Mat X, Mat Y) {
     double[] t_x = new double[xgv.size() + 1];
     double[] t_y = new double[ygv.size() + 1];
     for (int i = xgv.start; i <= xgv.end; i++) {
