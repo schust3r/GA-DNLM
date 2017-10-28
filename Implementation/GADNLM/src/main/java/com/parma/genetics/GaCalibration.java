@@ -1,6 +1,7 @@
 package com.parma.genetics;
 
 import java.util.Random;
+import java.util.TreeSet;
 import java.util.List;
 import java.util.ArrayList;
 import com.parma.dal.CalibrationDal;
@@ -13,6 +14,8 @@ public class GaCalibration {
   private Population population;
 
   private int safeboxSize;
+  
+  private TreeSet<ParamIndividual> safebox;
 
   private GaSettings settings;
 
@@ -23,6 +26,9 @@ public class GaCalibration {
     population = new Population(settings);
     this.population.initializePopulation(settings.getMaxIndividuals());
     this.safeboxSize = (int) ((double) settings.getMaxIndividuals() * 0.2);
+    this.safebox = new TreeSet<ParamIndividual>();
+    
+    this.settings.setSelectionThreshold(0.6);
   }
 
 
@@ -38,8 +44,15 @@ public class GaCalibration {
 
       calculatePopulationFitness();
       population.sortByFitness();
-
+           
       bestIndividual = population.getIndividual(0);
+      safebox.add(bestIndividual);
+
+      if (safebox.size() > this.safeboxSize) {
+    	  safebox.remove(safebox.last());
+      }
+      //TODO SafeBox 
+      
       // ParamIndividual worstIndividual = population.getIndividual(population.getSize() - 1);
 
       /*
@@ -58,6 +71,7 @@ public class GaCalibration {
       
       
       List<ParamIndividual> selectionIndividuals = getSelectionIndividuals();
+      System.out.println("Number of parents: "+selectionIndividuals.size());
       List<ParamIndividual> offspring =
           crossover.cross(selectionIndividuals, (int) (settings.getMaxIndividuals() / 2));
 
@@ -179,7 +193,5 @@ public class GaCalibration {
     }
     return accumulatedFitness;
   }
-
-
-
+  
 }
