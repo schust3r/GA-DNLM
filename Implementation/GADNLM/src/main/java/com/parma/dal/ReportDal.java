@@ -32,4 +32,12 @@ public class ReportDal {
     mongoOps.remove(query, TimeReport.class);
   }
 
+public static void saveFitnessReport(FitnessReport fitnessReport) {
+	ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
+    mongoOps.save(fitnessReport, "FitnessReport");
+    
+}
+
 }

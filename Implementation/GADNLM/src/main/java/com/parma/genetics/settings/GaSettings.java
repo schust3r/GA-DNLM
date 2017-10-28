@@ -3,6 +3,8 @@ package com.parma.genetics.settings;
 import java.util.ArrayList;
 import java.util.List;
 import org.opencv.core.Mat;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * 
@@ -24,6 +26,8 @@ public class GaSettings {
 	private int upperWn;	
 	
 	/** Genetic Algorithm configuration **/
+	
+	private String owner;
 
     private String title;
     
@@ -54,6 +58,8 @@ public class GaSettings {
 	public GaSettings() {
 		originalImages = new ArrayList<Mat>();
 		groundtruthImages = new ArrayList<Mat>();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		setOwner(auth.getName());
 	}
 	
 	public int getSampleCount() {
@@ -210,6 +216,14 @@ public class GaSettings {
 
 	public void setSelectionThreshold(double selectionThreshold) {
 		this.selectionThreshold = selectionThreshold;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 		
 }

@@ -2,12 +2,18 @@ package com.parma.genetics;
 
 import java.util.Random;
 import java.util.TreeSet;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.util.List;
 import java.util.ArrayList;
 import com.parma.dal.CalibrationDal;
+import com.parma.dal.ReportDal;
 import com.parma.genetics.fitness.FitnessEval;
 import com.parma.genetics.settings.Fitness;
 import com.parma.genetics.settings.GaSettings;
+import com.parma.model.FitnessReport;
 
 public class GaCalibration {
 
@@ -25,7 +31,7 @@ public class GaCalibration {
     this.settings = settings;
     population = new Population(settings);
     this.population.initializePopulation(settings.getMaxIndividuals());
-    this.safeboxSize = (int) ((double) settings.getMaxIndividuals() * 0.2);
+    this.safeboxSize = Math.max(1,(int) ((double) settings.getMaxIndividuals() * 0.2));
     this.safebox = new TreeSet<ParamIndividual>();
     
     this.settings.setSelectionThreshold(0.6);
@@ -33,12 +39,13 @@ public class GaCalibration {
 
 
   public void runCalibration() {
-
+	 
+	
     ParamIndividual bestIndividual;
-
+    CrossoverOperator crossover = new CrossoverOperator(settings.getCrossoverType());
     // run GA for the number of generations specified in settings
     for (int gen = 0; gen < settings.getMaxGenerations(); gen++) {
-      CrossoverOperator crossover = new CrossoverOperator(settings.getCrossoverType());
+      
       /* fitness function step */
 
       calculatePopulationFitness();
@@ -58,8 +65,12 @@ public class GaCalibration {
        * update the Calibration in the database
        */
       CalibrationDal.updateStatus(settings.getTitle(), bestIndividual.getFitness(), gen + 1,
-          "RUNNING");
+          "RUNNING",settings.getOwner());
       
+      FitnessReport fitnessReport = new FitnessReport(getAverageFitness(), 
+    		  bestIndividual.getFitness(), gen+1, settings.getTitle(), settings.getOwner());
+      
+      ReportDal.saveFitnessReport(fitnessReport);
       // TESTING LOG
       System.out.println("GEN:"+ (gen + 1) + "," + bestIndividual.getFitness() + "," + getAverageFitness() 
       + "|" + (gen+1) + "," + bestIndividual.getW() + "," + bestIndividual.getW_n() + "," + bestIndividual.getSigma_r());
@@ -83,15 +94,31 @@ public class GaCalibration {
 
     bestIndividual = population.getIndividual(0);
 
+
+    safebox.add(bestIndividual);
+
+    if (safebox.size() > this.safeboxSize) {
+  	  safebox.remove(safebox.last());
+    }
     /*
      * Update calibration with final status and parameters
      */
 
     CalibrationDal.updateStatus(settings.getTitle(), bestIndividual.getFitness(),
-        settings.getMaxGenerations(), "DONE");
+        settings.getMaxGenerations(), "DONE",settings.getOwner());
+    
+    FitnessReport fitnessReport = new FitnessReport(getAverageFitness(), 
+  		  bestIndividual.getFitness(),  settings.getMaxGenerations(), settings.getTitle(), settings.getOwner());
+    
+    ReportDal.saveFitnessReport(fitnessReport);
+    
+    bestIndividual = safebox.first();
 
     CalibrationDal.updateParams(settings.getTitle(), bestIndividual.getW(), bestIndividual.getW_n(),
-        bestIndividual.getSigma_r());
+        bestIndividual.getSigma_r(),bestIndividual.getFitness(),settings.getOwner());
+
+    
+   
 
   }
 

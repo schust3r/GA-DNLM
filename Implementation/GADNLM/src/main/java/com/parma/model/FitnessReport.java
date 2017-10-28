@@ -11,6 +11,14 @@ public class FitnessReport {
   private String calibrationName;
   private String owner;
   
+  public FitnessReport(double pAverageScore, double pBestScore, int pGeneration, String pCalibration, String pOwner) {
+	  averageScore = pAverageScore;
+	  bestScore = pBestScore;
+	  generation = pGeneration;
+	  calibrationName = pCalibration;
+	  owner = pOwner;
+  }
+  
   public double getAverageScore() {
     return averageScore;
   }
