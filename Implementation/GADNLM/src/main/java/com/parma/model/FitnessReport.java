@@ -8,14 +8,14 @@ public class FitnessReport {
   private double averageScore;
   private double bestScore;
   private int generation;
-  private String calibrationName;
+  private String calibration;
   private String owner;
   
   public FitnessReport(double pAverageScore, double pBestScore, int pGeneration, String pCalibration, String pOwner) {
 	  averageScore = pAverageScore;
 	  bestScore = pBestScore;
 	  generation = pGeneration;
-	  calibrationName = pCalibration;
+	  calibration = pCalibration;
 	  owner = pOwner;
   }
   
@@ -44,11 +44,11 @@ public class FitnessReport {
   }
   
   public String getCalibrationName() {
-    return calibrationName;
+    return calibration;
   }
   
   public void setCalibrationName(String calibrationName) {
-    this.calibrationName = calibrationName;
+    this.calibration = calibrationName;
   }
   
   public String getOwner() {

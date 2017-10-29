@@ -39,9 +39,9 @@ public class GaCalibration {
 
   public void runCalibration() {
 
-
-    ParamIndividual bestIndividual;
+    ParamIndividual bestIndividual = new ParamIndividual();
     CrossoverOperator crossover = new CrossoverOperator(settings.getCrossoverType());
+    
     // run GA for the number of generations specified in settings
     for (int gen = 0; gen < settings.getMaxGenerations(); gen++) {
 
@@ -56,7 +56,6 @@ public class GaCalibration {
       if (safebox.size() > this.safeboxSize) {
         safebox.remove(safebox.last());
       }
-      // TODO SafeBox
 
       // ParamIndividual worstIndividual = population.getIndividual(population.getSize() - 1);
 
@@ -86,39 +85,25 @@ public class GaCalibration {
       population.update(offspring);
 
       applyMutation();
-
     }
-
-    calculatePopulationFitness(settings.getMaxGenerations());
-    population.sortByFitness();
-
-    bestIndividual = population.getIndividual(0);
-
-
-    safebox.add(bestIndividual);
-
-    if (safebox.size() > this.safeboxSize) {
-      safebox.remove(safebox.last());
-    }
+    
     /*
      * Update calibration with final status and parameters
      */
-
     CalibrationDal.updateStatus(settings.getTitle(), bestIndividual.getFitness(),
         settings.getMaxGenerations(), "DONE", settings.getOwner());
 
+    /*
     FitnessReport fitnessReport =
         new FitnessReport(getAverageFitness(), bestIndividual.getFitness(),
             settings.getMaxGenerations(), settings.getTitle(), settings.getOwner());
-
     ReportDal.saveFitnessReport(fitnessReport);
+     */
 
     bestIndividual = safebox.first();
 
     CalibrationDal.updateParams(settings.getTitle(), bestIndividual.getW(), bestIndividual.getW_n(),
         bestIndividual.getSigma_r(), bestIndividual.getFitness(), settings.getOwner());
-
-
 
   }
 

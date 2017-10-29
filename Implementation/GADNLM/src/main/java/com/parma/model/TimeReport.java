@@ -8,14 +8,14 @@ public class TimeReport {
   private long timeElapsed;
   private String type;
   private int generation;
-  private String calibrationName;
+  private String calibration;
   private String owner;
   
   public TimeReport(long timeElapsed, String type, int generation, String calibrationName, String owner) {
     this.timeElapsed = timeElapsed;
     this.type = type;
     this.generation = generation;
-    this.calibrationName = calibrationName;
+    this.calibration = calibrationName;
     this.owner = owner;
 }
   
@@ -44,11 +44,11 @@ public class TimeReport {
   }
   
   public String getCalibrationName() {
-    return calibrationName;
+    return calibration;
   }
   
   public void setCalibrationName(String calibrationName) {
-    this.calibrationName = calibrationName;
+    this.calibration = calibrationName;
   }
   
   public String getOwner() {

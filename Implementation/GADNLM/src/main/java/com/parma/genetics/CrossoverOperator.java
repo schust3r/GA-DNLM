@@ -28,7 +28,7 @@ public class CrossoverOperator {
 		
 				if (type == Crossover.CLUSTER) lim = (int) (Math.sqrt((double) parents.size())); //No hay referencia al respecto
 				
-				for(int i = 0; i < lim; i++) {
+				for(int i = 0; i < lim && i < parents.size(); i++) {
 					fitnessAccum += parents.get(i).getFitness();
 				}
 
@@ -37,7 +37,7 @@ public class CrossoverOperator {
 				float w_n = 0;
 				float sigma_r = 0;
 				
-				for(int i=0; i < lim; i++) {
+				for(int i = 0; i < lim && i < parents.size(); i++) {
 					w += parents.get(i).getW()*(parents.get(i).getFitness()/fitnessAccum);
 					w_n += parents.get(i).getW_n()*(parents.get(i).getFitness()/fitnessAccum);
 					sigma_r += parents.get(i).getSigma_r()*(parents.get(i).getFitness()/fitnessAccum);
