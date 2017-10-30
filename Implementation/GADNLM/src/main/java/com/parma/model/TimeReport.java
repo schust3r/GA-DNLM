@@ -18,6 +18,9 @@ public class TimeReport {
     this.calibration = calibrationName;
     this.owner = owner;
 }
+  public TimeReport() {
+    
+  }
   
   public long getTimeElapsed() {
     return timeElapsed;

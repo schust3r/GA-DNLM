@@ -18,6 +18,9 @@ public class FitnessReport {
 	  calibration = pCalibration;
 	  owner = pOwner;
   }
+  public FitnessReport() {
+    
+  }
   
   public double getAverageScore() {
     return averageScore;

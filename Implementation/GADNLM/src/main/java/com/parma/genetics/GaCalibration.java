@@ -62,8 +62,12 @@ public class GaCalibration {
       /*
        * update the Calibration in the database
        */
+      String status = "RUNNING";
+      if (gen == settings.getMaxGenerations()-1) {
+        status = "DONE";
+      }
       CalibrationDal.updateStatus(settings.getTitle(), bestIndividual.getFitness(), gen + 1,
-          "RUNNING", settings.getOwner());
+          status, settings.getOwner());
 
       /*
        * Generate and save the fitness report for each generation
@@ -90,8 +94,12 @@ public class GaCalibration {
     /*
      * Update calibration with final status and parameters
      */
-    CalibrationDal.updateStatus(settings.getTitle(), bestIndividual.getFitness(),
-        settings.getMaxGenerations(), "DONE", settings.getOwner());
+    
+    /*
+     * CalibrationDal.updateStatus(settings.getTitle(), bestIndividual.getFitness(),
+     * settings.getMaxGenerations(), "DONE", settings.getOwner());
+     */
+        
 
     /*
     FitnessReport fitnessReport =
