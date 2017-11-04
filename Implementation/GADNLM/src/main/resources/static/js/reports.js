@@ -13,3 +13,9 @@ $(document).ready(function(){
         });
     };
 });
+
+function export_svg(button_id, chart_id) {    
+	  $("#" + chart_id + " svg").attr({ version: '1.1' , xmlns:"http://www.w3.org/2000/svg"});
+	  var svg = $("#" + chart_id + " svg").parent().html();
+	  document.getElementById(button_id + "-aux").value = svg; 	  
+}

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.xerces.impl.dv.util.Base64;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -14,11 +15,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.mongodb.util.JSON;
+import org.springframework.web.bind.annotation.ResponseBody;
 import com.parma.dal.CalibrationDal;
 import com.parma.dal.ReportDal;
 import com.parma.model.Calibration;
 import com.parma.model.FitnessReport;
+import com.parma.model.TimeReport;
 import com.parma.utils.ReportUtils;
 
 @Controller
@@ -28,7 +30,6 @@ public class ReportController {
   public String reports(HttpServletRequest servletRequest, Model model) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     model.addAttribute("username", auth.getName());
-
 
     String bestFitnessCSV = "";
     String averageFitnessCSV = "";
@@ -44,15 +45,12 @@ public class ReportController {
       bestFitnessCSV = ReportUtils.bestFitnessReportsToCSV(fitnessReports);
       averageFitnessCSV = ReportUtils.averageFitnessReportsToCSV(fitnessReports);
     }
-    // List<FitnessReport> = ReportDal.loadFitnessReports(calibration)
 
     String bestFitnessTable = ReportUtils.generateTable(bestFitnessCSV);
     String averageFitnessTable = ReportUtils.generateTable(averageFitnessCSV);
 
     model.addAttribute("chart1", bestFitnessTable);
     model.addAttribute("chart2", averageFitnessTable);
-
-
 
     List<Calibration> calibrations = CalibrationDal.loadFinishedCalibrations();
     model.addAttribute("calibrations", calibrations);
@@ -95,7 +93,6 @@ public class ReportController {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     model.addAttribute("username", auth.getName());
     try {
-
 
       String csvFile = "";
       List<List<FitnessReport>> fitnessReports = new ArrayList<List<FitnessReport>>();
@@ -207,6 +204,88 @@ public class ReportController {
       response.setHeader("Content-Disposition", "attachment;filename=mean_fitness.tex");
       ServletOutputStream out = response.getOutputStream();
       out.println(tikzFile);
+      out.flush();
+      out.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  
+  /*
+   * SVG exports
+   */
+  @RequestMapping(value = "/export-best-svg", method = RequestMethod.POST)
+  public void exportBestFitnessSVG(HttpServletRequest servletRequest, HttpServletResponse response,
+      @RequestParam("svg") String svg, Model model) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    model.addAttribute("username", auth.getName());
+    try {      
+      response.setContentType("image/svg+xml");
+      response.setHeader("Content-Disposition", "attachment;filename=best_fitness.svg");
+      ServletOutputStream out = response.getOutputStream();
+      out.println(svg.split("</svg>")[0] + "</svg>");
+      out.flush();
+      out.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @RequestMapping(value = "/export-mean-svg", method = RequestMethod.POST)
+  public void exportMeanFitnessSVG(HttpServletRequest servletRequest, HttpServletResponse response,
+      @RequestParam("svg") String svg, Model model) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    model.addAttribute("username", auth.getName());
+    try {      
+      response.setContentType("image/svg+xml");
+      response.setHeader("Content-Disposition", "attachment;filename=mean_fitness.svg");
+      ServletOutputStream out = response.getOutputStream();
+      out.println(svg.split("</svg>")[0] + "</svg>");
+      out.flush();
+      out.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+  
+  /**
+   * Time Report export
+   */
+
+  @RequestMapping(value = "/export-time", method = RequestMethod.POST)
+  public void exportTime(HttpServletRequest servletRequest, HttpServletResponse response,
+      @RequestParam("calibration") String calibration, @RequestParam("type") String type,
+      Model model) {
+
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    model.addAttribute("username", auth.getName());
+
+    try {
+
+      String csvFile = "";
+      csvFile = type.toLowerCase() + ",time_elapsed\n";
+
+      List<TimeReport> reports =
+          ReportDal.loadTimeReports(calibration, (type.equals("TOTAL")) ? "GENERATION" : type);
+
+      if (type.equals("TOTAL")) {
+        long totalTime = 0;
+        for (TimeReport row : reports) {
+          totalTime += row.getTimeElapsed();
+        }
+        csvFile += "1," + String.valueOf(totalTime);
+      } else {
+        for (int i = 0; i < reports.size(); i++) {
+          csvFile += (i + 1) + "," + reports.get(i).getTimeElapsed() + "\n";
+        }
+      }
+
+      response.setContentType("text/csv");
+      response.setHeader("Content-Disposition",
+          "attachment;filename=" + calibration + "_" + type.toLowerCase() + "_report.csv");
+      ServletOutputStream out = response.getOutputStream();
+      out.println(csvFile);
       out.flush();
       out.close();
     } catch (IOException e) {

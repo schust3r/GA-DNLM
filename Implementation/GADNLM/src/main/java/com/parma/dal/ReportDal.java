@@ -54,13 +54,15 @@ public class ReportDal {
   }
 
 
-  public static List<TimeReport> loadTimeReports(String calibration) {
+  public static List<TimeReport> loadTimeReports(String calibration, String type) {
     ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfiguration.class);
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     final MongoOperations mongoOps = (MongoOperations) ctx.getBean("mongoTemplate");
     List<TimeReport> reports = new ArrayList<>();
     Query query =
-        new Query(Criteria.where("calibration").is(calibration).and("owner").is(auth.getName()));
+        new Query(Criteria.where("calibration").is(calibration)
+            .and("owner").is(auth.getName())
+            .and("type").is(type));
     reports = mongoOps.find(query, TimeReport.class);
     return reports;
   }

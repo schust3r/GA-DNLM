@@ -21,7 +21,7 @@
 	var calibration1 = /*[[${chart1}]]*/null;
 
 	calibration1 = JSON.parse(calibration1);
-	
+
 	google.charts.load('current', {
 		'packages' : [ 'corechart' ]
 	});
@@ -145,7 +145,10 @@
 								</td>
 								<td>
 									<form method="POST" th:action="@{/export-best-svg}">
-										<button class="btn_add_fin">EXPORT AS SVG</button>
+										<input id="export-best-svg-aux" name="svg" type="hidden" value=""></span>
+										<button id="export-best-svg" class="btn_add_fin"
+											onclick="export_svg('export-best-svg', 'best_fitness_chart')">
+											EXPORT AS SVG</button>
 									</form>
 								</td>
 							</tr>
@@ -154,6 +157,7 @@
 				</div>
 			</div>
 		</div>
+
 		<!-- COLUMNA 2 -->
 		<div class="col-md-6">
 			<div class="panel panel-default">
@@ -180,7 +184,10 @@
 								</td>
 								<td>
 									<form method="POST" th:action="@{/export-mean-svg}">
-										<button class="btn_add_fin">EXPORT AS SVG</button>
+										<input id="export-mean-svg-aux" name="svg" type="hidden" value=""></span>
+										<button id="export-mean-svg" class="btn_add_fin"
+											onclick="export_svg('export-mean-svg', 'mean_f_chart')">
+											EXPORT AS SVG</button>
 									</form>
 								</td>
 							</tr>
@@ -193,7 +200,7 @@
 					<strong>RUNNING TIME</strong> <small> </small>
 				</div>
 				<div class="panel-body">
-					<form method="POST" th:action="@{/export-best-csv}">
+					<form method="POST" th:action="@{/export-time}">
 						<table class="table">
 							<tr>
 								<td class="titl_description" style="vertical-align: middle;"><b>Calibration
