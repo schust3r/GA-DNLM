@@ -25,25 +25,28 @@ public class CrossoverOperator {
 				ParamIndividual p = new ParamIndividual();
 
 				int lim = 2; 
-				if (type == Crossover.CLUSTER) lim += 4; //No hay referencia al respecto
+		
+				if (type == Crossover.CLUSTER) lim = (int) (Math.sqrt((double) parents.size())); //No hay referencia al respecto
 				
-				for(int i = 0; i < lim; i++) {
+				for(int i = 0; i < lim && i < parents.size(); i++) {
 					fitnessAccum += parents.get(i).getFitness();
 				}
+
 				
-				double w = 0;
-				double w_n = 0;
-				double sigma_r = 0;
+				float w = 0;
+				float w_n = 0;
+				float sigma_r = 0;
 				
-				for(int i=0; i < lim; i++) {
+				for(int i = 0; i < lim && i < parents.size(); i++) {
 					w += parents.get(i).getW()*(parents.get(i).getFitness()/fitnessAccum);
 					w_n += parents.get(i).getW_n()*(parents.get(i).getFitness()/fitnessAccum);
 					sigma_r += parents.get(i).getSigma_r()*(parents.get(i).getFitness()/fitnessAccum);
 				}
 				
-				p.setW((int) w);
-				p.setW_n((int) w_n);
-				p.setSigma_r((int) sigma_r);
+				
+				p.setW(Math.round(w));
+				p.setW_n(Math.round(w_n));
+				p.setSigma_r(Math.round(sigma_r));
 				
 				if (p.getW_n()+p.getSigma_r()+p.getW() == 0 ){
 					System.out.println("asd");

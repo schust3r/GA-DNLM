@@ -8,14 +8,12 @@ import java.util.SortedMap;
 import javax.imageio.ImageIO;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.Size;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.parma.genetics.GaCalibration;
 import com.parma.genetics.settings.GaSettings;
-import com.parma.images.ImageHandler;
 import com.parma.model.Image;
 import com.parma.dal.ImageDal;
 import com.parma.filter.DnlmFilter;
@@ -50,9 +48,6 @@ public class AsyncProcessService {
     int sigma_r = filterSettings.getS_r();
 
     log.info("Image processing '" + group + "' has started");
-    
-    /** DEBUG **/
-    ImageHandler ih = new ImageHandler();
 
     try {
       // perform DNLM-IFFT filtering for each file

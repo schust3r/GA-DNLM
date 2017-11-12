@@ -21,7 +21,7 @@ public class ControllerUtils {
    */
   public static SortedMap<String, Mat> getNameMatrixMap(MultipartFile[] files,
       boolean groundtruth) {
-    
+
     try {
       // load opencv
       System.loadLibrary(Core.NATIVE_LIBRARY_NAME);

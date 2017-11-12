@@ -1,193 +1,235 @@
 <head>
-  <title>Reports - GA DNLM</title>
-  <link rel="stylesheet" type="text/css" href="css/common.css">
-  <link rel="stylesheet" type="text/css" href="css/reports.css">
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <!-- jQuery library -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <!-- Latest compiled JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<title>Reports - GA DNLM</title>
+<link rel="stylesheet" type="text/css" href="css/common.css">
+<link rel="stylesheet" type="text/css" href="css/reports.css">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
 
-  <script type="text/javascript">
-    google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
+<script th:inline="javascript">
+	/*<![CDATA[*/
 
-    function drawChart() {
-      var data = google.visualization.arrayToDataTable([
-        ['Generation', 'Football players', 'Image lot 2'],
-        ['50', 65, 57],
-        ['100', 70, 85],
-        ['150', 78, 87],
-        ['200', 97, 93]
-      ]);
+	var calibration1 = /*[[${chart1}]]*/null;
 
-      var options = {
-        title: 'Performance of top individuals per generation',
-        hAxis: {title: 'Generation'},
-        vAxis: {title: 'Fitness'},
-        curveType: 'function',
-        legend: { position: 'bottom' }
-      };
+	calibration1 = JSON.parse(calibration1);
 
-      var chart = new google.visualization.LineChart(document.getElementById('best_fitness_chart'));
+	google.charts.load('current', {
+		'packages' : [ 'corechart' ]
+	});
+	google.charts.setOnLoadCallback(drawChart);
 
-      chart.draw(data, options);
-    }
-  </script>
+	function drawChart() {
 
-  <script type="text/javascript">
-    google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
+		var data = google.visualization.arrayToDataTable(calibration1);
 
-    function drawChart() {
-      var data = google.visualization.arrayToDataTable([
-        ['Generation', 'Football players', 'Image lot 2'],
-        ['50', 48, 43],
-        ['100', 65, 70],
-        ['150', 70, 75],
-        ['200', 88, 81]
-      ]);
+		var options = {
+			title : 'Performance of top individuals per generation',
+			hAxis : {
+				title : 'Generation'
+			},
+			vAxis : {
+				title : 'Fitness'
+			},
+			//curveType : 'function',
+			legend : {
+				position : 'bottom'
+			}
+		};
 
-      var options = {
-        title: 'Mean fitness of individuals per generation',
-        hAxis: {title: 'Generation'},
-        vAxis: {title: 'Mean of fitness'},
-        legend: { position: 'bottom' },
-        colors: ['#a52714', '#097138']
-      };
+		var chart = new google.visualization.LineChart(document
+				.getElementById('best_fitness_chart'));
 
-      var chart = new google.visualization.LineChart(document.getElementById('mean_f_chart'));
+		chart.draw(data, options);
+	}
+	/*]]>*/
+</script>
 
-      chart.draw(data, options);
-    }
-  </script>
+<script th:inline="javascript">
+	/*<![CDATA[*/
 
+	var calibration2 = /*[[${chart2}]]*/null;
+	calibration2 = JSON.parse(calibration2);
+	google.charts.load('current', {
+		'packages' : [ 'corechart' ]
+	});
+	google.charts.setOnLoadCallback(drawChart);
+
+	function drawChart() {
+		var data = google.visualization.arrayToDataTable(calibration2);
+
+		var options = {
+			title : 'Mean fitness of individuals per generation',
+			hAxis : {
+				title : 'Generation'
+			},
+			vAxis : {
+				title : 'Mean of fitness'
+			},
+			//curveType : 'function',
+			legend : {
+				position : 'bottom'
+			},
+			colors : [ '#a52714', '#097138' ]
+		};
+
+		var chart = new google.visualization.LineChart(document
+				.getElementById('mean_f_chart'));
+
+		chart.draw(data, options);
+	}
+</script>
 </head>
-
 <body>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        rel="stylesheet">
+	<div th:replace="common/navbar :: nav"></div>
+	<div class="container">
+		<!-- COLUMNA 1 -->
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<strong>CALIBRATION SELECTION</strong> <small> </small>
+				</div>
+				<div class="panel-body">
+					<form method="POST" th:action="@{/report-add}">
+						<table class="table">
+							<tr>
+								<td class="titl_description" style="vertical-align: middle;"><b>Calibration
+										name</b></td>
+								<td><select id="calibration" name="calibration"
+									class="input_title_desc">
+										<option th:each="cal : ${calibrations}"
+											th:value="${cal.title}" th:text="${cal.title}"></option>
+								</select></td>
+							</tr>
+						</table>
+						<div class="col-md-6" style="float: right">
+							<button class="btn_add_fin" type="submit">ADD TO CHARTS</button>
+						</div>
+					</form>
+					<div class="col-md-6" style="float: left">
+						<form method="POST" th:action="@{/report-clear}">
+							<button class="btn_add_fin">CLEAR</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<strong>BEST FITNESS CHART</strong> <small> </small>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div id="best_fitness_chart" style="width: 100%; height: 51.4%;"></div>
+					</div>
+					<div class="row" style="margin: 20px 0 0 0">
+						<table class="table">
+							<tr>
+								<td>
+									<form method="POST" th:action="@{/export-best-csv}">
+										<button class="btn_export" type="submit">EXPORT AS
+											CSV</button>
+									</form>
+								</td>
+								<td>
+									<form method="POST" th:action="@{/export-best-tikz}">
+										<button class="btn_export">EXPORT AS TIKZ</button>
+									</form>
+								</td>
+								<td>
+									<form method="POST" th:action="@{/export-best-svg}">
+										<input id="export-best-svg-aux" name="svg" type="hidden" value=""></span>
+										<button id="export-best-svg" class="btn_add_fin"
+											onclick="export_svg('export-best-svg', 'best_fitness_chart')">
+											EXPORT AS SVG</button>
+									</form>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
 
-  <div th:replace="common/navbar :: nav"></div>
-
-  <div class="container">    
-
-    <!-- COLUMNA 1 -->
-    <div class="col-md-6">
-
-      <div class="panel panel-default">
-        <div class="panel-heading"><strong>CALIBRATION SELECTION</strong> <small> </small></div>
-        <div class="panel-body">
-          <table class="table">
-            <tr>
-              <td class="titl_description" style="vertical-align:middle;"><b>Calibration name</b></td>
-              <td>
-                <select name="" class="input_title_desc" id="date_select">
-                  <option value="TODAY">Footbal players</option>
-                  <option value="TOMORROW">Image lot 2</option>                
-                </select>
-              </td>
-            </tr>        
-            <tr>
-              <td >
-                <button class="btn_add_fin"  onclick="add_to_list()">CLEAR</button>
-              </td>
-              <td>
-                <button class="btn_add_fin"  onclick="add_to_list()">ADD TO CHARTS</button>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-
-      <div class="panel panel-default">
-        <div class="panel-heading"><strong>BEST FITNESS CHART</strong> <small> </small></div>
-        <div class="panel-body">
-          <div class="row">
-            <div id="best_fitness_chart" style="width: 100%; height: 40%;"></div>
-          </div>
-          <div class="row" style="margin: 20px 0 0 0">  
-            <table class="table">
-              <tr>
-                <td>
-                  <button class="btn_export">EXPORT AS CSV</button>
-                </td>
-                <td>
-                  <button class="btn_add_fin">EXPORT AS SVG</button>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </div>     
-    </div>
-
-
-    <!-- COLUMNA 2 -->
-    <div class="col-md-6">
-
-      <div class="panel panel-default">
-        <div class="panel-heading"><strong>MEAN FITNESS PER GENERATION</strong> <small> </small></div>
-        <div class="panel-body">
-          <div class="row">
-            <div id="mean_f_chart" style="width: 100%; height: auto;"></div>
-          </div>
-          <div class="row" style="margin: 20px 0 0 0">            
-          <table class="table">
-              <tr>
-                <td>
-                  <button class="btn_export">EXPORT AS CSV</button>
-                </td>
-                <td>
-                  <button class="btn_add_fin">EXPORT AS SVG</button>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </div>     
-
-      <div class="panel panel-default">
-        <div class="panel-heading"><strong>RUNNING TIME</strong> <small> </small></div>
-        <div class="panel-body">
-          <table class="table">
-            <tr>
-              <td class="titl_description" style="vertical-align:middle;"><b>Calibration name</b></td>
-              <td>
-                <select name="" class="input_title_desc" id="date_select">
-                  <option value="TODAY">Footbal players</option>
-                  <option value="TOMORROW">Image lot 2</option>                
-                </select>
-              </td>
-            </tr>        
-            <tr>
-              <td class="titl_description" style="vertical-align:middle;">Filter by</td>
-              <td>
-                <select name="" class="input_title_desc" id="date_select">
-                  <option value="TODAY">Individual</option>
-                  <option value="TOMORROW">Generation</option>
-                  <option value="TOMORROW">Total</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3">
-                <button class="btn_add_fin" onclick="add_to_list()">EXPORT</button>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-  <script src="js/reports.js"></script>
-
+		<!-- COLUMNA 2 -->
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<strong>MEAN FITNESS PER GENERATION</strong> <small> </small>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div id="mean_f_chart" style="width: 100%; height: 40%;"></div>
+					</div>
+					<div class="row" style="margin: 20px 0 0 0">
+						<table class="table">
+							<tr>
+								<td>
+									<form method="POST" th:action="@{/export-mean-csv}">
+										<button class="btn_export" type="submit">EXPORT AS
+											CSV</button>
+									</form>
+								</td>
+								<td>
+									<form method="POST" th:action="@{/export-mean-tikz}">
+										<button class="btn_export">EXPORT AS TIKZ</button>
+									</form>
+								</td>
+								<td>
+									<form method="POST" th:action="@{/export-mean-svg}">
+										<input id="export-mean-svg-aux" name="svg" type="hidden" value=""></span>
+										<button id="export-mean-svg" class="btn_add_fin"
+											onclick="export_svg('export-mean-svg', 'mean_f_chart')">
+											EXPORT AS SVG</button>
+									</form>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<strong>RUNNING TIME</strong> <small> </small>
+				</div>
+				<div class="panel-body">
+					<form method="POST" th:action="@{/export-time}">
+						<table class="table">
+							<tr>
+								<td class="titl_description" style="vertical-align: middle;"><b>Calibration
+										name</b></td>
+								<td><select id="calibration" name="calibration"
+									class="input_title_desc">
+										<option th:each="cal : ${calibrations}"
+											th:value="${cal.title}" th:text="${cal.title}"></option>
+								</select></td>
+							</tr>
+							<tr>
+								<td class="titl_description" style="vertical-align: middle;">Filter
+									by</td>
+								<td><select id="type" name="type" class="input_title_desc">
+										<option value="INDIVIDUAL">Individual</option>
+										<option value="GENERATION">Generation</option>
+										<option value="TOTAL">Total</option>
+								</select></td>
+							</tr>
+							<tr>
+								<td colspan="3">
+									<button class="btn_add_fin" type="submit">EXPORT</button>
+								</td>
+							</tr>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="js/reports.js"></script>
 </body>
-
-

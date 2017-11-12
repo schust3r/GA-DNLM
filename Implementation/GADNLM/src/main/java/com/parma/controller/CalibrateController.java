@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import com.parma.dal.CalibrationDal;
+import com.parma.dal.ReportDal;
 import com.parma.genetics.settings.GaSettings;
 import com.parma.model.Calibration;
 import com.parma.model.User;
@@ -73,12 +74,19 @@ public class CalibrateController {
   public String removeCalibration(@RequestParam(value = "id") String title,
       HttpServletRequest servletRequest, Model model) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    model.addAttribute("username", auth.getName());
+    model.addAttribute("username", auth.getName());    
 
     CalibrationDal.removeCalibration(title);
+    // also remove all report data from the database
+    ReportDal.removeReports(title);
+    
+    // load updated list of calibrations
+    List<Calibration> calibrations = CalibrationDal.loadAllCalibrations();
+    model.addAttribute("calibrations", calibrations);
+    
     model.addAttribute("message", "The calibration '" + title + "' has been deleted");
 
-    return "redirect:/calibrate";
+    return "calibrate";
   }
 
   @RequestMapping(value = "/view-cal", params = {"id"}, method = RequestMethod.GET)
@@ -92,6 +100,7 @@ public class CalibrateController {
     // details of a single calibration
     Calibration cal = CalibrationDal.loadCalibration(title);
     model.addAttribute("cal", cal);
+    model.addAttribute("message", "Details for calibration '" + title + "' are shown");
 
     return "calibrate";
   }
@@ -104,10 +113,6 @@ public class CalibrateController {
 
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     model.addAttribute("username", auth.getName());
-
-    // load all calibrations
-    List<Calibration> calibrations = CalibrationDal.loadAllCalibrations();
-    model.addAttribute("calibrations", calibrations);
 
     Calibration cal = new Calibration();
 
@@ -153,6 +158,10 @@ public class CalibrateController {
 
         // Save in database
         CalibrationDal.saveCalibration(cal);
+        
+        // load updated list of calibrations
+        List<Calibration> calibrations = CalibrationDal.loadAllCalibrations();
+        model.addAttribute("calibrations", calibrations);
 
         // call service to run asynchronously
         asyncService.processCalibration(settings);

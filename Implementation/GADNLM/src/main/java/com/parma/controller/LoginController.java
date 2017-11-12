@@ -1,8 +1,6 @@
 package com.parma.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -61,7 +59,7 @@ public class LoginController {
     if (bindingResult.hasErrors()) {
       return "login";
     }
-    securityService.autologin(userForm.getUsername(), userForm.getPassword());
+    securityService.autologin(userForm.getUsername(), userForm.getPassword());   
     
     model.addAttribute("username", userForm.getUsername());
     return "calibrate";
@@ -80,12 +78,8 @@ public class LoginController {
   } 
 
   @RequestMapping(value = "/logout", method = RequestMethod.GET)
-  public String logoutPage(Model model) {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    if (auth != null) {
-      auth.setAuthenticated(false);
-    }
-    return "redirect:/login";
+  public String logoutPage(Model model) {   
+    return "login";
   }
 
 }

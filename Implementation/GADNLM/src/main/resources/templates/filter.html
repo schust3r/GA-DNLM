@@ -1,162 +1,136 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<title>Image filtering - GA DNLM</title>
-<link rel="stylesheet" type="text/css" href="css/common.css">
-<link rel="stylesheet" type="text/css" href="css/filter.css">
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<!-- jQuery library -->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!-- Latest compiled JavaScript -->
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>Image filtering - GA DNLM</title>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/filter.css">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-		rel="stylesheet">
 
-	<div th:replace="common/navbar :: nav"></div>
+    <div th:replace="common/navbar :: nav"></div>
 
-	<div class="container">
+    <div class="container">
 
-		<div class="center-div">
+        <div class="col-md-6 center-div">
 
-			<div class="form-group">
-				<span th:text="${message}"></span>
-			</div>
+            <div class="form-group">
+                <span th:text="${message}"></span>
+            </div>
 
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<strong>EXECUTE FILTER</strong>
-				</div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>EXECUTE FILTER</strong>
+                </div>
 
-				<form method="POST" th:action="@{/run-filter}"
-					enctype="multipart/form-data">
+                <div class="panel-body">
 
-					<div class="row row-margin">
-						<div class="form-group">
-							<label class="col-md-4 control-label input-form"
-								for="modification_date">Image group</label>
-							<div class="col-md-7">
-								<input id="image_group" name="image_group"
-									placeholder="Input an unique name"
-									class="input_title_desc  input-form" required="" type="text">
-							</div>
-						</div>
-					</div>
+                    <form method="POST" th:action="@{/run-filter}" enctype="multipart/form-data">
 
-					<div class="row row-margin">
-						<div class="form-group">
-							<label class="col-md-4 control-label" for="category_name">Use
-								previous configuration</label>
-							<div class="col-md-7">
-								<select id="configs" name="configs"
-									onchange="load_from_select()"
-									class="input_description_title input-form">
-									<option selected value>None</option>
-									<option th:each="cal : ${calibrations}"
-										th:value="${cal.best_w + ',' + cal.best_w_n + ',' + cal.best_s_r}"
-										th:text="${cal.title}"></option>
-								</select>
-							</div>
-						</div>
-					</div>
+                        <div class="row row-margin">
+                            <div class="form-group">
+                                <label class="col-md-4 control-label input-form">Image
+									group</label>
+                                <div class="col-md-7">
+                                    <input id="image_group" name="image_group" placeholder="Input an unique name" class="input_title_desc  input-form" required="" type="text">
+                                </div>
+                            </div>
+                        </div>
 
-					<div class="row row-margin">
-						<div class="form-group">
-							<label class="col-md-4 control-label input-form"
-								for="category_name_fr">Load from file</label>
-							<div class="col-md-7">
-								<div class="input-group image-preview">
-									<input id="text_input" name="text_input" placeholder=""
-										type="text" class="form-control image-preview-filename"
-										disabled="disabled"><span class="input-group-btn">
-										<div class="btn btn-default image-preview-input">
-											<span class="glyphicon glyphicon-folder-open"></span> <span
-												class="image-preview-input-title">Browse</span> <input
-												id="text_file" name="text_file" type="file"
-												accept="text/plain"
-												onchange="show_filenames('text_file','text_input')" />
-										</div>
-									</span>
-								</div>
-							</div>
-						</div>
-					</div>
+                        <div class="row row-margin">
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="category_name">Use
+									previous configuration</label>
+                                <div class="col-md-7">
+                                    <select id="configs" name="configs" onchange="load_from_select()" class="input_description_title input-form">
+										<option selected value> -- Select a calibration --</option>
+										<option th:each="cal : ${calibrations}"
+											th:value="${cal.best_w + ',' + cal.best_w_n + ',' + cal.best_s_r}"
+											th:text="${cal.title}"></option>
+									</select>
+                                </div>
+                            </div>
+                        </div>
 
-					<div class="row row-margin">
-						<div class="form-group">
-							<label class="col-md-4 control-label input-form">w value</label>
-							<div class="col-md-7">
-								<input id="w_value" name="w_value" placeholder="w"
-									class="input_title_desc input-form" required="" type="text">
-							</div>
-						</div>
-					</div>
+                        <div class="row row-margin">
+                            <div class="form-group">
+                                <label class="col-md-4 control-label input-form">Load
+									from file</label>
+                                <div class="col-md-7">
+                                    <div class="input-group image-preview">
+                                        <input id="text_input" name="text_input" placeholder="" type="text" class="form-control image-preview-filename" disabled="disabled"><span class="input-group-btn">
+											<div class="btn btn-default image-preview-input">
+												<span class="glyphicon glyphicon-folder-open"></span> <span class="image-preview-input-title">Browse</span> <input id="text_file" name="text_file" type="file" accept="text/plain" onchange="show_filenames('text_file','text_input')" />
+                                    </div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                </div>
 
-					<div class="row row-margin">
-						<!-- Text input-->
-						<div class="form-group">
-							<label class="col-md-4 control-label input-form" for="add_by">w<sub>n</sub>
-								value
-							</label>
-							<div class="col-md-7">
-								<input id="w_n_value" name="w_n_value" placeholder="w_n"
-									class="input_title_desc input-form" required="" type="text">
-							</div>
-						</div>
-					</div>
+                <div class="row row-margin">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label input-form">w value</label>
+                        <div class="col-md-7">
+                            <input id="w_value" name="w_value" placeholder="w" class="input_title_desc input-form" required="" type="text">
+                        </div>
+                    </div>
+                </div>
 
-					<div class="row row-margin">
-						<div class="form-group">
-							<label class="col-md-4 control-label input-form"
-								for="modification_date">sigma<sub>r</sub> value
-							</label>
-							<div class="col-md-7">
-								<input id="sigma_r_value" name="sigma_r_value"
-									placeholder="σᵣ" class="input_title_desc input-form"
-									required="" type="text">
-							</div>
-						</div>
-					</div>
+                <div class="row row-margin">
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label input-form">w<sub>n</sub>
+									value
+								</label>
+                        <div class="col-md-7">
+                            <input id="w_n_value" name="w_n_value" placeholder="w_n" class="input_title_desc input-form" required="" type="text">
+                        </div>
+                    </div>
+                </div>
 
-					<div class="row">
-						<div class="form-group">
-							<label class="col-md-4 control-label input-form"
-								for="modification_date">Images to filter</label>
-							<div class="col-md-7">
-								<div class="input-group image-preview">
-									<input id="files_input" name="files_input" placeholder=""
-										class="form-control image-preview-filename"
-										disabled="disabled" type="text"> <span
-										class="input-group-btn">
-										<div class="btn btn-default image-preview-input">
-											<span class="glyphicon glyphicon-folder-open"></span> <span
-												class="image-preview-input-title">Browse</span> <input
-												id="image_files" name="image_files" required=""
-												accept="image/png, image/jpeg, image/gif, image/tif"
-												onchange="show_filenames('image_files','files_input')"
-												multiple type="file">
-										</div>
-									</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<br />
+                <div class="row row-margin">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label input-form">sigma<sub>r</sub>
+									value
+								</label>
+                        <div class="col-md-7">
+                            <input id="sigma_r_value" name="sigma_r_value" placeholder="σᵣ" class="input_title_desc input-form" required="" type="text">
+                        </div>
+                    </div>
+                </div>
 
-					<button class="btn_add_fin" type="submit">FILTER IMAGES</button>
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label input-form">Images
+									to filter</label>
+                        <div class="col-md-7">
+                            <div class="input-group image-preview">
+                                <input id="files_input" name="files_input" placeholder="" class="form-control image-preview-filename" disabled="disabled" type="text"> <span class="input-group-btn">
+											<div class="btn btn-default image-preview-input">
+												<span class="glyphicon glyphicon-folder-open"></span> <span class="image-preview-input-title">Browse</span> <input id="image_files" name="image_files" required="" accept="image/png, image/jpeg, image/gif, image/tif" onchange="show_filenames('image_files','files_input')" multiple type="file">
+                            </div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-				</form>
+            <button id="filter_button" class="btn_add_fin" type="submit">FILTER IMAGES</button>
 
-				<br>
-			</div>
-		</div>
-	</div>
-	<script src="js/filter.js"></script>
+            </form>
+        </div>
+    </div>
+    </div>
+    </div>
+    <script src="js/filter.js"></script>
 </body>
+
 </html>

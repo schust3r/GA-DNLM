@@ -1,50 +1,14 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700);
 body{
   font-family: 'Roboto Condensed', sans-serif;   
-
 }
+
 /** FILES **/
 /* layout.css Style */
 .upload-drop-zone {
   height: 200px;
   border-width: 2px;
   margin-bottom: 20px;
-}
-
-/* skin.css Style*/
-.upload-drop-zone {
-  color: #ccc;
-  border-style: dashed;
-  border-color: #ccc;
-  line-height: 200px;
-  text-align: center
-}
-.upload-drop-zone.drop {
-  color: #222;
-  border-color: #222;
-}
-
-.image-preview-input {
-    position: relative;
-    overflow: hidden;
-    margin: 0px;    
-    color: #333;
-    background-color: #fff;
-    border-color: #ccc;    
-}
-.image-preview-input input[type=file] {
-	position: absolute;
-	top: 0;
-	right: 0;
-	margin: 0;
-	padding: 0;
-	font-size: 20px;
-	cursor: pointer;
-	opacity: 0;
-	filter: alpha(opacity=0);
-}
-.image-preview-input-title {
-    margin-left:2px;
 }
 
 /**DROPDOWN**/
@@ -92,31 +56,31 @@ body{
 .modal-overflow ul{
   list-style: none;
   padding-left: .5em;
-
 }
+
 .modal-overflow li >a{
   color:#FFFFFF;
   padding-left:.5em;
 }
+
 .modal-overflow li >a:hover, {
   list-style: none;
   background: #E5E5E5;
 }
+
 .modal-overflow li >a:active{
   background:#000000;
   color:#FFFFFF;
-
-
 }
+
 overflow-menu a{
   color:#000000;
   list-style: none;
   padding-left: .5em;
+}	
 
-}
 a{
   color:#000000;
-
 }
 .modal-backdrop.in {
   filter: alpha(opacity=0);
